@@ -22,7 +22,7 @@ const Login = () => {
     e.preventDefault();
     const token = Cookies.get('access_token')? Cookies.get('access_token') : null 
     if(token == null || !token){
-      axios.post('http://localhost:5000/login', { username, password}, {withCredentials: true})
+      axios.post('https://playstation-backend.onrender.com/login', { username, password}, {withCredentials: true})
       .then(({data})=>{
         if(data.success){
           Cookies.set('access_token', data.token, { expires: new Date(data.expDate) })
