@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: Alexandria;
+    src: url('/src/assets/fonts/Alexandria-VariableFont_wght.ttf');
+}
+
+*{
+    box-sizing: border-box;
+}
