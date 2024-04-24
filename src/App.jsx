@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React from 'react';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 
@@ -12,7 +12,6 @@ import Orders from './pages/orders/Orders';
 import Stock from './pages/stock/Stock';
 import Config from './pages/config/Config';
 import Revenue from './pages/revenue/Revenue';
-import RevenueGrowthIndicator from './pages/revenue/Revenue';
 
 function App() {
 
