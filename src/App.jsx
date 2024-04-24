@@ -1,40 +1,40 @@
-import React, { useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
-import Login from './routes/safe/Login'
-import PrivateRoutes from './routes/main/PrivateRoutes'
-import Home from './routes/private/Home';
-import LoginRoute from './routes/main/LoginRoute';
-import Cookies from 'js-cookie';
-import Devices from './routes/private/Devices';
-import Orders from './routes/private/Orders';
+import { Toaster } from 'react-hot-toast';
 
+import PrivateRoutes from './routes/PrivateRoutes'
+import LoginRoute from './routes/LoginRoute';
+
+import Login from './pages/login/Login'
+import Home from './pages/home/Home';
+import Devices from './pages/devices/Devices';
+import Orders from './pages/orders/Orders';
+import Stock from './pages/stock/Stock';
+import Config from './pages/config/Config';
+import Revenue from './pages/revenue/Revenue';
+import RevenueGrowthIndicator from './pages/revenue/Revenue';
 
 function App() {
-  const [token, setToken] = useState(Cookies.get('access_token'))
-
-  const presenceCookie = Cookies.get("access_token")
-  
-  useEffect(()=>{
-    if (token !== presenceCookie ) {
-      setToken(presenceCookie);
-    }
-  }, [])
-  
 
   return (
     <>
       <BrowserRouter>
+      <Toaster position='top-left' containerStyle={
+        { zIndex: 15, marginTop: '80px', userSelect: "none"} 
+      }/>
         <Routes>
           <Route path='/auth/login' element={<LoginRoute children={<Login />} />} />
           <Route element={<PrivateRoutes />}>
             <Route element={<Home />} path='/' exact />
             <Route element={<Devices /> } path='/devices' exact />
-            <Route element={<Orders />} path='/orders' exact />
+            <Route element ={<Orders />} path='/orders' exact />
+            <Route element ={<Stock />} path='/stock' exact />
+            <Route element={<Config />} path='/settings' exact />
+            <Route element={<Revenue />} path='/revenue' exact />
           </Route>
           </Routes>
       </BrowserRouter>
-      
-    </>
+    </> 
   )
 }
 

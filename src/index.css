@@ -2,11 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+
 @font-face {
     font-family: Alexandria;
-    src: url('/src/assets/fonts/Alexandria-VariableFont_wght.ttf');
+    src: url('./assets/fonts/Alexandria-VariableFont_wght.ttf');
+}
+
+@font-face {
+    font-family: "Noto";
+    src: url('./assets/fonts/NotoNaskhArabic-VariableFont_wght.ttf');
 }
 
 *{
+    font-family: Alexandria;
     box-sizing: border-box;
 }

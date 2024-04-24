@@ -1,6 +1,7 @@
 import Cookies from 'js-cookie';
 import { Navigate, useLocation } from 'react-router-dom'
-import Navbar from '../../components/Navbar';
+import Navbar from '../components/Navbar';
+import { Toaster } from 'react-hot-toast';
 
 const LoginRoute = ({children}) => {
     const location = useLocation();

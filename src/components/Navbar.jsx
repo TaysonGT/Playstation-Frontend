@@ -5,8 +5,8 @@ import UserIcon from '../assets/user.png'
 import RevenueIcon from '../assets/revenue.png'
 import StockIcon from '../assets/stock.png'
 import DevicesIcon from '../assets/devices-icon.png'
-import GamesIcon from '../assets/buttons.png'
 import OrdersIcon from '../assets/orders.png'
+import ConfigIcon from '../assets/config.png'
 import './Navbar.css'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 
@@ -21,10 +21,10 @@ const Navbar = ({token}) => {
   const links = [
     {link: 'الرئيسية', path: "/", image: Home},
     {link: 'الأجهزة', path: "/devices", image: DevicesIcon},
-    {link: 'الطلبات', path: "/orders", image: OrdersIcon},
+    {link: 'الفواتير', path: "/orders", image: OrdersIcon},
     {link: 'المخزن', path: '/stock', image: StockIcon},
-    {link: 'الألعاب', path: "/games", image: GamesIcon},
-    {link: 'الحسابات', path: "/acount", image: RevenueIcon},
+    {link: 'الحسابات', path: "/revenue", image: RevenueIcon},
+    {link: 'الاعدادات', path: "/settings", image: ConfigIcon},
   ]
 
   const nav = useNavigate()
@@ -37,6 +37,7 @@ const Navbar = ({token}) => {
 
   useEffect(()=>{
       setCurrentLocation(location)
+      !Cookies.get('access_token') && nav('/auth/login')
   },[location.pathname])
 
 
@@ -49,8 +50,8 @@ const Navbar = ({token}) => {
         </div>
         
         <ul className=' lg:gap-12 sm:gap-6 hidden justify-between sm:flex lg:absolute lg:left-[50%] lg:translate-x-[-50%]'>
-           {links.map(({link, path, image})=>
-            <li className={'text-white flex flex-col items-center cursor-pointer nav-link ' + ("/" +currentLocation.pathname.split('/')[1] == path && "active")}>
+           {links.map(({link, path, image}, i)=>
+            <li key={i} className={'text-white flex flex-col items-center cursor-pointer nav-link ' + ("/" +currentLocation.pathname.split('/')[1] == path && "active")}>
               <Link to={path} className='flex flex-col items-center' >
               <img src={image} className=' h-[30px]' alt="" /> 
               <p className=' font-semibold duration-150 mt-1'>{link}</p>
