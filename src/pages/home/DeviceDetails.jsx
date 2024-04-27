@@ -44,10 +44,10 @@ const DeviceDetails = ({setShowDetails, sessions ,device, currentDeviceType, clo
     
     useEffect(()=>{
       (sessions && device)&& setSession(sessions.filter((item)=> item.device_id == device.id)[0])
-      axios.get(`/products`, {withCredentials:true})
+      axios.get(`/products`)
       .then(({data})=> setProducts(data.products))
 
-      session&& axios.get(`/orders/${session.id}`, {withCredentials: true})
+      session&& axios.get(`/orders/${session.id}`)
       .then(({data})=>{
         setOrders(data.arrangedOrders)
         setTimeOrders(data.timeOrders)
@@ -63,7 +63,7 @@ const DeviceDetails = ({setShowDetails, sessions ,device, currentDeviceType, clo
     let product_id = document.getElementById('selectProduct').value
     let quantity = document.getElementById('orderQuantity').value
     if(product_id && quantity){
-      axios.post(`/orders/${session.id}`, {product_id, quantity},{withCredentials: true})
+      axios.post(`/orders/${session.id}`, {product_id, quantity})
       .then(({data})=>{
         if(data.message){
           data.success? toast.success(data.message) : toast.error(data.message)
@@ -77,7 +77,7 @@ const DeviceDetails = ({setShowDetails, sessions ,device, currentDeviceType, clo
 
   const endSessionHandler = (e)=>{
     e.preventDefault()
-    axios.delete(`/sessions/${session.id}`, {withCredentials: true})
+    axios.delete(`/sessions/${session.id}`)
       .then(({data})=>{
           if(data.message){
               data.success? toast.success(data.message) : toast.error(data.message)

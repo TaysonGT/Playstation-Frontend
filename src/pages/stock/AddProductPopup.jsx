@@ -20,7 +20,7 @@ const AddProductPopup = ({setMessage, setShowPopup, setSuccess}) => {
 
     const addHandler = (e)=>{
       e.preventDefault();
-      axios.post('/products', {stock, name, price}, {withCredentials:true})
+      axios.post('/products', {stock, name, price})
       .then(({data})=> {
         if(data.message){
           data.success? toast.success(data.message) : toast.error(data.message)

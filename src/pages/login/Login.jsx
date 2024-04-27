@@ -27,7 +27,7 @@ const Login = () => {
     e.preventDefault();
     const token = Cookies.get('access_token')? Cookies.get('access_token') : null 
     if(token == null || !token){
-      axios.post('/login', { username, password}, {withCredentials: true})
+      axios.post('/login', { username, password})
       .then(({data})=>{
         if(data.success){
           Cookies.set('access_token', data.token, { expires: new Date(data.expDate) })

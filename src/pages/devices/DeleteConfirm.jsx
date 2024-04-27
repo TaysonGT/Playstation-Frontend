@@ -5,7 +5,7 @@ import toast from 'react-hot-toast'
 const DeleteConfirm = ({setDeleteConfirm, deleteId, setDeleteId, refresh, setRefresh}) => {
     const [done, setDone] = useState(false)
     const deleteHandler = ()=>{
-        axios.delete(`/devices/${deleteId}`, {withCredentials: true})
+        axios.delete(`/devices/${deleteId}`)
         .then(({data})=>{
             if(data.message){
                 data.success? toast.success(data.message) : toast.error(data.message)

@@ -16,7 +16,7 @@ const DeviceReceiptTable = ({orders, setShowPopup}) => {
 
     const getReceiptHandler = (e)=>{
         let id = e.target.id;
-        axios.get(`/receipts/${id}`, {withCredentials: true})
+        axios.get(`/receipts/${id}`)
         .then(({data})=> setReceiptData(data.receipt))
     }
 

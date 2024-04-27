@@ -47,7 +47,7 @@ const Device = ({device, sessions, trigger, setTrigger, deviceTypes, devices}) =
         let date = new Date()
         setHours(date.getHours() + currHours)
         setMinutes(date.getMinutes() + currMinutes -1)
-        axios.post(`/sessions/${e.target.id}`, {play_type: playType, time_type: timeType, end_time: date}, {withCredentials: true})
+        axios.post(`/sessions/${e.target.id}`, {play_type: playType, time_type: timeType, end_time: date})
         .then(({data})=>{
             if(data.message){
                 data.success? toast.success(data.message) : toast.error(data.message)
