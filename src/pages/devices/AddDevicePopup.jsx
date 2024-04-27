@@ -26,8 +26,8 @@ const AddDevicePopup = ({setShowPopup}) => {
   }, [])
 
   useEffect(()=>{
-    deviceTypes && setDeviceType(deviceTypes.find((type)=> type.id==currDevType))
-  }, [currDevType])
+    (deviceTypes && currDevType )&& setDeviceType(deviceTypes.find((type)=> type.id==currDevType))
+  }, [currDevType, deviceType])
 
   const addDeviceHandler = (e)=>{
     e.preventDefault()
