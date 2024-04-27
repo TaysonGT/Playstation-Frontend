@@ -20,11 +20,11 @@ const DeviceDetails = ({setShowDetails, sessions ,device, currentDeviceType, clo
       let ordersCost = 0;
       let timeCost = 0;
 
-      orders.map((order)=>{
+      orders?.map((order)=>{
         ordersCost += order.cost;
       })
       
-      timeOrders.map((order)=>{
+      timeOrders?.map((order)=>{
         timeCost += order.cost;
       })
 

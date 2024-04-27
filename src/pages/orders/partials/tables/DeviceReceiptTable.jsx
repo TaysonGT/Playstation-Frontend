@@ -38,7 +38,7 @@ const DeviceReceiptTable = ({orders, setShowPopup}) => {
             </li>
         </ul>
         <ul className='w-full h-full bg-white overflow-y-scroll'>
-            {orders.map((order)=>
+            {orders?.map((order)=>
             <li className='flex items-stretch w-full'>
                 <div className="py-4 px-6 border-b border-gray-200 flex-1 flex items-center bg-white">{new Date(order.time_ordered).toString().slice(0, 25)}</div>
                 <div  className="py-4 px-6 border-b border-gray-200 flex-1 flex items-center text-ellipsis overflow-hidden"><button onClick={(e)=>getReceiptHandler(e)} className='p-2 bg-green-500 hover:bg-green-400 duration-100 text-white rounded-md'>عرض الطلبات</button></div>

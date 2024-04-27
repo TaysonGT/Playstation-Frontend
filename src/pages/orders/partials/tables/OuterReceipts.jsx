@@ -33,7 +33,7 @@ const OuterReceipts = ({ receipts,setShowPopup }) => {
       <h1 className="text-3xl font-bold mb-4 text-white">الفواتير الخارجية</h1>
       <button className='bg-indigo-600 rounded hover:bg-indigo-500 duration-150 text-white px-4 py-2' onClick={()=>setShowPopup(true)}>إضافة طلب</button>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-2">
-        {receipts.map((receipt, index) => (
+        {receipts?.map((receipt, index) => (
           <div key={index} className="bg-white shadow-lg rounded-lg overflow-hidden p-4">
             <h2 className="text-xl font-semibold mb-2">{receipt.cashier}</h2>
             <p className="text-gray-600">التاريخ: {new Date(receipt.time_ordered).toLocaleDateString()}</p>

@@ -64,7 +64,7 @@ const Revenue = () => {
     if(orders){
       let monthlyCost = 0;
       let lastMonthCost = 0;
-      orders.map((order)=>{
+      orders?.map((order)=>{
         let monthDiff = new Date(order.time_ordered).getMonth() == new Date().getMonth(); 
         let lastMonthDiff = new Date(order.time_ordered).getMonth() == new Date().getMonth() -1 ; 
         let yearDiff = new Date(order.time_ordered).getFullYear() == new Date().getFullYear(); 

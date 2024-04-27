@@ -48,7 +48,7 @@ const SessionReceipt = ({sessionReceipt, setShowInvoice, configs}) => {
             </div>
             <div className="mb-4">
                 <h2 className="text-lg font-bold mb-2">وقت اللعب</h2>
-                {sessionReceipt&& JSON.parse(sessionReceipt.orders).map((order, index) => (
+                {sessionReceipt&& JSON.parse(sessionReceipt.orders)?.map((order, index) => (
                 <div className="flex justify-between mb-2">
                     <span className='flex-[.45]'>{order.product_id}</span>
                     <span className='flex-[.33]'>{order.quantity}</span>

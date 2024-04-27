@@ -42,7 +42,7 @@ const Home = () => {
         <div className='w-[85%] mx-auto flex flex-col items-center pt-32'>
             <h1 className='text-3xl font-bold text-[#37474f] inline-block'>الأجهزة المتاحة</h1>
             <div className='flex w-full flex-wrap justify-center  gap-6 mt-8'>
-                {availableDevices.map((device)=>{
+                {availableDevices?.map((device)=>{
                 return(
                 <Device key={device.id} {...{device, setTrigger, trigger, deviceTypes,devices}} />)
                 })}
@@ -54,7 +54,7 @@ const Home = () => {
         <div className={'w-[85%] mx-auto  flex flex-col items-center ' + (availableDevices?.length<1? 'pt-32': 'pt-16')}>
             <h1 className='text-3xl font-bold text-[#37474f] inline-block'>الأجهزة المشغولة</h1>
             <div className='flex w-full flex-wrap justify-center  gap-6 mt-8'>
-                {unavailableDevices.map((device)=><Device  key={device.id} {... {device, sessions, trigger, setTrigger, deviceTypes, devices}} />)}
+                {unavailableDevices?.map((device)=><Device  key={device.id} {... {device, sessions, trigger, setTrigger, deviceTypes, devices}} />)}
             </div>
         </div>
         }

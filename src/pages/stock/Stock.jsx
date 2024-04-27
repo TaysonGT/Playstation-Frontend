@@ -80,13 +80,13 @@ const Stock = () => {
         <table className='w-full text-black mt-6 select-none text-right tracking-wide shadow-2xl rounded-lg overflow-hidden'>
             <thead className='bg-gray-50 border-b-2 border-gray-200'>
                 <tr>
-                {tableHead.map((key, i)=> 
+                {tableHead?.map((key, i)=> 
                 <th key={i} className='p-3 text-sm font-semibold text-right  '>{key}</th>
                 )}
                 </tr>
             </thead>
             <tbody>
-                {products.map((product, i)=> 
+                {products?.map((product, i)=> 
                 <tr key={i} className={ 'relative ' + (i%2 != 0 ? 'bg-gray-50': 'bg-white')}>
                     <td className='pr-7 font-bold text-blue-500 p-4'>{product.name}</td>
                     <td>

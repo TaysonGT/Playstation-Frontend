@@ -38,7 +38,7 @@ const OuterReceipt = ({receiptData, setShowInvoice, configs}) => {
             </div>
             <div className="mb-4">
                 <h2 className="text-lg font-bold mb-2">الطلبات</h2>
-                {JSON.parse(receiptData.orders).map((order, index) => (
+                {JSON.parse(receiptData.orders)?.map((order, index) => (
                 <div className="flex justify-between mb-2">
                     <span className='flex-[.45]'>{order.product_id}</span>
                     <span className='flex-[.33]'>{order.quantity}</span>
