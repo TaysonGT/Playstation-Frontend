@@ -1,5 +1,5 @@
 {
-  "name": "PS_Client",
+  "name": "ps-client",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
