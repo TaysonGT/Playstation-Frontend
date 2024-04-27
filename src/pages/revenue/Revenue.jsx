@@ -85,13 +85,13 @@ const Revenue = () => {
   useEffect(()=>{
     if(date){
       setDay(arabicWeekNames[new Date(date).getDay()])
-      axios.get(`/finances/${date}`)
+      axios.get(`/finances/${date}`, {withCredentials:true})
       .then(({data})=>{
         setFinances(data)
         setCurrentFinances(data.currentDayFinances)
         console.log(data)
       })
-      axios.get('/orders/outer')
+      axios.get('/orders/outer', {withCredentials: true})
       .then(({data})=>{
         setOrders(data.outerOrders)
       })  

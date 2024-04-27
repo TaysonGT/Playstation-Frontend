@@ -44,10 +44,10 @@ const DeviceDetails = ({setShowDetails, sessions ,device, currentDeviceType, clo
     
     useEffect(()=>{
       (sessions && device)&& setSession(sessions.filter((item)=> item.device_id == device.id)[0])
-      axios.get(`/products`)
+      axios.get(`/products`, {withCredentials:true})
       .then(({data})=> setProducts(data.products))
 
-      session&& axios.get(`/orders/${session.id}`)
+      session&& axios.get(`/orders/${session.id}`, {withCredentials: true})
       .then(({data})=>{
         setOrders(data.arrangedOrders)
         setTimeOrders(data.timeOrders)
@@ -77,7 +77,7 @@ const DeviceDetails = ({setShowDetails, sessions ,device, currentDeviceType, clo
 
   const endSessionHandler = (e)=>{
     e.preventDefault()
-    axios.delete(`/sessions/${session.id}`)
+    axios.delete(`/sessions/${session.id}`, {withCredentials: true})
       .then(({data})=>{
           if(data.message){
               data.success? toast.success(data.message) : toast.error(data.message)

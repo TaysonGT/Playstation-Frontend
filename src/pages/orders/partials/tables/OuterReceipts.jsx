@@ -15,10 +15,10 @@ const OuterReceipts = ({ receipts,setShowPopup }) => {
 
   const getReceiptHandler = (e)=>{
       let id = e.target.id;
-      axios.get(`/receipts/${id}`)
+      axios.get(`/receipts/${id}`, {withCredentials: true})
       .then(({data})=> setReceiptData(data.receipt))
       
-      axios.get('/config')
+      axios.get('/config', {withCredentials: true})
       .then(({data})=> setConfigs({name: data.nameConfig.value, phone: data.phoneConfig.value}))
   }    
 

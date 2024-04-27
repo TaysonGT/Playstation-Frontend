@@ -12,7 +12,7 @@ const DevicesOrders = () => {
     
 
     useEffect(()=>{
-    axios.get('/orders')
+    axios.get('/orders', {withCredentials: true})
         .then(({data})=> {
             setOrders(data.orders)
         })

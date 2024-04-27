@@ -11,7 +11,7 @@ const EditConfirm = ({editProduct, setEditProduct, setEditConfirm}) => {
 
     const editHandler = (e)=>{
         e.preventDefault()
-        axios.put(`/products/${editProduct.id}`, {name: prodName, price, stock: quantity})
+        axios.put(`/products/${editProduct.id}`, {name: prodName, price, stock: quantity}, {withCredentials: true})
         .then(({data})=>{
             if(data.message){
                 data.success ? toast.success(data.message) 
@@ -32,7 +32,7 @@ const EditConfirm = ({editProduct, setEditProduct, setEditConfirm}) => {
     }
 
     useEffect(()=>{
-        axios.get(`/products/${editProduct.id}`)
+        axios.get(`/products/${editProduct.id}`, {withCredentials: true})
         .then(({data})=>setProduct(data.product))
         .catch(err=>err)
     }, [])

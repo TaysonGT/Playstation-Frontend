@@ -15,17 +15,17 @@ const Home = () => {
     const [trigger, setTrigger] = useState(false)
 
     useEffect(()=>{
-        axios.get('/devices')
+        axios.get('/devices', {withCredentials: true})
             .then(({data})=> {
                 setDevices(data.devices)
                 setAvailableDevices(data.devices?.filter((device)=> device.status == false ))
                 setUnavailableDevices(data.devices?.filter((device)=> device.status == true))
             })
-        axios.get('/sessions')
+        axios.get('/sessions', {withCredentials:true})
         .then(({data})=>{
             setSessions(data.sessions)
         })
-        axios.get('/device-types')
+        axios.get('/device-types', {withCredentials:true})
         .then(({data})=> setDeviceTypes(data.deviceTypes))
         
     }, [trigger])

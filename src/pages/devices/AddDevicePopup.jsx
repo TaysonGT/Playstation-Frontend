@@ -10,7 +10,7 @@ const AddDevicePopup = ({setShowPopup}) => {
   const [allowAdd, setAllowAdd] = useState(true)
 
   useEffect(()=>{
-    axios.get('/device-types')
+    axios.get('/device-types', {withCredentials: true})
     .then(({data})=> {
       if(!data.message){
         setDeviceTypes(data.deviceTypes)
@@ -32,7 +32,7 @@ const AddDevicePopup = ({setShowPopup}) => {
     if(!(deviceName&&deviceType)){
       toast.error("برجاء ملء بيانات الجهاز")
     }else{
-      axios.post('/devices', {name: deviceName, type: deviceType})
+      axios.post('/devices', {name: deviceName, type: deviceType}, {withCredentials: true})
       .then(({data})=>{
         data.success? toast.success(data.message) : toast.error(data.message)
         setShowPopup(false)

@@ -17,12 +17,12 @@ const Devices = () => {
 
 
     useEffect(()=>{
-        axios.get('/devices')
+        axios.get('/devices', {withCredentials: true})
             .then(({data})=> {
                 setDevices(data.devices)
             })
         
-        axios.get('/device-types')
+        axios.get('/device-types', {withCredentials: true})
         .then(({data})=> setDeviceTypes(data.deviceTypes))
         .catch(err=>(err))
 

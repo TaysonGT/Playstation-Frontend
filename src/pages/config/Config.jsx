@@ -31,7 +31,7 @@ const Config = () => {
   
   const handleSaveTypes = (e) => {
     e.preventDefault();
-    axios.put(`/device-types/${currDevType.id}`, {singlePrice, multiPrice})
+    axios.put(`/device-types/${currDevType.id}`, {singlePrice, multiPrice}, {withCredentials: true})
     .then(({data})=>{
       data.success? toast.success(data.message) : toast.error(data.message);
       setRefresh(!refresh)
@@ -39,7 +39,7 @@ const Config = () => {
   };
 
   useEffect(()=>{
-    axios.get('/device-types')
+    axios.get('/device-types', {withCredentials: true})
     .then(({data})=> {
       if(data.message){
         toast.error("برجاء إضافة نوع جهاز")
@@ -49,13 +49,13 @@ const Config = () => {
   
   useEffect(()=>{
     if(currTypeId){
-      axios.get(`/device-types/${currTypeId}`)
+      axios.get(`/device-types/${currTypeId}`, {withCredentials: true})
       .then(({data})=>{
         if(currDevType) setCurrDevType(data.deviceType)
       })
     }
 
-    axios.get('/config')
+    axios.get('/config', {withCredentials:true})
     .then(({data})=>{
       setConfigs({name: data.nameConfig?.value, phone: data.phoneConfig?.value})
     })
@@ -64,7 +64,7 @@ const Config = () => {
   
   
   useEffect(()=>{
-    axios.get('/device-types')
+    axios.get('/device-types', {withCredentials:true})
     .then(({data})=> {
         if(data.deviceTypes){
           setDevTypes(data.deviceTypes)

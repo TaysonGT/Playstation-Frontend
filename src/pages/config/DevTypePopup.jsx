@@ -9,7 +9,7 @@ const DevTypePopup = ({ setTypePopup, setRefresh, refresh }) => {
     
   const handleAddDevType = (e) => {
     e.preventDefault()
-    axios.post('/device-types', {name, single_price, multi_price})
+    axios.post('/device-types', {name, single_price, multi_price}, {withCredentials: true})
     .then(({data})=> {
         if(data.message){
           data.success? toast.success(data.message) : toast.error(data.message)

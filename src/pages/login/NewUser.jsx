@@ -17,7 +17,7 @@ const NewUser = ({setNewUserPopup, setSuccess, setMessage, setNewUser}) => {
     const addHandler = (e)=>{
       e.preventDefault();
       let admin = true;
-      axios.post('/firstuser', {username, password, admin})
+      axios.post('/firstuser', {username, password, admin}, {withCredentials: true})
       .then(({data})=> {
         if(data.message){
           setSuccess(data.success)

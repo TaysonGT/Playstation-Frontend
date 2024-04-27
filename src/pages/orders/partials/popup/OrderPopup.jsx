@@ -7,7 +7,7 @@ const OrderPopup = ({setMessage, setSuccess, setShowPopup}) => {
   const [inputs, setInputs] = useState([]) 
 
   useEffect(()=>{
-    axios.get('/products')
+    axios.get('/products', {withCredentials:true})
       .then(({data})=> {
         setProducts(data.products)
       })
@@ -30,7 +30,7 @@ const OrderPopup = ({setMessage, setSuccess, setShowPopup}) => {
 
   const submitHandler = (e)=>{
     e.preventDefault()
-    axios.post('/receipts', {orderData})
+    axios.post('/receipts', {orderData}, {withCredentials: true})
       .then(({data})=> {
           setSuccess(data.success)
           setMessage(data.message)

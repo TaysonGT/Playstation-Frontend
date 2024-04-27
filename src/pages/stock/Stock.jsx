@@ -20,7 +20,7 @@ const Stock = () => {
     
 
     useEffect(()=>{
-        axios.get('/products')
+        axios.get('/products', {withCredentials: true})
             .then(({data})=> {
                 setProducts(data.products)
                 if(data.message){ 
@@ -31,7 +31,7 @@ const Stock = () => {
 
 
     const editHandler = (e)=>{
-        axios.get(`/products/${e.target.id.slice(4)}`)
+        axios.get(`/products/${e.target.id.slice(4)}`, {withCredentials: true})
         .then(({data})=>{
             setEditProduct(data.product)
             setEditConfirm(true)
