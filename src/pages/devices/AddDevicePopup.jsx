@@ -7,7 +7,6 @@ const AddDevicePopup = ({setShowPopup}) => {
   const [deviceTypes, setDeviceTypes] = useState()
   const [deviceName, setDeviceName] = useState()
   const [deviceType, setDeviceType] = useState()
-  const [currDevType, setCurrDevType] = useState()
   const [allowAdd, setAllowAdd] = useState(true)
 
   useEffect(()=>{
@@ -15,7 +14,6 @@ const AddDevicePopup = ({setShowPopup}) => {
     .then(({data})=> {
       if(!data.message){
         setDeviceTypes(data.deviceTypes)
-        setDeviceType(data.deviceTypes[0]?.id)
         setAllowAdd(true)
       }else {
         allowAdd&& toast.error(data.message)
@@ -26,8 +24,8 @@ const AddDevicePopup = ({setShowPopup}) => {
   }, [])
 
   useEffect(()=>{
-    (deviceTypes && currDevType )&& setDeviceType(deviceTypes.find((type)=> type.id==currDevType))
-  }, [currDevType, deviceType])
+    deviceTypes && setDeviceType(deviceTypes.find((type)=> type.id==deviceTypes[0].id))
+  }, [deviceTypes])
 
   const addDeviceHandler = (e)=>{
     e.preventDefault()
@@ -53,7 +51,7 @@ const AddDevicePopup = ({setShowPopup}) => {
           </div>
           <div>
             <label className=' block'>نوع الجهاز</label>
-            <select onInput={(e)=> setCurrDevType(e.target.value)} className='w-full mt-2 p-2 border border-gray-300'>
+            <select onInput={(e)=> setDeviceType(e.target.value)} className='w-full mt-2 p-2 border border-gray-300'>
               {deviceTypes?.map((type, i)=><option key={i} value={type.id}>{type.name}</option>)}
             </select>  
           </div>
