@@ -18,8 +18,8 @@ const Home = () => {
         axios.get('/devices', {withCredentials: true})
             .then(({data})=> {
                 setDevices(data.devices)
-                setAvailableDevices(data.devices.filter((device)=> device.status == false ))
-                setUnavailableDevices(data.devices.filter((device)=> device.status == true))
+                setAvailableDevices(data.devices?.filter((device)=> device.status == false ))
+                setUnavailableDevices(data.devices?.filter((device)=> device.status == true))
             })
         axios.get('/sessions', {withCredentials:true})
         .then(({data})=>{
