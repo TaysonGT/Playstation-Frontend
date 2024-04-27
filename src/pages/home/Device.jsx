@@ -45,9 +45,8 @@ const Device = ({device, sessions, trigger, setTrigger, deviceTypes, devices}) =
         let currHours = parseInt(hours)
         let currMinutes = parseInt(minutes)
         let date = new Date()
-        date.setHours(date.getHours() + currHours)
-        date.setMinutes(date.getMinutes() + currMinutes -1)
-        (date)
+        setHours(date.getHours() + currHours)
+        setMinutes(date.getMinutes() + currMinutes -1)
         axios.post(`/sessions/${e.target.id}`, {play_type: playType, time_type: timeType, end_time: date}, {withCredentials: true})
         .then(({data})=>{
             if(data.message){
