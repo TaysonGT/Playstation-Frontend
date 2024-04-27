@@ -13,14 +13,12 @@ const EditConfirm = ({editProduct, setEditProduct, setEditConfirm}) => {
         e.preventDefault()
         axios.put(`/products/${editProduct.id}`, {name: prodName, price, stock: quantity}, {withCredentials: true})
         .then(({data})=>{
-            console.log(data)
             if(data.message){
                 data.success ? toast.success(data.message) 
                 : toast.error(data.message)
             }
             setDone(true)
         })
-        .catch(err=>console.log(err))
     }
 
     const inputHandler = (e)=>{

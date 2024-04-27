@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import Invoice from '../invoice/Invoice'
 import axios from 'axios'
+import SessionReceipt from '../receipt/SessionReceipt';
 
 const DeviceReceiptTable = ({orders, setShowPopup}) => {
     const [receiptData, setReceiptData] = useState()
@@ -18,14 +18,13 @@ const DeviceReceiptTable = ({orders, setShowPopup}) => {
         let id = e.target.id;
         axios.get(`/receipts/${id}`, {withCredentials: true})
         .then(({data})=> setReceiptData(data.receipt))
-        .catch(err=>console.log(err))
     }
 
   return (
     <div className="shadow-lg rounded-lg overflow-hidden grow ">
         {showInvoice&& 
             <>
-                <Invoice {... {receiptData, setShowInvoice}} />
+                <SessionReceipt {... {receiptData, setShowInvoice}} />
                 <div onClick={()=>setShowInvoice(false)} className='fixed left-0 top-0 w-screen h-screen bg-layout z-[99]'></div>
             </>
         }

@@ -21,7 +21,7 @@ const Orders = () => {
                     }`}
                     onClick={() => setSelectOrder(!selectOrder)}
                 >
-                    <span>{selectOrder ? 'فواتير الأجهزة' : 'الفواتير الخارجية'}</span>
+                    <span>{selectOrder ? 'الفواتير الخارجية' : 'فواتير الأجهزة'}</span>
                 </button>
         </div>
         { !selectOrder? 

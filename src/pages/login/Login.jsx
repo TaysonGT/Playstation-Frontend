@@ -49,7 +49,7 @@ const Login = () => {
       .then(({data})=> 
         data.existing? setNewUser(false) : setNewUser(true)
       )
-      .catch(err=>console.log(err))
+      .catch(err=>(err))
   }, [])
 
   useEffect(()=>{

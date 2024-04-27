@@ -11,7 +11,6 @@ const OrderPopup = ({setMessage, setSuccess, setShowPopup}) => {
       .then(({data})=> {
         setProducts(data.products)
       })
-      .catch(err=>console.log(err))
   },[])
 
   let orders = []
@@ -36,9 +35,7 @@ const OrderPopup = ({setMessage, setSuccess, setShowPopup}) => {
           setSuccess(data.success)
           setMessage(data.message)
           setShowPopup(false)
-          console.log(data)
       })
-      .catch((err)=>console.log(err))
   }
 
   return (

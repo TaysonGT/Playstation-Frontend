@@ -1,31 +1,48 @@
 import React, { useEffect, useState } from 'react'
 import DeleteIcon from '../../assets/delete.png'
 import EditIcon from '../../assets/edit.png'
-import ps5Icon from '../../assets/ps5-black.png'
-import ps4Icon from '../../assets/ps4-black.png'
 import axios from 'axios'
 import AddDevicePopup from './AddDevicePopup'
+import toast from 'react-hot-toast'
+import DeleteConfirm from './DeleteConfirm';
 
 
 const Devices = () => {
-
-
+    const [deviceTypes, setDeviceTypes] = useState([])
     const [devices, setDevices] = useState([])
     const [showPopup, setShowPopup] = useState(false)
+    const [deleteId, setDeleteId] = useState()
+    const [refresh, setRefresh] = useState(false)
+    const [deleteConfirm, setDeleteConfirm] = useState(false)
+
 
     useEffect(()=>{
         axios.get('/devices', {withCredentials: true})
             .then(({data})=> {
                 setDevices(data.devices)
             })
-    }, [showPopup])
+        
+        axios.get('/device-types', {withCredentials: true})
+        .then(({data})=> setDeviceTypes(data.deviceTypes))
+        .catch(err=>(err))
+
+
+    }, [showPopup, refresh])
 
     const tableHead = [
         "اسم الجهاز",
         "نوع الجهاز",
         "الحالة",
-        "الألعاب",
     ]
+
+    const deleteDeviceHandler = (e)=>{
+        e.preventDefault()
+        setDeleteId(e.target.id.slice(4))
+    }
+
+    useEffect(()=>{
+        deleteId? setDeleteConfirm(true) : setDeleteConfirm(false)
+    }, [deleteId])
   
   return (
     <>
@@ -34,6 +51,10 @@ const Devices = () => {
             <AddDevicePopup {...{setShowPopup}} />
         </>
         }
+        {deleteConfirm&&<>
+            <div onClick={()=>setDeleteConfirm(false)} className='fixed left-0 top-0 w-screen h-screen bg-layout z-[100]' ></div>
+            <DeleteConfirm {...{deleteId, setDeleteId, setDeleteConfirm, refresh, setRefresh}} />
+        </>}
     <div className='pt-32 px-36 bg-[#0d47a1] min-h-screen' dir='rtl'>
         <div className='w-full flex justify-between items-start'>
             <h1 className='text-white text-3xl font-bold'>الأجهزة</h1>
@@ -50,22 +71,21 @@ const Devices = () => {
                 </tr>
             </thead>
             <tbody>
-                {devices.map((device, i)=> 
+                {devices?.map((device, i)=> 
                 <tr key={i} className={ 'relative ' + (i%2 != 0 ? 'bg-gray-50': 'bg-white')}>
                     <td className='pr-7 font-bold text-blue-500 p-4'>{device.name}</td>
                     <td>
-                        <img className='w-[65px]' src={device.type == "PS5" ? ps4Icon : ps5Icon} />
+                        <p className=''>{deviceTypes?.filter((type)=> type.id == device.type)[0]?.name}</p>
                     </td>
                     <td>
                         <span className={'p-1.5 text-xs font-bold uppercase tracking-wider bg-opcaity-50 rounded-lg ' + (!device.status? "text-green-800 bg-green-200" : "text-red-800 bg-red-200")}>{!device.status? "متاح" : "مشغول"}</span>
                     </td>
-                    <td>{device.startedAt}</td>
                     <div  className='absolute top-[50%] translate-y-[-50%] left-[2%] flex gap-4 items-center'>
                         <button>
                             <img src={EditIcon} className='h-[30px] z-20 bg-indigo-950 hover:bg-indigo-400 duration-100 rounded p-1' alt="" />
                         </button>
-                        <button>
-                            <img src={DeleteIcon} className='h-[30px] z-20 bg-red-300 hover:bg-red-700 duration-100 rounded p-1' alt="" />
+                        <button id={"btn_" +device.id} onClick={deleteDeviceHandler}>
+                            <img id={"img_" +device.id} src={DeleteIcon} className='h-[30px] z-20 bg-red-300 hover:bg-red-700 duration-100 rounded p-1' alt="" />
                         </button>
                     </div>
                 </tr>

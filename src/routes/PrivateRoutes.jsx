@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 import Navbar from '../components/Navbar';
 
 const PrivateRoutes = () => {
-  const token = useState(Cookies.get('access_token'))
+  let token = useState(Cookies.get('access_token'))
 
   return (
     token? <><Navbar token={token} /><Outlet /></> : <Navigate to='/auth/login' />

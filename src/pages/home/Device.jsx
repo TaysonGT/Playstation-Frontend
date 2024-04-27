@@ -2,15 +2,16 @@ import axios from 'axios'
 import React, {useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 import Notification from '../../assets/notification.mp3'
+import DeviceDetails from './DeviceDetails'
 
-import { Link } from 'react-router-dom'
 
-const Device = ({device, sessions, trigger, setTrigger, deviceTypes}) => {
+const Device = ({device, sessions, trigger, setTrigger, deviceTypes, devices}) => {
     const [timerState, setTimerState] = useState(false)
     const [clock, setClock] = useState(null)
     const [isInputDisabled, setIsInputDisabled] = useState(true)
-    const [notification, setNotification] = useState(true)
+    // const [notification, setNotification] = useState(true)
     // const audio = useRef(new Audio(Notification))
+    const [showDetails, setShowDetails] = useState(false)
 
     const [timeType, setTimeType] = useState()
     const [playType, setPlayType] = useState()
@@ -46,7 +47,7 @@ const Device = ({device, sessions, trigger, setTrigger, deviceTypes}) => {
         let date = new Date()
         date.setHours(date.getHours() + currHours)
         date.setMinutes(date.getMinutes() + currMinutes -1)
-        console.log(date)
+        (date)
         axios.post(`/sessions/${e.target.id}`, {play_type: playType, time_type: timeType, end_time: date}, {withCredentials: true})
         .then(({data})=>{
             if(data.message){
@@ -103,13 +104,6 @@ const Device = ({device, sessions, trigger, setTrigger, deviceTypes}) => {
         }
     }
     
-    // const playNotificationSound = ()=>{
-    //     audio.current.play()
-    // }
-
-    // const sound = ()=>{
-    //     setTimeout(playNotificationSound, 1000)
-    // }
     
     useEffect(()=>{ 
         if(!timerState && !clock && currentSession){
@@ -125,19 +119,22 @@ const Device = ({device, sessions, trigger, setTrigger, deviceTypes}) => {
         }
         if(sessions) setCurrentSession(sessions.filter((session)=> session.device_id == device.id)[0])
         if(deviceTypes) setCurrentDeviceType(deviceTypes.filter((type)=> type.id == device.type)[0])
-    }, [currentSession, sessions, deviceTypes])
+    }, [currentSession, sessions, deviceTypes, showDetails])
     
   return (
-    <div className=' bg-indigo-900 w-[250px] flex flex-col items-center rounded p-5 text-[#fff] hover:shadow-lg duration-[.3s] h-[300px]'>
+    <div className='bg-[#ffffff] w-[250px] border-2 border-[#e0e0e0] flex flex-col items-center rounded p-5 text-[#333] shadow-lg duration-[.3s] h-[320px]'>
         <div className='flex justify-between w-full items-center'>
             <h1 className={'font-semibold px-[20px] py-[3px] text-white rounded ' + (device.status?  'bg-red-500' : 'bg-[#3cb75b]')}>{device.name}</h1>
-            <div className='bg-white text-black p-1 px-4 rounded font-medium'>{currentDeviceType?.name}</div>
+            <div className='bg-white border-2 border-black text-black p-1 px-4 rounded font-medium'>{currentDeviceType?.name}</div>
         </div>
+        {showDetails&&<>
+            <div onClick={()=>setShowDetails(false)} className='fixed left-0 top-0 w-screen h-screen bg-layout z-[100]'></div>
+            <DeviceDetails {...{device, setShowDetails, sessions, clock, setTrigger, trigger, devices, currentDeviceType}} />
+        </>
+        }
         { !device.status? 
-        
-        <form dir="rtl" className='w-full flex flex-col gap-1 text-sm font-bold mt-6 '>
+        <form dir="rtl" className='w-full flex flex-grow flex-col gap-1 text-sm font-bold mt-6 '>
             <div className='flex justify-between gap-2 items-center'>
-                
                 <label className="font-bold text-sm w-[100px]">نوع اللعب:</label>
                 <select className={classnames.input}>
                     <option className={classnames.option} value="single">سنجل</option>
@@ -164,15 +161,15 @@ const Device = ({device, sessions, trigger, setTrigger, deviceTypes}) => {
                     </div>
                 </div>
             </div>
-            <button onClick={startDeviceHandler} id={device.id} className=' bg-[#11bb66] text-white p-3 text-md rounded-md hover:bg-[#7fbea7]  duration-150 active:shadow-hardInner mt-auto '>بدء</button>
+            <button onClick={startDeviceHandler} id={device.id} className=' bg-[#37474f] text-white p-3 text-md rounded-md hover:bg-[#4f6874]  duration-150 active:shadow-hardInner mt-auto '>بدء</button>
         </form> :
         <div className='mt-5 flex flex-col items-center gap-3 h-full w-full'>
-            <div className={'w-[80%] p-4 text-center text-3xl font-bold bg-[white] text-gray-600  bg-center bg-cover border-emerald-50 border  rounded shadow-hardInner  ' + (currentSession?.time_type == "open"? 'text-red-500' :  'text-green-500')}>{clock? clock : "00:00:00"}</div>
+            <div className={'w-[90%] p-4 text-center text-3xl font-bold bg-[#212121] text-white bg-center bg-cover border-emerald-50 border rounded  ' + (currentSession?.time_type == "open"? 'text-red-500' :  'text-green-500')}>{clock? clock : "00:00:00"}</div>
             <div className='flex justify-between gap-4 p-2 '>
                 <p className={'text-sm font-medium p-3 py-2 border-white border-b-[5px] rounded-sm w-full text-white ' + (currentSession?.time_type=="open" ?  'bg-red-500': 'bg-[#11bb66]')} >{currentSession?.time_type}</p>
                 <p className='text-sm font-medium p-3 py-2 bg-white  border-[#568968] border-b-[5px] rounded-sm w-full text-[#568968]'>{currentSession?.play_type}</p>
             </div>
-            <Link className=' bg-[#00b4d8]  p-3 text-md rounded-md text-white hover:bg-[#90e0ef] duration-200 active:shadow-hardInner mt-auto w-full text-center '>تفاصيل</Link>
+            <button onClick={()=> setShowDetails(true)} id={device.id} className=' bg-[#00b4d8]  p-3 text-md rounded-md text-white hover:bg-[#90e0ef] duration-200 active:shadow-hardInner mt-auto w-full text-center '>تفاصيل</button>
         </ div>
         }
 

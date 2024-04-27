@@ -8,49 +8,58 @@ const AddDevicePopup = ({setShowPopup}) => {
   const [deviceName, setDeviceName] = useState()
   const [deviceType, setDeviceType] = useState()
   const [currDevType, setCurrDevType] = useState()
+  const [allowAdd, setAllowAdd] = useState(true)
 
   useEffect(()=>{
     axios.get('/device-types', {withCredentials: true})
     .then(({data})=> {
-      setDeviceTypes(data.deviceTypes)
-      setDeviceType(data.deviceTypes[0].id)
+      if(!data.message){
+        setDeviceTypes(data.deviceTypes)
+        setDeviceType(data.deviceTypes[0]?.id)
+        setAllowAdd(true)
+      }else {
+        allowAdd&& toast.error(data.message)
+        setAllowAdd(false)
+      }
     })
+
   }, [])
 
   useEffect(()=>{
     deviceTypes && setDeviceType(deviceTypes.find((type)=> type.id==currDevType))
-    console.log(deviceTypes, currDevType, deviceName)
   }, [currDevType])
 
   const addDeviceHandler = (e)=>{
     e.preventDefault()
     if(!(deviceName&&deviceType)){
       toast.error("برجاء ملء بيانات الجهاز")
-    }else 
-    axios.post('/devices', {name: deviceName, type: deviceType}, {withCredentials: true})
-    .then(({data})=>{
-      data.success? toast.success(data.message) : toast.error(data.message)
-      console.log(data)
-    })
-    setShowPopup(false)
+    }else{
+      axios.post('/devices', {name: deviceName, type: deviceType}, {withCredentials: true})
+      .then(({data})=>{
+        data.success? toast.success(data.message) : toast.error(data.message)
+        setShowPopup(false)
+      })
+    }
   }
 
   return (
-    <div className='pt-8 px-16 pb-10 bg-[#1b1b1f] border-2 border-white rounded-lg fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-[100]'>
-      <h1 className='text-3xl font-bold text-white text-center'>إضافة جهاز</h1>
-        <form className='flex flex-col gap-4 mt-6 text-right'>
+    <div dir='rtl' className={`fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-[102] flex items-center justify-center`}>
+      <div className="bg-white rounded-lg p-8">
+      <h2 className="text-lg font-semibold mb-4">اضافة جهاز</h2>
+        <form className='flex flex-col gap-4 text-right'>
           <div>
-            <label className='block text-white'>اسم الجهاز</label>
-            <input className="p-2 mt-2" onInput={(e)=>setDeviceName(e.target.value)} type="text" />    
+            <label className='block '>اسم الجهاز</label>
+            <input className="p-2 mt-2 border border-gray-300 px-3 py-2 w-64" onInput={(e)=>setDeviceName(e.target.value)} type="text" placeholder='مثلا: PS6 أو 6' />    
           </div>
           <div>
-            <label className='text-white block'>نوع الجهاز</label>
-            <select onInput={(e)=> setCurrDevType(e.target.value)} className='w-full mt-2 p-2'>
+            <label className=' block'>نوع الجهاز</label>
+            <select onInput={(e)=> setCurrDevType(e.target.value)} className='w-full mt-2 p-2 border border-gray-300'>
               {deviceTypes?.map((type, i)=><option key={i} value={type.id}>{type.name}</option>)}
             </select>  
           </div>
-          <button onClick={addDeviceHandler} className='bg-white hover:bg-indigo-200 duration-200 rounded p-3 mt-8 text-xl font-bold'>إضافة</button>
+          <button onClick={addDeviceHandler} className='px-4 py-2 bg-blue-500 hover:bg-indigo-400 duration-150 text-white rounded'>إضافة</button>
         </form>
+      </div>
     </div>
   )
 }

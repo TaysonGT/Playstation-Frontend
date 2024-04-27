@@ -14,7 +14,6 @@ const LoginRoute = ({children}) => {
             {children}
         </>
     }else{
-        console.log("You're Signed in")
         return <Navigate to="/"  replace state={{from: location}} />
     }
 }

@@ -37,7 +37,6 @@ const Stock = () => {
             setEditConfirm(true)
             data.message &&toast.error(data.message)
         })
-        .catch(err=>console.log(err))
     }
 
     const deleteHandler = (e)=>{
@@ -78,7 +77,7 @@ const Stock = () => {
                 إضافة منتج <span className='text-xl font-bold'>+</span> 
             </button>
         </div>
-        <table className='w-full text-black mt-6 select-none text-right tracking-wide shadow-small rounded-lg overflow-hidden'>
+        <table className='w-full text-black mt-6 select-none text-right tracking-wide shadow-2xl rounded-lg overflow-hidden'>
             <thead className='bg-gray-50 border-b-2 border-gray-200'>
                 <tr>
                 {tableHead.map((key, i)=> 
@@ -94,15 +93,15 @@ const Stock = () => {
                         <span className={'p-1.5 text-xs font-bold uppercase tracking-wider bg-opcaity-50 rounded-lg ' + (product.stock>20? "text-green-800 bg-green-200" : "text-red-800 bg-red-200")}>{product.stock}</span>
                     </td>
                     <td>{product.consumed}</td>
-                    <td>{product.price}</td>
-                    <div  className='absolute top-[50%] translate-y-[-50%] left-[2%] flex gap-4 items-center'>
+                    <td>{product.price}ج</td>
+                    {/* <div  className='absolute top-[50%] translate-y-[-50%] left-[2%] flex gap-4 items-center'>
                         <button onClick={editHandler}>
                             <img id={'btn-' + product.id} src={EditIcon} className='h-[30px] z-20 bg-indigo-950 hover:bg-indigo-400 duration-100 rounded p-1' alt="" />
                         </button>
                         <button onClick={deleteHandler}>
                             <img id={'btn-' + product.id} src={DeleteIcon} className='h-[30px] z-20 bg-red-300 hover:bg-red-700 duration-100 rounded p-1' alt="" />
                         </button>
-                    </div>
+                    </div> */}
                 </tr>
                 )}
             </tbody>

@@ -33,25 +33,21 @@ const Config = () => {
     e.preventDefault();
     axios.put(`/device-types/${currDevType.id}`, {singlePrice, multiPrice}, {withCredentials: true})
     .then(({data})=>{
-      data.success? toast.success(data.message) : toast.error(data.message)
+      data.success? toast.success(data.message) : toast.error(data.message);
       setRefresh(!refresh)
     })
-
   };
 
   useEffect(()=>{
     axios.get('/device-types', {withCredentials: true})
-    .then(({data})=> setCurrDevType(data.deviceTypes[0]))
-  },[])
-
-  useEffect(()=>{
-    axios.get('/device-types', {withCredentials:true})
     .then(({data})=> {
-      if(data.deviceTypes){
-        setDevTypes(data.deviceTypes)
-      }
+      if(data.message){
+        toast.error("برجاء إضافة نوع جهاز")
+      }else setCurrDevType(data.deviceTypes[0])
     })
-
+  },[refresh])
+  
+  useEffect(()=>{
     if(currTypeId){
       axios.get(`/device-types/${currTypeId}`, {withCredentials: true})
       .then(({data})=>{
@@ -61,16 +57,25 @@ const Config = () => {
 
     axios.get('/config', {withCredentials:true})
     .then(({data})=>{
-      setConfigs({name: data.nameConfig.value, phone: data.phoneConfig.value})
+      setConfigs({name: data.nameConfig?.value, phone: data.phoneConfig?.value})
     })
 
   }, [typePopup, refresh, currTypeId])
-
+  
+  
+  useEffect(()=>{
+    axios.get('/device-types', {withCredentials:true})
+    .then(({data})=> {
+        if(data.deviceTypes){
+          setDevTypes(data.deviceTypes)
+        }
+      })
+    }, [refresh])
 
   
   
   return (
-    <div dir='rtl' className="flex flex-col h-screen overflow-hidden pb-10 bg-[#0d47a1] pt-32 px-36 container font-alexandria">
+    <div dir='rtl' className="flex flex-col h-screen overflow-hidden pb-10 bg-[#0d47a1] pt-32 px-36 font-alexandria">
       {typePopup&& <>
         <DevTypePopup {...{setTypePopup, setRefresh, refresh}} />
         <div onClick={(e)=>{e.preventDefault(); setTypePopup(false)}} className='fixed left-0 top-0 w-screen h-screen bg-layout z-[99]'></div>
@@ -99,7 +104,7 @@ const Config = () => {
             <div className='flex gap-4 items-start mb-4'>
               <h1 className='font-bold text-xl' >الأسعار</h1>
               <select onInput={e=> setCurrTypeId(e.target.value)} className='select-input p-2 border-2 border-indigo-500 text-indigo-500 outline-none cursor-pointer'>
-                {devTypes?.map((devType)=> <option value={devType.id}>{devType.name}</option> )}
+                {devTypes?.map((devType, i)=> <option key={i} value={devType.id}>{devType.name}</option> )}
               </select>
               <button type='button' onClick={(e)=>{e.preventDefault();  setTypePopup(true)}} className='bg-[#1f1f1f] hover:bg-[#4d4d4d] duration-150 text-white p-2 px-4 rounded'>اضافة نوع جهاز</button>
             </div>

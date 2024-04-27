@@ -15,7 +15,7 @@ const OuterOrders = () => {
             .then(({data}) => {
                 setOrders(data.receipts)    
             })
-            .catch(err=> console.log(err))
+            .catch(err=> (err))
 
         if(message){
             success?toast.success(message) : toast.error(message)

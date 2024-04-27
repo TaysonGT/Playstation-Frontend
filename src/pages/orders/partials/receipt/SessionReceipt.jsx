@@ -2,14 +2,13 @@ import React, { useRef } from 'react'
 import toast from 'react-hot-toast'
 import { useReactToPrint } from 'react-to-print'
 
-const Invoice = ({receiptData, setShowInvoice, configs}) => {
+const SessionReceipt = ({sessionReceipt, setShowInvoice, configs}) => {
     const invoiceRef = useRef()
     const handler = useReactToPrint({
         content: ()=> invoiceRef.current,
         documentTitle: "Invoice",
         onAfterPrint: ()=> toast.success("طباعة ناجحة")
     })
-    console.log(configs)
 
   return (
     <div className='fixed z-[100] left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] bg-[#eee] p-4 rounded-lg'>
@@ -27,19 +26,29 @@ const Invoice = ({receiptData, setShowInvoice, configs}) => {
                 <p>{configs?.phone}</p>
                 </div>
                 <div>
-                <p className="text-sm">التاريخ: {new Date(receiptData.time_ordered).toLocaleDateString()}</p>
-                <p className="text-sm">الوقت: {new Date(receiptData.time_ordered).toLocaleTimeString()}</p>
+                <p className="text-sm">التاريخ: {new Date(sessionReceipt?.time_ordered).toLocaleDateString()}</p>
+                <p className="text-sm">الوقت: {new Date(sessionReceipt?.time_ordered).toLocaleTimeString()}</p>
                 </div>
             </div>
             <div className="flex gap-6 mb-4">
                 <div>
                 <h1 className="text-sm font-bold">الكاشير</h1>
-                <p>{receiptData.cashier}</p>
+                <p>{sessionReceipt?.cashier}</p>
                 </div>
             </div>
             <div className="mb-4">
                 <h2 className="text-lg font-bold mb-2">الطلبات</h2>
-                {JSON.parse(receiptData.orders).map((order, index) => (
+                {sessionReceipt&& JSON.parse(sessionReceipt.orders).map((order, index) => (
+                <div className="flex justify-between mb-2">
+                    <span className='flex-[.45]'>{order.product_id}</span>
+                    <span className='flex-[.33]'>{order.quantity}</span>
+                    <span>{order.order_cost}ج</span>
+                </div>
+                ))}
+            </div>
+            <div className="mb-4">
+                <h2 className="text-lg font-bold mb-2">وقت اللعب</h2>
+                {sessionReceipt&& JSON.parse(sessionReceipt.orders).map((order, index) => (
                 <div className="flex justify-between mb-2">
                     <span className='flex-[.45]'>{order.product_id}</span>
                     <span className='flex-[.33]'>{order.quantity}</span>
@@ -49,7 +58,7 @@ const Invoice = ({receiptData, setShowInvoice, configs}) => {
             </div>
             <div className="flex justify-between pt-2 border-t-2 border-gray-300">
                 <span className="font-bold">الاجمالي:</span>
-                <span>{receiptData.total}ج</span>
+                <span>{sessionReceipt?.total}ج</span>
             </div>
         </div>
         </div>
@@ -57,7 +66,7 @@ const Invoice = ({receiptData, setShowInvoice, configs}) => {
   )
 }
 
-export default Invoice
+export default SessionReceipt
 
 
 
