@@ -32,7 +32,7 @@ const EditConfirm = ({editProduct, setEditProduct, setEditConfirm}) => {
     }
 
     useEffect(()=>{
-        axios.get(`/products/${editProduct.id}`)
+        axios.get(`/products/${editProduct.id}`, {withCredentials: true})
         .then(({data})=>setProduct(data.product))
         .catch(err=>err)
     }, [])
