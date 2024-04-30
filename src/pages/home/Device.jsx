@@ -5,23 +5,23 @@ import Notification from '../../assets/notification.mp3'
 import DeviceDetails from './DeviceDetails'
 
 
-const Device = ({device, sessions, trigger, setTrigger, deviceTypes, devices}) => {
+const Device = ({device, sessions, trigger, setTrigger, deviceTypes, devices, setUnavailableDevices, refresh, setRefresh}) => {
     const [timerState, setTimerState] = useState(false)
     const [clock, setClock] = useState(null)
     const [isInputDisabled, setIsInputDisabled] = useState(true)
     // const [notification, setNotification] = useState(true)
     // const audio = useRef(new Audio(Notification))
     const [showDetails, setShowDetails] = useState(false)
+    
 
     const [timeType, setTimeType] = useState()
     const [playType, setPlayType] = useState()
     const [minutes, setMinutes] = useState(0)
     const [hours, setHours] = useState(0)
-
+    
     const [currentSession, setCurrentSession] = useState()
     const [currentDeviceType, setCurrentDeviceType] = useState()
-
-
+    
     useEffect(()=>{
         if(!timeType){
             setTimeType("open")
@@ -30,6 +30,7 @@ const Device = ({device, sessions, trigger, setTrigger, deviceTypes, devices}) =
             setPlayType("single")
         }
     }, [])
+    
     
     
     const classnames = {
@@ -45,8 +46,8 @@ const Device = ({device, sessions, trigger, setTrigger, deviceTypes, devices}) =
         let currHours = parseInt(hours)
         let currMinutes = parseInt(minutes)
         let date = new Date()
-        setHours(date.getHours() + currHours)
-        setMinutes(date.getMinutes() + currMinutes -1)
+        date.setHours(date.getHours() + currHours)
+        date.setMinutes(date.getMinutes() + currMinutes -1)
         axios.post(`/sessions/${e.target.id}`, {play_type: playType, time_type: timeType, end_time: date}, {withCredentials: true})
         .then(({data})=>{
             if(data.message){
@@ -80,10 +81,11 @@ const Device = ({device, sessions, trigger, setTrigger, deviceTypes, devices}) =
         setClock(timeString)
         
         time ++;
+        
     }
     
     const decrement = (e)=>{
-        let time = Math.floor(( new Date(currentSession.end_at).getTime() - Date.now()) /1000)
+      let time =  Math.floor((new Date(currentSession.end_at).getTime() - new Date().getTime()) /1000)
         if (time>0) {
             const hours = Math.floor(time / (60*60))
             const minutes = Math.floor(time/(60)) % 60
@@ -104,21 +106,27 @@ const Device = ({device, sessions, trigger, setTrigger, deviceTypes, devices}) =
     }
     
     
-    useEffect(()=>{ 
-        if(!timerState && !clock && currentSession){
-            let run = null;
-            
-            if(currentSession.time_type == "open") {
-                run = setInterval(increment, 1000)
-                increment()
-            }else run = setInterval(decrement ,1000)
-            // if(notification) sound()
-            
-            setTimerState(true)
+    useEffect(()=>{
+      let run=null
+      if(!timerState && currentSession){
+        if(currentSession.time_type == "open") {
+            increment()
+            run = setInterval(increment, 1000)
+        }else {
+          run = setInterval(decrement ,1000)
         }
-        if(sessions) setCurrentSession(sessions.filter((session)=> session.device_id == device.id)[0])
-        if(deviceTypes) setCurrentDeviceType(deviceTypes.filter((type)=> type.id == device.type)[0])
-    }, [currentSession, sessions, deviceTypes, showDetails])
+        
+        setTimerState(true)
+      }
+    },[currentSession])
+    
+    useEffect(()=>{
+      sessions&& setCurrentSession(sessions.filter((session)=> session.device_id == device.id)[0])
+    },[sessions])
+    
+    useEffect(()=>{
+      deviceTypes&& setCurrentDeviceType(deviceTypes.filter((type)=> type.id == device.type)[0])
+    },[deviceTypes])
     
   return (
     <div className='bg-[#ffffff] w-[250px] border-2 border-[#e0e0e0] flex flex-col items-center rounded p-5 text-[#333] shadow-lg duration-[.3s] h-[320px]'>
@@ -128,7 +136,7 @@ const Device = ({device, sessions, trigger, setTrigger, deviceTypes, devices}) =
         </div>
         {showDetails&&<>
             <div onClick={()=>setShowDetails(false)} className='fixed left-0 top-0 w-screen h-screen bg-layout z-[100]'></div>
-            <DeviceDetails {...{device, setShowDetails, sessions, clock, setTrigger, trigger, devices, currentDeviceType}} />
+            <DeviceDetails {...{device, setShowDetails, currentSession, clock, setTrigger, trigger, devices, currentDeviceType, refresh, setRefresh, setUnavailableDevices}} />
         </>
         }
         { !device.status? 

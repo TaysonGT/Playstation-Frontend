@@ -11,11 +11,11 @@ const OuterReceipts = ({ receipts,setShowPopup }) => {
 
   useEffect(()=>{
       receiptData&&setShowInvoice(true)
-  }, [configs])
+  }, [configs, receiptData])
 
   const getReceiptHandler = (e)=>{
       let id = e.target.id;
-      axios.get(`/receipts/${id}`, {withCredentials: true})
+      axios.get(`/receipts/outer/${id}`, {withCredentials: true})
       .then(({data})=> setReceiptData(data.receipt))
       
       axios.get('/config', {withCredentials: true})

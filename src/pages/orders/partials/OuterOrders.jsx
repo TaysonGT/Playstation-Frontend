@@ -11,7 +11,7 @@ const OuterOrders = () => {
     const [success, setSuccess] = useState()
     
     useEffect(()=>{
-        axios.get('/receipts', {withCredentials:true})
+        axios.get('/receipts/outer', {withCredentials:true})
             .then(({data}) => {
                 setOrders(data.receipts)    
             })

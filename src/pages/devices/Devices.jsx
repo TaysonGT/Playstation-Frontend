@@ -19,7 +19,7 @@ const Devices = () => {
     useEffect(()=>{
         axios.get('/devices', {withCredentials: true})
             .then(({data})=> {
-                setDevices(data.devices)
+                setDevices(data.devices.sort((a,b) => a.name - b.name))
             })
         
         axios.get('/device-types', {withCredentials: true})

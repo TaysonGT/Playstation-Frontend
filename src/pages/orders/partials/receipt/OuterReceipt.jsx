@@ -2,7 +2,7 @@ import React, { useRef } from 'react'
 import toast from 'react-hot-toast'
 import { useReactToPrint } from 'react-to-print'
 
-const OuterReceipt = ({receiptData, setShowInvoice, configs}) => {
+const OuterReceipt = ({receiptData, setShowInvoice, configs, products}) => {
     const invoiceRef = useRef()
     const handler = useReactToPrint({
         content: ()=> invoiceRef.current,
@@ -40,7 +40,7 @@ const OuterReceipt = ({receiptData, setShowInvoice, configs}) => {
                 <h2 className="text-lg font-bold mb-2">الطلبات</h2>
                 {JSON.parse(receiptData.orders)?.map((order, index) => (
                 <div className="flex justify-between mb-2">
-                    <span className='flex-[.45]'>{order.product_id}</span>
+                    <span className='flex-[.45]'>{order.product_name}</span>
                     <span className='flex-[.33]'>{order.quantity}</span>
                     <span>{order.order_cost}ج</span>
                 </div>

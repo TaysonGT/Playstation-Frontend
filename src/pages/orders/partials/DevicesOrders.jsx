@@ -6,22 +6,26 @@ import DeviceReceiptTable from './tables/DeviceReceiptTable'
 
 
 const DevicesOrders = () => {
-    
-    const [orders, setOrders] = useState([]) 
+    const [receipts, setReceipts] = useState([])
+    const [products, setProducts] = useState([]) 
     const [showPopup, setShowPopup] = useState(false)
     
 
     useEffect(()=>{
-    axios.get('/orders', {withCredentials: true})
-        .then(({data})=> {
-            setOrders(data.orders)
-        })
+    axios.get('/products', {withCredentials: true})
+      .then(({data})=> {
+          setProducts(data.products)
+      })
+    axios.get('/receipts/session', {withCredentials:true})
+    .then(({data})=> {
+          setReceipts(data.timeReceipts)
+      })
     }, [])
 
   return (<>
     <div className='min-h-screen bg-[#0d47a1] pt-32 pb-10 px-36'>
         <h1 className="text-3xl font-bold mb-4 text-white">فواتير الأجهزة</h1>
-        <DeviceReceiptTable {... {orders, setShowPopup}} />
+        <DeviceReceiptTable {... {receipts, setShowPopup, products}} />
     </div>
       </>
     )

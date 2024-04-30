@@ -132,7 +132,7 @@ const Revenue = () => {
             <h2 className="text-lg font-semibold mb-2">الايراد الاسبوعي</h2>
             <div className='flex gap-4 items-end'>
               <p className="text-2xl font-bold">{finances?.weeklyFinances}<span className='font-noto'>ج</span></p>
-              {isFinite(weeklyGrowthLoss) && !isNaN(weeklyGrowthLoss)  > 0 &&
+              {isFinite(weeklyGrowthLoss) && !isNaN(weeklyGrowthLoss) &&
                 <p className={`text-lg font-bold ${weeklyGrowthLossSign ? 'text-green-500' : 'text-red-500'}`}>{weeklyGrowthLoss}% {weeklyGrowthLossSign? "↑" : "↓"}</p>
               }
             </div>
