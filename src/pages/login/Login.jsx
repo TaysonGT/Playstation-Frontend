@@ -56,7 +56,7 @@ const Login = () => {
       success? toast.success(message) : toast.error(message)
     }
     setMessage(null) 
-  }, [message])
+  }, [message, success])
 
   return (
     <div className='min-h-screen w-full bg-indigo-200 bg-cover bg-center flex justify-center items-center text-white font-medium'>

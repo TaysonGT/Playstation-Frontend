@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { Navigate, Outlet, Route } from 'react-router-dom';
+import React, { useState } from 'react'
+import { Navigate, Outlet } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import Navbar from '../components/Navbar';
 

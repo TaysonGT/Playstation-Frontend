@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import OrderPopup from '../partials/popup/OrderPopup'
 import { toast } from 'react-hot-toast';
@@ -21,7 +21,7 @@ const OuterOrders = () => {
             success?toast.success(message) : toast.error(message)
             setMessage(null)
         }
-    },[message, showPopup])
+    },[message, showPopup, success])
 
 
   return (

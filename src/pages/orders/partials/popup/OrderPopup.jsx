@@ -16,7 +16,7 @@ const OrderPopup = ({setMessage, setSuccess, setShowPopup}) => {
   let orders = []
   
   const inputHandler = (e)=>{
-    setInputs([... document.querySelectorAll('.input')])
+    setInputs([...document.querySelectorAll('.input')])
     setOrderData([])
     if(inputs.length>0){
       inputs?.map((item)=> item.value>0&&orders.push({product_id : item.id, quantity: parseInt(item.value)}))
@@ -53,7 +53,7 @@ const OrderPopup = ({setMessage, setSuccess, setShowPopup}) => {
           </thead>
           <tbody className='text-black'>
         {products?.map((product, i)=>
-          <tr key={i} className={'border-b text-md font-medium border-[#ddd] ' + (i%2==0? 'bg-[#f3f3f3] ' : 'bg-[#e3e3e3] ')+ (i==products.length-1&&' border-b-[4px] border-[#009829]')}>
+          <tr key={i} className={'border-b text-md font-medium border-[#ddd] ' + (i%2===0? 'bg-[#f3f3f3] ' : 'bg-[#e3e3e3] ')+ (i===products.length-1&&' border-b-[4px] border-[#009829]')}>
             <td className='px-[15px] py-[12px]'>{product.name}</td>
             <td className='px-[15px] py-[12px] text-white'><input type="number" id={product.name} onInput={(e)=>inputHandler(e)} className="w-[50px] text-center p-1 input border-y-2 border-[#009829] bg-slate-700 text-wh ite" defaultValue={0} /></td>
             <td className='px-[15px] py-[12px]'>{product.price}</td>

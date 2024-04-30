@@ -3,7 +3,6 @@ import DeleteIcon from '../../assets/delete.png'
 import EditIcon from '../../assets/edit.png'
 import axios from 'axios'
 import AddDevicePopup from './AddDevicePopup'
-import toast from 'react-hot-toast'
 import DeleteConfirm from './DeleteConfirm';
 
 
@@ -53,7 +52,7 @@ const Devices = () => {
         }
         {deleteConfirm&&<>
             <div onClick={()=>setDeleteConfirm(false)} className='fixed left-0 top-0 w-screen h-screen bg-layout z-[100]' ></div>
-            <DeleteConfirm {...{deleteId, setDeleteId, setDeleteConfirm, refresh, setRefresh}} />
+            <DeleteConfirm {...{deleteId, setDeleteId,deleteConfirm, setDeleteConfirm, refresh, setRefresh}} />
         </>}
     <div className='pt-32 px-36 bg-[#0d47a1] min-h-screen' dir='rtl'>
         <div className='w-full flex justify-between items-start'>
@@ -72,10 +71,10 @@ const Devices = () => {
             </thead>
             <tbody>
                 {devices?.map((device, i)=> 
-                <tr key={i} className={ 'relative ' + (i%2 != 0 ? 'bg-gray-50': 'bg-white')}>
+                <tr key={i} className={ 'relative ' + (i%2 !== 0 ? 'bg-gray-50': 'bg-white')}>
                     <td className='pr-7 font-bold text-blue-500 p-4'>{device.name}</td>
                     <td>
-                        <p className=''>{deviceTypes?.filter((type)=> type.id == device.type)[0]?.name}</p>
+                        <p className=''>{deviceTypes?.filter((type)=> type.id === device.type)[0]?.name}</p>
                     </td>
                     <td>
                         <span className={'p-1.5 text-xs font-bold uppercase tracking-wider bg-opcaity-50 rounded-lg ' + (!device.status? "text-green-800 bg-green-200" : "text-red-800 bg-red-200")}>{!device.status? "متاح" : "مشغول"}</span>

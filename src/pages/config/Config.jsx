@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DevTypePopup from './DevTypePopup';
 import toast from 'react-hot-toast';
 
@@ -62,7 +62,7 @@ const Config = () => {
       setConfigs({name: data.nameConfig?.value, phone: data.phoneConfig?.value})
     })
 
-  }, [typePopup, refresh, currTypeId])
+  }, [typePopup, refresh, currTypeId, currDevType])
   
   
   useEffect(()=>{
@@ -94,7 +94,7 @@ const Config = () => {
               <label className="block font-semibold mb-1">رقم التليفون:</label>
               <input type="tel" placeholder={configs?.phone} onInput={(e)=> setPhone(e.target.value)}  onKeyDown={(e) => {
                   const key = e.key;
-                  const isValidInput = /^[0-9]*$/.test(key) || key ==="Backspace" || key == "ArrowRight" || key == "ArrowLeft";
+                  const isValidInput = /^[0-9]*$/.test(key) || key ==="Backspace" || key === "ArrowRight" || key === "ArrowLeft";
                   if (!isValidInput) {
                     e.preventDefault();
                   }

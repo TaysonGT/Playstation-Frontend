@@ -1,15 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useState } from 'react'
 import OuterOrders from './partials/OuterOrders'
 import DevicesOrders from './partials/DevicesOrders'
-import DownArrow from'../../assets/down-arrow.png'
 
 const Orders = () => {
 
     const [selectOrder, setSelectOrder] = useState(false)
-
-    const selectOrderHandler = (e)=>{
-        e.target.value==1? setSelectOrder(false) : setSelectOrder(true)
-    }
 
   return (
     <div className='bg-white min-h-screen' dir='rtl'>

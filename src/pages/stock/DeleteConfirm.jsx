@@ -2,7 +2,7 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 
-const DeleteConfirm = ({setDeleteConfirm, deleteId, setDeleteId}) => {
+const DeleteConfirm = ({setDeleteConfirm, deleteId, setDeleteId, deleteConfirm, refresh, setRefresh}) => {
     const [done, setDone] = useState()
     const deleteHandler = ()=>{
         axios.delete(`/products/${deleteId.slice(4)}`, {withCredentials: true})
@@ -20,7 +20,7 @@ const DeleteConfirm = ({setDeleteConfirm, deleteId, setDeleteId}) => {
             setDeleteConfirm(false)
         }
         setDone(false)      
-    },[done])
+    },[done, setDeleteConfirm, setDeleteId, deleteConfirm, refresh, setRefresh])
   
     return (
     <div className='fixed left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] bg-white shadow-large flex-col flex z-[102] select-none px-6 py-4 gap-6'>

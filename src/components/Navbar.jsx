@@ -38,7 +38,7 @@ const Navbar = ({token}) => {
   useEffect(()=>{
       setCurrentLocation(location)
       !Cookies.get('access_token') && nav('/auth/login')
-  },[location.pathname])
+  },[location, nav])
 
 
   return ( 
@@ -51,7 +51,7 @@ const Navbar = ({token}) => {
         
         <ul className=' lg:gap-12 sm:gap-6 hidden justify-between sm:flex lg:absolute lg:left-[50%] lg:translate-x-[-50%]'>
            {links.map(({link, path, image}, i)=>
-            <li key={i} className={'text-white flex flex-col items-center cursor-pointer nav-link ' + ("/" +currentLocation.pathname.split('/')[1] == path && "active")}>
+            <li key={i} className={'text-white flex flex-col items-center cursor-pointer nav-link ' + ("/" +currentLocation.pathname.split('/')[1] === path && "active")}>
               <Link to={path} className='flex flex-col items-center' >
               <img src={image} className=' h-[30px]' alt="" /> 
               <p className=' font-semibold duration-150 mt-1'>{link}</p>

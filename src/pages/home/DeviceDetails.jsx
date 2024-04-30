@@ -19,19 +19,19 @@ const DeviceDetails = ({setShowDetails, currentSession ,device, currentDeviceTyp
       let timeCost = 0;
 
       orders?.map((order)=>{
-        ordersCost += order.cost;
+        return ordersCost += order.cost;
       })
       
       timeOrders?.map((order)=>{
-        timeCost += order.cost;
+        return timeCost += order.cost;
       })
       
       let time = null;
       let currentTimeCost = 0
-      if(currentSession.time_type == "time" && new Date(currentSession.end_at) < new Date() ) {
+      if(currentSession.time_type === "time" && new Date(currentSession.end_at) < new Date() ) {
         time = (new Date(currentSession.end_at).getTime() - new Date(currentSession.start_at).getTime()) / (1000 * 60 * 60);
       } else time = (Date.now() - new Date(currentSession.start_at).getTime()) / (1000 * 60 * 60)
-      currentSession.play_type=="multi" ? currentTimeCost = Math.ceil(time * currentDeviceType.multi_price )
+      currentSession.play_type==="multi" ? currentTimeCost = Math.ceil(time * currentDeviceType.multi_price )
       : currentTimeCost = Math.ceil(time * currentDeviceType.single_price) 
       
       timeCost += currentTimeCost;
@@ -43,7 +43,7 @@ const DeviceDetails = ({setShowDetails, currentSession ,device, currentDeviceTyp
       if(currentSession&&orders&&timeOrders) {
         setTotal(getTotal()) 
       }
-    }, [orders, timeOrders])
+    }, [orders, timeOrders, currentSession])
     
     useEffect(()=>{
       axios.get(`/products`, {withCredentials:true})
@@ -55,9 +55,9 @@ const DeviceDetails = ({setShowDetails, currentSession ,device, currentDeviceTyp
         setTimeOrders(data.timeOrders)
       })
 
-      devices&& setFreeDevices(devices.filter((dev, i )=> dev.status == false))
+      devices&& setFreeDevices(devices.filter((dev, i )=> dev.status === false))
 
-    },[currentSession])
+    },[currentSession, devices])
     
     useEffect(()=>{
       if(timeOrders){
@@ -140,8 +140,8 @@ const DeviceDetails = ({setShowDetails, currentSession ,device, currentDeviceTyp
             <p className="text-xl font-bold mt-4 text-red-600">{total?.currentTimeCost}<span className='tracking-widest font-noto my-2'>ج</span></p>
 
             <div className='flex justify-center gap-6 mt-2'>
-              <div className='text-md font-medium border-b-4 pb-1 border-gray-600'>{currentSession?.play_type == "multi"? "ملتي" : "سنجل" }</div>
-              <div className='text-md font-medium border-b-4 pb-1 border-gray-600'>{currentSession?.time_type == "open"? "مفتوح" : "وقت"}</div>
+              <div className='text-md font-medium border-b-4 pb-1 border-gray-600'>{currentSession?.play_type === "multi"? "ملتي" : "سنجل" }</div>
+              <div className='text-md font-medium border-b-4 pb-1 border-gray-600'>{currentSession?.time_type === "open"? "مفتوح" : "وقت"}</div>
             </div>
 
           </div>

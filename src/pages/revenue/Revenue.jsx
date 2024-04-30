@@ -1,4 +1,3 @@
-import { data } from 'autoprefixer';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 
@@ -65,9 +64,9 @@ const Revenue = () => {
       let monthlyCost = 0;
       let lastMonthCost = 0;
       orders?.map((order)=>{
-        let monthDiff = new Date(order.time_ordered).getMonth() == new Date().getMonth(); 
-        let lastMonthDiff = new Date(order.time_ordered).getMonth() == new Date().getMonth() -1 ; 
-        let yearDiff = new Date(order.time_ordered).getFullYear() == new Date().getFullYear(); 
+        let monthDiff = new Date(order.time_ordered).getMonth() === new Date().getMonth(); 
+        let lastMonthDiff = new Date(order.time_ordered).getMonth() === new Date().getMonth() -1 ; 
+        let yearDiff = new Date(order.time_ordered).getFullYear() === new Date().getFullYear(); 
 
         if(monthDiff && yearDiff){
           monthlyCost += order.cost;
@@ -181,11 +180,11 @@ const Revenue = () => {
               {currentFinances?.map((finance, i ) =>
                 <div className="bg-white shadow-lg w-[22%] rounded-lg h-44 overflow-hidden flex flex-col justify-between">
                   <div className="p-4 h-4/5">
-                    <h3 className="text-lg font-semibold">{finance.type=="Device" || finance.type =="devices" ? "جهاز" : finance.type == "outerReceipt" ? "فاتورة خارجية" : "خصم"}</h3>
+                    <h3 className="text-lg font-semibold">{finance.type==="Device" || finance.type ==="devices" ? "جهاز" : finance.type === "outerReceipt" ? "فاتورة خارجية" : "خصم"}</h3>
                     <p className="text-gray-600 text-sm mt-2 ">{finance.description}</p>
                   </div>
                   <div className="bg-gray-100 h-1/5">
-                    <p className={"font-bold text-md " + (finance.type == "deduction"? "text-red-600" : "text-green-500")}>{finance.finances}ج</p>
+                    <p className={"font-bold text-md " + (finance.type === "deduction"? "text-red-600" : "text-green-500")}>{finance.finances}ج</p>
                   </div>
                 </div>
               )}

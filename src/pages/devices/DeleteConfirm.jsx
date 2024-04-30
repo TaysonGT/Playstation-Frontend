@@ -21,7 +21,7 @@ const DeleteConfirm = ({setDeleteConfirm, deleteId, setDeleteId, refresh, setRef
             setRefresh(!refresh)
         }
         setDone(false)      
-    },[done])
+    },[done, refresh, setRefresh, setDeleteConfirm, setDeleteId])
   
     return (
     <div className='fixed left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] bg-white shadow-large flex-col flex z-[102] select-none px-6 py-4 gap-6'>

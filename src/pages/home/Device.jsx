@@ -1,7 +1,6 @@
 import axios from 'axios'
-import React, {useEffect, useRef, useState } from 'react'
+import React, {useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
-import Notification from '../../assets/notification.mp3'
 import DeviceDetails from './DeviceDetails'
 
 
@@ -9,8 +8,6 @@ const Device = ({device, sessions, trigger, setTrigger, deviceTypes, devices, se
     const [timerState, setTimerState] = useState(false)
     const [clock, setClock] = useState(null)
     const [isInputDisabled, setIsInputDisabled] = useState(true)
-    // const [notification, setNotification] = useState(true)
-    // const audio = useRef(new Audio(Notification))
     const [showDetails, setShowDetails] = useState(false)
     
 
@@ -29,7 +26,7 @@ const Device = ({device, sessions, trigger, setTrigger, deviceTypes, devices, se
         if(!playType){
             setPlayType("single")
         }
-    }, [])
+    }, [playType, timeType])
     
     
     
@@ -58,7 +55,7 @@ const Device = ({device, sessions, trigger, setTrigger, deviceTypes, devices, se
     }
     
     const timeOpenHandler = (e)=>{
-        if(e.target.value == "time") {
+        if(e.target.value === "time") {
             setTimeType("time")
             setIsInputDisabled(false) 
         }else {
@@ -109,7 +106,7 @@ const Device = ({device, sessions, trigger, setTrigger, deviceTypes, devices, se
     useEffect(()=>{
       let run=null
       if(!timerState && currentSession){
-        if(currentSession.time_type == "open") {
+        if(currentSession.time_type === "open") {
             increment()
             run = setInterval(increment, 1000)
         }else {
@@ -117,16 +114,17 @@ const Device = ({device, sessions, trigger, setTrigger, deviceTypes, devices, se
         }
         
         setTimerState(true)
+        return ()=> clearInterval(run)
       }
-    },[currentSession])
+    },[currentSession, timerState])
     
     useEffect(()=>{
-      sessions&& setCurrentSession(sessions.filter((session)=> session.device_id == device.id)[0])
-    },[sessions])
+      sessions&& setCurrentSession(sessions.filter((session)=> session.device_id === device.id)[0])
+    },[sessions, device.id])
     
     useEffect(()=>{
-      deviceTypes&& setCurrentDeviceType(deviceTypes.filter((type)=> type.id == device.type)[0])
-    },[deviceTypes])
+      deviceTypes&& setCurrentDeviceType(deviceTypes.filter((type)=> type.id === device.type)[0])
+    },[deviceTypes, device.type])
     
   return (
     <div className='bg-[#ffffff] w-[250px] border-2 border-[#e0e0e0] flex flex-col items-center rounded p-5 text-[#333] shadow-lg duration-[.3s] h-[320px]'>
@@ -171,9 +169,9 @@ const Device = ({device, sessions, trigger, setTrigger, deviceTypes, devices, se
             <button onClick={startDeviceHandler} id={device.id} className=' bg-[#37474f] text-white p-3 text-md rounded-md hover:bg-[#4f6874]  duration-150 active:shadow-hardInner mt-auto '>بدء</button>
         </form> :
         <div className='mt-5 flex flex-col items-center gap-3 h-full w-full'>
-            <div className={'w-[90%] p-4 text-center text-3xl font-bold bg-[#212121] text-white bg-center bg-cover border-emerald-50 border rounded  ' + (currentSession?.time_type == "open"? 'text-red-500' :  'text-green-500')}>{clock? clock : "00:00:00"}</div>
+            <div className={'w-[90%] p-4 text-center text-3xl font-bold bg-[#212121] text-white bg-center bg-cover border-emerald-50 border rounded  ' + (currentSession?.time_type === "open"? 'text-red-500' :  'text-green-500')}>{clock? clock : "00:00:00"}</div>
             <div className='flex justify-between gap-4 p-2 '>
-                <p className={'text-sm font-medium p-3 py-2 border-white border-b-[5px] rounded-sm w-full text-white ' + (currentSession?.time_type=="open" ?  'bg-red-500': 'bg-[#11bb66]')} >{currentSession?.time_type}</p>
+                <p className={'text-sm font-medium p-3 py-2 border-white border-b-[5px] rounded-sm w-full text-white ' + (currentSession?.time_type==="open" ?  'bg-red-500': 'bg-[#11bb66]')} >{currentSession?.time_type}</p>
                 <p className='text-sm font-medium p-3 py-2 bg-white  border-[#568968] border-b-[5px] rounded-sm w-full text-[#568968]'>{currentSession?.play_type}</p>
             </div>
             <button onClick={()=> setShowDetails(true)} id={device.id} className=' bg-[#00b4d8]  p-3 text-md rounded-md text-white hover:bg-[#90e0ef] duration-200 active:shadow-hardInner mt-auto w-full text-center '>تفاصيل</button>

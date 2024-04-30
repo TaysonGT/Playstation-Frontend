@@ -1,7 +1,6 @@
 import axios from 'axios'
 import Device from './Device'
 import { useState, useEffect } from 'react'
-import DeviceDetails from './DeviceDetails'
 
 
 const Home = () => {
@@ -40,11 +39,11 @@ const Home = () => {
           setRefresh(false)
         }
         setTimeout(()=>{
-          setAvailableDevices(devices.filter((device)=> device.status == false ))
-          setUnavailableDevices(devices.filter((device)=> device.status == true))
+          setAvailableDevices(devices.filter((device)=> device.status === false ))
+          setUnavailableDevices(devices.filter((device)=> device.status === true))
         },500)
       }
-    },[devices, sessions])
+    },[devices, sessions, refresh])
 
 
   return (

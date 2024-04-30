@@ -7,7 +7,6 @@ const EditConfirm = ({editProduct, setEditProduct, setEditConfirm}) => {
     const [prodName, setProdName] = useState() 
     const [quantity, setQuantity] = useState()
     const [price, setPrice] = useState()
-    const [product, setProduct] = useState({})
 
     const editHandler = (e)=>{
         e.preventDefault()
@@ -22,27 +21,21 @@ const EditConfirm = ({editProduct, setEditProduct, setEditConfirm}) => {
     }
 
     const inputHandler = (e)=>{
-        if(e.target.name=="name"){
+        if(e.target.name==="name"){
             setProdName(e.target.value)
-        }else if (e.target.name == "quantity"){
+        }else if (e.target.name === "quantity"){
             setQuantity(e.target.value)
         }else{
             setPrice(e.target.value)
         }
     }
-
-    useEffect(()=>{
-        axios.get(`/products/${editProduct.id}`, {withCredentials: true})
-        .then(({data})=>setProduct(data.product))
-        .catch(err=>err)
-    }, [])
-
+    
     useEffect(()=>{
         if(done){
             setEditConfirm(false)
             setEditProduct(null)
         }
-    },[done])
+    },[done, editProduct.id, setEditProduct, setEditConfirm])
 
   return (
     <div className='pt-8 px-16 pb-10 bg-white border-2 border-white rounded-lg fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-[120]'>

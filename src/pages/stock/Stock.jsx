@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import DeleteIcon from '../../assets/delete.png'
 import EditIcon from '../../assets/edit.png'
 import axios from 'axios'
@@ -87,21 +87,21 @@ const Stock = () => {
             </thead>
             <tbody>
                 {products?.map((product, i)=> 
-                <tr key={i} className={ 'relative ' + (i%2 != 0 ? 'bg-gray-50': 'bg-white')}>
+                <tr key={i} className={ 'relative ' + (i%2 !== 0 ? 'bg-gray-50': 'bg-white')}>
                     <td className='pr-7 font-bold text-blue-500 p-4'>{product.name}</td>
                     <td>
                         <span className={'p-1.5 text-xs font-bold uppercase tracking-wider bg-opcaity-50 rounded-lg ' + (product.stock>20? "text-green-800 bg-green-200" : "text-red-800 bg-red-200")}>{product.stock}</span>
                     </td>
                     <td>{product.consumed}</td>
                     <td>{product.price}ج</td>
-                    {/* <div  className='absolute top-[50%] translate-y-[-50%] left-[2%] flex gap-4 items-center'>
+                    <div  className='absolute top-[50%] translate-y-[-50%] left-[2%] flex gap-4 items-center'>
                         <button onClick={editHandler}>
                             <img id={'btn-' + product.id} src={EditIcon} className='h-[30px] z-20 bg-indigo-950 hover:bg-indigo-400 duration-100 rounded p-1' alt="" />
                         </button>
                         <button onClick={deleteHandler}>
                             <img id={'btn-' + product.id} src={DeleteIcon} className='h-[30px] z-20 bg-red-300 hover:bg-red-700 duration-100 rounded p-1' alt="" />
                         </button>
-                    </div> */}
+                    </div>
                 </tr>
                 )}
             </tbody>
