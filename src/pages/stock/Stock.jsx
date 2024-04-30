@@ -70,7 +70,7 @@ const Stock = () => {
     </>}
 
 
-    <div className='pt-32 pb-10 px-36 bg-[#0d47a1] min-h-screen' dir='rtl'>
+    <div className='pt-32 pb-10 px-10 lg:px-36 bg-[#0d47a1] min-h-screen' dir='rtl'>
         <div className='w-full flex justify-between items-start '>
             <h1 className='text-white text-3xl font-bold'>المخزن</h1>
             <button onClick={()=> setShowPopup(true)} className='mt-4 px-4 p-2 shadow-sm shadow-black rounded text-md text-white bg-blue-700 hover:bg-blue-500 duration-100 flex gap-3 items-center'>

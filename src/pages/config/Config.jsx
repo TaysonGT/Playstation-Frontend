@@ -77,13 +77,13 @@ const Config = () => {
   
   
   return (
-    <div dir='rtl' className="flex flex-col h-screen overflow-hidden pb-10 bg-[#0d47a1] pt-32 px-36 font-alexandria">
+    <div dir='rtl' className="flex flex-col h-screen overflow-hidden pb-10 bg-[#0d47a1] pt-32 lg:px-36 px-10 font-alexandria">
       {typePopup&& <>
         <DevTypePopup {...{setTypePopup, setRefresh, refresh}} />
         <div onClick={(e)=>{e.preventDefault(); setTypePopup(false)}} className='fixed left-0 top-0 w-screen h-screen bg-layout z-[99]'></div>
       </>}
         <h1 className="text-white text-3xl font-bold mb-4">الاعدادات</h1>
-      <div className='p-10 flex-grow grid grid-cols-2 gap-24 bg-white rounded-lg shadow-large'>
+      <div className='p-10 flex-grow grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-24 bg-white rounded-lg shadow-large'>
         <form className='flex flex-col'>
           <h1 className='font-bold text-xl' >بيانات المحل</h1>
             <div className="my-4">

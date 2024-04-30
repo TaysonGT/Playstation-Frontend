@@ -102,10 +102,10 @@ const Revenue = () => {
   }, [currentFinances])
 
   return (
-    <div dir='rtl' className="px-36 bg-[navy] pt-32 h-screen grid grid-cols-4 gap-4 grid-rows-5 pb-10 overflow-hidden">
-      <h1 className="text-3xl font-semibold mb-6 text-white">لوحة المعلومات</h1>
+    <div dir='rtl' className="lg:px-36 px-10 bg-[navy] pt-32 pb-10 flex flex-col gap-6 h-screen ">
+      <h1 className="text-3xl align-middle lg font-semibold text-white">لوحة المعلومات</h1>
 
-        
+      <div className='grid lg:grid-cols-4 grid-cols-3 gap-4 lg:grid-rows-5 grid-rows-[10] overflow-hidden grow'>
          <div className="bg-green-500 text-white rounded-lg shadow-md p-4">
             <div className='flex justify-between'>
               <h2 className="text-lg font-semibold mb-2">يوم</h2>
@@ -148,13 +148,27 @@ const Revenue = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow-md p-4">
-            <h2 className="text-lg font-semibold mb-2">الخصومات <span className='text-sm'>(هذا الشهر)</span> </h2>
-            <div className='flex gap-4 items-end'>
-              <p className="text-2xl font-bold">{finances?.monthlyDeduction}<span className='font-noto'>ج</span></p>
-              {isFinite(deductionGrowthLossPercent) && !isNaN(deductionGrowthLossPercent) &&
-                <p className={`text-lg font-bold ${monthlyDeductionGrowthLossSign?  'text-red-500' : 'text-green-500'}`}>{deductionGrowthLossPercent}% {monthlyDeductionGrowthLossSign? "↑" : "↓"}</p>
-              }
+          <div className="bg-white lg:row-start-4 lg:row-end-6 rounded-lg shadow-md p-4 flex-col flex">
+            <h2 className="text-lg font-semibold mb-3">الخصومات  </h2>
+            <div className='grow justify-between flex flex-col'>
+              <div>
+                <span className='text-sm'>(هذا الشهر)</span>
+                <div className='flex gap-4 items-end'>
+                  <p className="text-2xl font-bold">{finances?.monthlyDeduction}<span className='font-noto'>ج</span></p>
+                  {isFinite(deductionGrowthLossPercent) && !isNaN(deductionGrowthLossPercent) &&
+                    <p className={`text-lg font-bold ${monthlyDeductionGrowthLossSign?  'text-red-500' : 'text-green-500'}`}>{deductionGrowthLossPercent}% {monthlyDeductionGrowthLossSign? "↑" : "↓"}</p>
+                  }
+                </div>
+              </div>
+              <div>
+                <span className='text-sm'>( اليوم)</span>
+                <div className='flex gap-4 items-end'>
+                  <p className="text-2xl font-bold">{finances?.monthlyDeduction}<span className='font-noto'>ج</span></p>
+                  {isFinite(deductionGrowthLossPercent) && !isNaN(deductionGrowthLossPercent) &&
+                    <p className={`text-lg font-bold ${monthlyDeductionGrowthLossSign?  'text-red-500' : 'text-green-500'}`}>{deductionGrowthLossPercent}% {monthlyDeductionGrowthLossSign? "↑" : "↓"}</p>
+                  }
+                </div>
+              </div>
             </div>
           </div>
 
@@ -176,7 +190,7 @@ const Revenue = () => {
               }
             </div>
           </div>
-          <div className="flex justify-start p-8 gap-4 flex-wrap overflow-y-scroll text-center bg-white rounded-lg shadow-md text-black col-start-2 row-start-2 col-end-5 row-end-6">
+          <div className="flex justify-start p-8 gap-4 flex-wrap overflow-y-scroll text-center bg-white rounded-lg shadow-md text-black col-start-2 row-start-2 col-end-4 lg:col-end-5 row-end-6">
               {currentFinances?.map((finance, i ) =>
                 <div className="bg-white shadow-lg w-[22%] rounded-lg h-44 overflow-hidden flex flex-col justify-between">
                   <div className="p-4 h-4/5">
@@ -189,7 +203,8 @@ const Revenue = () => {
                 </div>
               )}
           </div>
-      </div>      
+      </div>
+    </div>      
   );
 };
 

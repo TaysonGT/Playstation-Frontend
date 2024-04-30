@@ -32,7 +32,7 @@ const OuterOrders = () => {
             <div onClick={()=>setShowPopup(false)} className='fixed left-0 top-0 w-screen h-screen bg-layout z-[100]'></div>
          </>
         }
-        <div className='min-h-screen bg-[#0d47a1] pt-32 px-36'>
+        <div className='min-h-screen bg-[#0d47a1] pt-32 lg:px-36 px-10'>
             <OuterReceipts {... {receipts: orders , setShowPopup}} />
         </div>
     </>

@@ -23,7 +23,7 @@ const DevicesOrders = () => {
     }, [])
 
   return (<>
-    <div className='min-h-screen bg-[#0d47a1] pt-32 pb-10 px-36'>
+    <div className='min-h-screen bg-[#0d47a1] pt-32 pb-10 lg:px-36 px-10'>
         <h1 className="text-3xl font-bold mb-4 text-white">فواتير الأجهزة</h1>
         <DeviceReceiptTable {... {receipts, setShowPopup, products}} />
     </div>
