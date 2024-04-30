@@ -33,8 +33,10 @@ const Config = () => {
     e.preventDefault();
     axios.put(`/device-types/${currDevType.id}`, {singlePrice, multiPrice}, {withCredentials: true})
     .then(({data})=>{
-      data.success? toast.success(data.message) : toast.error(data.message);
-      setRefresh(!refresh)
+      if(data.message){
+        data.success? toast.success(data.message) : toast.error(data.message);
+        setRefresh(!refresh)
+      }
     })
   };
 

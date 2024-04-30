@@ -21,10 +21,10 @@ const NewUser = ({setNewUserPopup, setSuccess, setMessage, setNewUser}) => {
     }
     
   return (
-    <div className={`fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-[102] flex items-center justify-center text-black`}>
+    <div className={`fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-[102] flex items-center justify-center text-black font-medium`}>
       <div className="bg-white rounded-lg p-8">
-        <h2 className="text-lg font-bold mb-4">اضافة مستخدم جديد</h2>
-        <form>
+        <h2 className="text-lg text-center font-bold mb-4">اضافة مستخدم جديد</h2>
+        <form className='mt-6'>
           <div className="mb-4">
             <label className="block mb-1">اسم المستخدم:</label>
             <input

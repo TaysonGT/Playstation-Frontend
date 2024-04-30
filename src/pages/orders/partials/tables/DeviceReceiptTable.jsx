@@ -9,7 +9,7 @@ const DeviceReceiptTable = ({receipts, setShowPopup, products}) => {
 
     useEffect(()=>{
         axios.get('/config', {withCredentials: true})
-          .then(({data})=> setConfigs({name: data.nameConfig.value, phone: data.phoneConfig.value}))
+          .then(({data})=> setConfigs({name: data.nameConfig?.value, phone: data.phoneConfig?.value}))
     }, [])
     
     useEffect(()=>{
