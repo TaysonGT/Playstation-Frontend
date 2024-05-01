@@ -9,9 +9,11 @@ const DeviceDetails = ({setShowDetails, currentSession ,device, currentDeviceTyp
     const [times, setTimes] = useState([{}])
 
     const [total, setTotal] = useState()
+    const [pulse, setPulse] = useState(false)
 
     const [products, setProducts] = useState()
     const [freeDevices, setFreeDevices] = useState([])
+    
 
     const getTotal= ()=>{
       let final = 0;
@@ -57,7 +59,7 @@ const DeviceDetails = ({setShowDetails, currentSession ,device, currentDeviceTyp
 
       devices&& setFreeDevices(devices.filter((dev, i )=> dev.status === false))
 
-    },[currentSession, devices])
+    },[currentSession, devices, pulse])
     
     useEffect(()=>{
       if(timeOrders){
@@ -90,6 +92,7 @@ const DeviceDetails = ({setShowDetails, currentSession ,device, currentDeviceTyp
       .then(({data})=>{
         if(data.message){
           data.success? toast.success(data.message) : toast.error(data.message)
+          setPulse(!pulse)
         }
       })
     }else toast.error("برجاء إدخال كل البيانات")
@@ -130,7 +133,7 @@ const DeviceDetails = ({setShowDetails, currentSession ,device, currentDeviceTyp
     }
 
   return (
-    <div dir='rtl' className="text-center grid grid-cols-3 p-8 gap-8 fixed z-[102] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border border-gray-300 shadow-md rounded-lg " style={{gridAutoRows: '180px 290px'}}>
+    <div dir='rtl' className="text-center grid grid-cols-3 p-8 gap-8 fixed z-[102] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border border-gray-300 shadow-md rounded-lg lg:w-auto w-[90vw]" style={{gridAutoRows: '180px 290px'}}>
         <div className="flex flex-col">
 
           <h2 className="text-lg font-semibold text-gray-800">الوقت</h2>

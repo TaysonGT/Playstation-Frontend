@@ -32,6 +32,7 @@ const Login = () => {
         if(data.success){
           Cookies.set('access_token', data.token, { expires: new Date(data.expDate) })
           Cookies.set('username', data.username,  { expires: new Date(data.expDate) })
+          Cookies.set('user_id', data.user_id,  { expires: new Date(data.expDate) })
           navigate('/')
         }else{
           toast.error(data.message)
@@ -39,7 +40,7 @@ const Login = () => {
       })
       .catch(err=> toast.error("حدث خطأ"))
     }else{
-      toast.error("You're Already Signed in!")
+      toast.error("لقد سجلت دخولك بالفعل!")
       navigate('/')
     }
   }
@@ -70,7 +71,7 @@ const Login = () => {
             <button onClick={handleLogin} className='bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-400 focus:outline-none focus:shadow-outline-blue mt-6 duration-150'>دخول</button>
           </form>
           {newUser&& <>
-            <p className='text-md font-thin'>لا يوجد مستحدمين!</p>
+            <p className='text-md font-thin'>لا يوجد مستخدمين!</p>
             <button onClick={()=> setNewUserPopup(true)}>هل تريد إضافة مستخدم جديد؟</button>
             {newUserPopup && <>
             <div onClick={()=>setNewUserPopup(false)} className='fixed left-0 top-0 w-screen h-screen bg-layout z-[50]'></div>

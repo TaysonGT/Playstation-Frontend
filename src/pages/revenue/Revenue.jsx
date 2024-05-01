@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import AddDeducionPopup from './popups/AddDeductionPopup';
 
 const Revenue = () => {
   const [finances, setFinances] = useState()
@@ -15,14 +16,18 @@ const Revenue = () => {
   const [monthlyGrowthLoss, setMonthlyGrowthLoss] = useState()
   const [yearlyGrowthLoss, setYearlyGrowthLoss] = useState()
   const [productsGrowthLoss, setProductsGrowthLoss] = useState()
-  const [deductionGrowthLossPercent, setDeductionGrowthLossPercent]= useState() 
+  const [dailyDeductionGrowthLoss, setDailyDeductionGrowthLoss]= useState() 
+  const [monthlyDeductionGrowthLoss, setMonthlyDeductionGrowthLoss]= useState() 
 
   const [dailyGrowthLossSign, setDailyGrowthLossSign] = useState()
   const [monthlyGrowthLossSign, setMonthlyGrowthLossSign] = useState()
   const [weeklyGrowthLossSign, setWeeklyGrowthLossSign] = useState()
   const [yearlyGrowthLossSign, setYearlyGrowthLossSign] = useState()
   const [productsGrowthLossSign, setProductsGrowthLossSign] = useState()
+  const [dailyDeductionGrowthLossSign, setDailyDeductionGrowthLossSign] = useState()
   const [monthlyDeductionGrowthLossSign, setMonthlyDeductionGrowthLossSign] = useState()
+  
+  const [showAddDeductionPopup, setShowAddDeductionPopup] = useState(false)
 
   const arabicWeekNames = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
 
@@ -47,12 +52,14 @@ const Revenue = () => {
         setWeeklyGrowthLoss(Math.floor(Math.abs(finances.weeklyFinances - finances.lastWeek)/ finances.lastWeek *100))
         setMonthlyGrowthLoss(Math.floor(Math.abs(finances.monthlyFinances - finances.lastMonth)/ finances.lastMonth *100 ))
         setYearlyGrowthLoss(Math.floor(Math.abs(finances.yearlyFinances - finances.lastYear)/ finances.lastYear *100 ))
-        setDeductionGrowthLossPercent(Math.floor(Math.abs(finances.monthlyDeduction - finances.lastMonthDeduction)/ finances.lastMonthDeduction *100 ))
+        setDailyDeductionGrowthLoss(Math.floor(Math.abs(finances.dailyDeduction - finances.lastDayDeduction)/ finances.lastDayDeduction *100 ))
+        setMonthlyDeductionGrowthLoss(Math.floor(Math.abs(finances.monthlyDeduction - finances.lastMonthDeduction)/ finances.lastMonthDeduction *100 ))
 
         finances.dailyFinances - finances.lastDay>0? setDailyGrowthLossSign(true) : setDailyGrowthLossSign(false)
         finances.weeklyFinances - finances.lastWeek>0? setWeeklyGrowthLossSign(true) : setWeeklyGrowthLossSign(false)
         finances.monthlyFinances - finances.lastMonth>0? setMonthlyGrowthLossSign(true) : setMonthlyGrowthLossSign(false)
         finances.yearlyFinances - finances.lastYear>0? setYearlyGrowthLossSign(true) : setYearlyGrowthLossSign(false)
+        finances.dailyDeduction - finances.lastDayDeduction>0? setDailyDeductionGrowthLossSign(true) : setMonthlyDeductionGrowthLossSign(false)
         finances.monthlyDeduction - finances.lastMonthDeduction>0? setMonthlyDeductionGrowthLossSign(true) : setMonthlyDeductionGrowthLossSign(false)
         
       }
@@ -103,9 +110,17 @@ const Revenue = () => {
 
   return (
     <div dir='rtl' className="lg:px-36 px-10 bg-[navy] pt-32 pb-10 flex flex-col gap-6 h-screen ">
+    
+      {showAddDeductionPopup&& 
+      <>
+        <div onClick={()=>setShowAddDeductionPopup(false)} className='fixed left-0 top-0 w-screen h-screen bg-layout z-[99]'></div>
+        <AddDeducionPopup {...{setShowAddDeductionPopup}} />
+      </>
+      }
+    
       <h1 className="text-3xl align-middle lg font-semibold text-white">لوحة المعلومات</h1>
 
-      <div className='grid lg:grid-cols-4 grid-cols-3 gap-4 lg:grid-rows-5 grid-rows-[10] overflow-hidden grow'>
+      <div className='grid lg:grid-cols-4 grid-cols-3 gap-4 lg:grid-rows-5 overflow-hidden grow'>
          <div className="bg-green-500 text-white rounded-lg shadow-md p-4">
             <div className='flex justify-between'>
               <h2 className="text-lg font-semibold mb-2">يوم</h2>
@@ -149,23 +164,26 @@ const Revenue = () => {
           </div>
 
           <div className="bg-white lg:row-start-4 lg:row-end-6 rounded-lg shadow-md p-4 flex-col flex">
-            <h2 className="text-lg font-semibold mb-3">الخصومات  </h2>
+            <div className='flex justify-between items-center'>
+              <h2 className="text-lg font-semibold">الخصومات  </h2>
+              <button onClick={()=> setShowAddDeductionPopup(true)} className='p-2 bg-red-500 hover:bg-red-400 text-white rounded'>اضافة </button>
+            </div>
             <div className='grow justify-between flex flex-col'>
               <div>
-                <span className='text-sm'>(هذا الشهر)</span>
+                <span className='text-sm'>(اليوم)</span>
                 <div className='flex gap-4 items-end'>
-                  <p className="text-2xl font-bold">{finances?.monthlyDeduction}<span className='font-noto'>ج</span></p>
-                  {isFinite(deductionGrowthLossPercent) && !isNaN(deductionGrowthLossPercent) &&
-                    <p className={`text-lg font-bold ${monthlyDeductionGrowthLossSign?  'text-red-500' : 'text-green-500'}`}>{deductionGrowthLossPercent}% {monthlyDeductionGrowthLossSign? "↑" : "↓"}</p>
+                  <p className="text-2xl font-bold">{finances?.dailyDeduction}<span className='font-noto'>ج</span></p>
+                  {isFinite(dailyDeductionGrowthLoss) && !isNaN(dailyDeductionGrowthLoss) &&
+                    <p className={`text-lg font-bold ${dailyGrowthLossSign?  'text-red-500' : 'text-green-500'}`}>{dailyDeductionGrowthLoss}% {setDailyDeductionGrowthLossSign? "↑" : "↓"}</p>
                   }
                 </div>
               </div>
               <div>
-                <span className='text-sm'>( اليوم)</span>
+                <span className='text-sm'>( هذا الشهر)</span>
                 <div className='flex gap-4 items-end'>
                   <p className="text-2xl font-bold">{finances?.monthlyDeduction}<span className='font-noto'>ج</span></p>
-                  {isFinite(deductionGrowthLossPercent) && !isNaN(deductionGrowthLossPercent) &&
-                    <p className={`text-lg font-bold ${monthlyDeductionGrowthLossSign?  'text-red-500' : 'text-green-500'}`}>{deductionGrowthLossPercent}% {monthlyDeductionGrowthLossSign? "↑" : "↓"}</p>
+                  {isFinite(monthlyDeductionGrowthLoss) && !isNaN(monthlyDeductionGrowthLoss) &&
+                    <p className={`text-lg font-bold ${monthlyDeductionGrowthLossSign?  'text-red-500' : 'text-green-500'}`}>{monthlyDeductionGrowthLoss}% {monthlyDeductionGrowthLossSign? "↑" : "↓"}</p>
                   }
                 </div>
               </div>
@@ -190,18 +208,20 @@ const Revenue = () => {
               }
             </div>
           </div>
-          <div className="flex justify-start p-8 gap-4 flex-wrap overflow-y-scroll text-center bg-white rounded-lg shadow-md text-black col-start-2 row-start-2 col-end-4 lg:col-end-5 row-end-6">
+          <div className="flex flex-col text-center bg-gray-200 rounded-lg shadow-md text-black col-start-2 row-start-2 col-end-4 lg:col-end-5 lg:row-end-6 row-end-5 overflow-hidden">
+            <div className='p-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 overflow-y-scroll' style={{gridAutoRows: '200px'}}>
               {currentFinances?.map((finance, i ) =>
-                <div className="bg-white shadow-lg w-[22%] rounded-lg h-44 overflow-hidden flex flex-col justify-between">
-                  <div className="p-4 h-4/5">
+                <div key={i} className="bg-white shadow-lg rounded-lg flex flex-col justify-between overflow-hidden">
+                  <div className="p-4 flex-1">
                     <h3 className="text-lg font-semibold">{finance.type==="Device" || finance.type ==="devices" ? "جهاز" : finance.type === "outerReceipt" ? "فاتورة خارجية" : "خصم"}</h3>
-                    <p className="text-gray-600 text-sm mt-2 ">{finance.description}</p>
+                    <p className="text-gray-600 text-sm ">{finance.description}</p>
                   </div>
-                  <div className="bg-gray-100 h-1/5">
+                  <div className="bg-gray-100 p-1 flex-[.2]">
                     <p className={"font-bold text-md " + (finance.type === "deduction"? "text-red-600" : "text-green-500")}>{finance.finances}ج</p>
                   </div>
                 </div>
               )}
+            </div>
           </div>
       </div>
     </div>      

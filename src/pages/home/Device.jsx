@@ -44,7 +44,7 @@ const Device = ({device, sessions, trigger, setTrigger, deviceTypes, devices, se
         let currMinutes = parseInt(minutes)
         let date = new Date()
         date.setHours(date.getHours() + currHours)
-        date.setMinutes(date.getMinutes() + currMinutes -1)
+        date.setMinutes(date.getMinutes() + currMinutes)
         axios.post(`/sessions/${e.target.id}`, {play_type: playType, time_type: timeType, end_time: date}, {withCredentials: true})
         .then(({data})=>{
             if(data.message){
@@ -64,7 +64,7 @@ const Device = ({device, sessions, trigger, setTrigger, deviceTypes, devices, se
         }
     }
     
-    const increment = (e)=>{
+    const increment = ()=>{
         let time = Math.floor((Date.now() - new Date(currentSession.start_at).getTime()) /1000)
         const hours = Math.floor(time / (60*60))
         const minutes = Math.floor(time/(60)) % 60
@@ -81,8 +81,9 @@ const Device = ({device, sessions, trigger, setTrigger, deviceTypes, devices, se
         
     }
     
-    const decrement = (e)=>{
-      let time =  Math.floor((new Date(currentSession.end_at).getTime() - new Date().getTime()) /1000)
+    const decrement = ()=>{
+      let time =  Math.floor((new Date(currentSession.end_at) - new Date()) /1000)
+      console.log(time)
         if (time>0) {
             const hours = Math.floor(time / (60*60))
             const minutes = Math.floor(time/(60)) % 60
@@ -114,12 +115,14 @@ const Device = ({device, sessions, trigger, setTrigger, deviceTypes, devices, se
         }
         
         setTimerState(true)
-        return ()=> clearInterval(run)
       }
     },[currentSession, timerState])
     
     useEffect(()=>{
-      sessions&& setCurrentSession(sessions.filter((session)=> session.device_id === device.id)[0])
+      if(sessions){  
+        setCurrentSession(sessions.filter((session)=> session.device_id === device.id)[0])
+        console.log(sessions)
+      }
     },[sessions, device.id])
     
     useEffect(()=>{
@@ -127,16 +130,17 @@ const Device = ({device, sessions, trigger, setTrigger, deviceTypes, devices, se
     },[deviceTypes, device.type])
     
   return (
+    <>
+    {showDetails&&<>
+        <div onClick={()=>setShowDetails(false)} className='fixed left-0 top-0 w-screen h-screen bg-layout z-[100]'></div>
+        <DeviceDetails {...{device, setShowDetails, currentSession, clock, setTrigger, trigger, devices, currentDeviceType, refresh, setRefresh, setUnavailableDevices}} />
+    </>
+    }
     <div className='bg-[#ffffff] w-[250px] border-2 border-[#e0e0e0] flex flex-col items-center rounded p-5 text-[#333] shadow-lg duration-[.3s] h-[320px]'>
         <div className='flex justify-between w-full items-center'>
             <h1 className={'font-semibold px-[20px] py-[3px] text-white rounded ' + (device.status?  'bg-red-500' : 'bg-[#3cb75b]')}>{device.name}</h1>
             <div className='bg-white border-2 border-black text-black p-1 px-4 rounded font-medium'>{currentDeviceType?.name}</div>
         </div>
-        {showDetails&&<>
-            <div onClick={()=>setShowDetails(false)} className='fixed left-0 top-0 w-screen h-screen bg-layout z-[100]'></div>
-            <DeviceDetails {...{device, setShowDetails, currentSession, clock, setTrigger, trigger, devices, currentDeviceType, refresh, setRefresh, setUnavailableDevices}} />
-        </>
-        }
         { !device.status? 
         <form dir="rtl" className='w-full flex flex-grow flex-col gap-1 text-sm font-bold mt-6 '>
             <div className='flex justify-between gap-2 items-center'>
@@ -171,14 +175,15 @@ const Device = ({device, sessions, trigger, setTrigger, deviceTypes, devices, se
         <div className='mt-5 flex flex-col items-center gap-3 h-full w-full'>
             <div className={'w-[90%] p-4 text-center text-3xl font-bold bg-[#212121] text-white bg-center bg-cover border-emerald-50 border rounded  ' + (currentSession?.time_type === "open"? 'text-red-500' :  'text-green-500')}>{clock? clock : "00:00:00"}</div>
             <div className='flex justify-between gap-4 p-2 '>
-                <p className={'text-sm font-medium p-3 py-2 border-white border-b-[5px] rounded-sm w-full text-white ' + (currentSession?.time_type==="open" ?  'bg-red-500': 'bg-[#11bb66]')} >{currentSession?.time_type}</p>
-                <p className='text-sm font-medium p-3 py-2 bg-white  border-[#568968] border-b-[5px] rounded-sm w-full text-[#568968]'>{currentSession?.play_type}</p>
+                <p className={'text-sm font-medium p-3 py-2 rounded-sm w-full text-white ' + (currentSession?.time_type==="open" ?  'bg-red-700': 'bg-teal-600')} >{currentSession?.time_type.toUpperCase()}</p>
+                <p className='text-sm font-medium p-3 py-2 bg-slate-700 rounded-sm w-full text-white'>{currentSession?.play_type.toUpperCase()}</p>
             </div>
-            <button onClick={()=> setShowDetails(true)} id={device.id} className=' bg-[#00b4d8]  p-3 text-md rounded-md text-white hover:bg-[#90e0ef] duration-200 active:shadow-hardInner mt-auto w-full text-center '>تفاصيل</button>
+            <button onClick={()=> setShowDetails(true)} id={device.id} className=' bg-[#00b4d8] p-3 text-md rounded-md text-white hover:bg-[#90e0ef] duration-200 active:shadow-hardInner mt-auto w-full text-center '>تفاصيل</button>
         </ div>
         }
 
     </div>
+    </>
   )
 }
 
