@@ -174,7 +174,7 @@ const Revenue = () => {
                 <div className='flex gap-4 items-end'>
                   <p className="text-2xl font-bold">{finances?.dailyDeduction}<span className='font-noto'>ج</span></p>
                   {isFinite(dailyDeductionGrowthLoss) && !isNaN(dailyDeductionGrowthLoss) &&
-                    <p className={`text-lg font-bold ${dailyGrowthLossSign?  'text-red-500' : 'text-green-500'}`}>{dailyDeductionGrowthLoss}% {setDailyDeductionGrowthLossSign? "↑" : "↓"}</p>
+                    <p className={`text-lg font-bold ${dailyDeductionGrowthLossSign?  'text-red-500' : 'text-green-500'}`}>{dailyDeductionGrowthLoss}% {dailyDeductionGrowthLossSign? "↑" : "↓"}</p>
                   }
                 </div>
               </div>

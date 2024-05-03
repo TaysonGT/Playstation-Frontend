@@ -34,7 +34,7 @@ const Config = () => {
 
   const handleSaveInfo = (e) => {
     e.preventDefault();
-    axios.put('/config', {name: playstationName, phone})
+    axios.put('/config', {name: playstationName, phone}, {withCredentials:true})
     .then(({data})=>{
       if(data.message){
         data.success? toast.success(data.message) : toast.error(data.message)
