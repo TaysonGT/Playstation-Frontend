@@ -30,13 +30,11 @@ const Login = () => {
       axios.post('/login', { username, password}, {withCredentials: true})
       .then(({data})=>{
         if(data.success){
-          Cookies.set('access_token', data.token, { expires: new Date(data.expDate) })
-          Cookies.set('username', data.username,  { expires: new Date(data.expDate) })
-          Cookies.set('user_id', data.user_id,  { expires: new Date(data.expDate) })
-          .then(()=> navigate('/'))
+          toast.success(data.message)
         }else{
           toast.error(data.message)
         }
+          navigate('/')
       })
       .catch(err=> toast.error("حدث خطأ"))
     }else{

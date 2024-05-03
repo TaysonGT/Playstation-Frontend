@@ -4,7 +4,7 @@ import Navbar from '../components/Navbar';
 
 const LoginRoute = ({children}) => {
     const location = useLocation();
-    let token = Cookies.get('access_token')
+    let token = Cookies.get("access_token")
 
 
     if(!token){

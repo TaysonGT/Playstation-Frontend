@@ -32,6 +32,8 @@ const Navbar = ({token}) => {
   const logoutHandler = (e)=>{
     e.preventDefault()
     Cookies.remove('access_token')
+    Cookies.remove('username')
+    Cookies.remove('user_id')
     nav('/auth/login')
   }
 
