@@ -22,7 +22,7 @@ function App() {
         { zIndex: 15, marginTop: '80px', userSelect: "none"} 
       }/>
         <Routes>
-          <Route path='/auth/login' element={<LoginRoute children={<Login />} />} />
+          <Route index={true} path='/auth/login' element={<LoginRoute children={<Login />} />} />
           <Route element={<PrivateRoutes />}>
             <Route element={<Home />} path='/' exact />
             <Route element={<Devices /> } path='/devices' exact />
