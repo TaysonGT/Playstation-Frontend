@@ -30,11 +30,11 @@ const Login = () => {
       axios.post('/login', { username, password}, {withCredentials: true})
       .then(({data})=>{
         if(data.success){
-          toast.success(data.message)
+          // toast.success(data.message)
+          navigate('/')
         }else{
           toast.error(data.message)
         }
-          navigate('/')
       })
       .catch(err=> toast.error("حدث خطأ"))
     }else{
