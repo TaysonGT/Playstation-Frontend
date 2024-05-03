@@ -33,7 +33,7 @@ const Login = () => {
           Cookies.set('access_token', data.token, { expires: new Date(data.expDate) })
           Cookies.set('username', data.username,  { expires: new Date(data.expDate) })
           Cookies.set('user_id', data.user_id,  { expires: new Date(data.expDate) })
-          navigate('/')
+          .then(()=> navigate('/'))
         }else{
           toast.error(data.message)
         }
