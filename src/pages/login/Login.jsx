@@ -25,8 +25,8 @@ const Login = () => {
   const navigate = useNavigate();
   const handleLogin = (e)=>{
     e.preventDefault();
-    const token = Cookies.get('access_token')? Cookies.get('access_token') : null 
-    if(token == null || !token){
+    let token = Cookies.get('access_token')
+    if(!token){
       axios.post('/login', { username, password}, {withCredentials: true})
       .then(({data})=>{
         if(data.success){
