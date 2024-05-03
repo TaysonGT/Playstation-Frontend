@@ -11,6 +11,10 @@ module.exports = {
       "poppins": '"Poppins", sans-serif',
     },
     extend: {
+      gridAutoColumns:{
+        '2fr': 'minmax(0, 2fr)',
+        '1fr': 'minmax(0, 1fr)',
+      },
       colors:{
         'main': '#014b76',
         'primary': "#A8DADC",
