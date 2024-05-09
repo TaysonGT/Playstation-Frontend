@@ -4,10 +4,17 @@ import App from './App';
 import "./index.css"
 import eruda from 'eruda'
 import axios from 'axios';
+import Cookies from 'js-cookie'
 
-// axios.defaults.baseURL = 'https://playstation-backend.onrender.com';
-axios.defaults.baseURL = 'http://localhost:5000';
+axios.defaults.baseURL = 'https://playstation-backend.onrender.com';
+// axios.defaults.baseURL = 'http://localhost:5000';
+axios.interceptors.request.use(config => {
+   const accessToken = Cookies.get('access_token');
 
+   config.headers.Authorization = `Bearer ${accessToken}`;
+
+   return config;
+});
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
