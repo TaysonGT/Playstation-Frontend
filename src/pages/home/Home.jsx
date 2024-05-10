@@ -56,7 +56,7 @@ const Home = () => {
             <div className='flex w-full flex-wrap   gap-6 mt-8'>
                 {availableDevices?.map((device, i)=>
                   (
-                  <Device key={i} {...{device, setTrigger, trigger, deviceTypes,devices, refresh, setRefresh}} />)
+                  <Device key={i} {...{device, setTrigger, trigger, deviceTypes,devices, refresh, setRefresh, setUnavailableDevices}} />)
                   )
                 }
                 
