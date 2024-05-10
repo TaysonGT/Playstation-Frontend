@@ -40,10 +40,9 @@ const Device = ({device, sessions, trigger, setTrigger, deviceTypes, devices, se
 
     const startDeviceHandler = (e)=>{
       e.preventDefault();
-      let currHours = parseInt(hours)
-      let currMinutes = parseInt(minutes)
-      let currentDay = new Date()
-      let date = new Date(currentDay.getFullYear(), currentDay.getMonth() + 1 , currentDay.getDate() ,currentDay.getHours() + currHours, currentDay.getMinutes() + currMinutes)
+      let date = new Date()
+      date.setHours(date.getHours()+hours)
+      date.setMinutes(date.getMinutes()+minutes)
       setUnavailableDevices(null)
       axios.post(`/sessions/${e.target.id}`, {play_type: playType, time_type: timeType, end_time: date}, {withCredentials: true})
       .then(({data})=>{
