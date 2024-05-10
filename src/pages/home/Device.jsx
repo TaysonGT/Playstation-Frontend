@@ -20,12 +20,12 @@ const Device = ({device, sessions, trigger, setTrigger, deviceTypes, devices, se
     const [currentDeviceType, setCurrentDeviceType] = useState()
     
     useEffect(()=>{
-        if(!timeType){
-            setTimeType("open")
-        }
-        if(!playType){
-            setPlayType("single")
-        }
+      if(!timeType){
+        setTimeType("open")
+      }
+      if(!playType){
+        setPlayType("single")
+      }
     }, [playType, timeType])
     
     
@@ -39,20 +39,18 @@ const Device = ({device, sessions, trigger, setTrigger, deviceTypes, devices, se
 
 
     const startDeviceHandler = (e)=>{
-        e.preventDefault();
-        let currHours = parseInt(hours)
-        let currMinutes = parseInt(minutes)
-        let date = new Date()
-        date.setHours(date.getHours() + currHours)
-        date.setMinutes(date.getMinutes() + currMinutes)
-        setUnavailableDevices(false)
-        axios.post(`/sessions/${e.target.id}`, {play_type: playType, time_type: timeType, end_time: date}, {withCredentials: true})
-        .then(({data})=>{
-            if(data.message){
-                setTrigger(!trigger)
-                data.success? toast.success(data.message) : toast.error(data.message)
-            }
-        })
+      e.preventDefault();
+      let currHours = parseInt(hours)
+      let currMinutes = parseInt(minutes)
+      let date = new Date().setHours(new Date().getHours() + currHours).setMinutes(new Date().getMinutes() + currMinutes)
+      setUnavailableDevices(null)
+      axios.post(`/sessions/${e.target.id}`, {play_type: playType, time_type: timeType, end_time: date}, {withCredentials: true})
+      .then(({data})=>{
+        if(data.message){
+          setTrigger(!trigger)
+          data.success? toast.success(data.message) : toast.error(data.message)
+        }
+      })
     }
     
     const timeOpenHandler = (e)=>{
@@ -161,11 +159,11 @@ const Device = ({device, sessions, trigger, setTrigger, deviceTypes, devices, se
                 <div className='flex gap-4 justify-between my-3'>
                     <div className='flex justify-between gap-2 items-center'>
                         <label className={classnames.label} >دقيقة</label>
-                        <input type="number" onInput={(e)=> setMinutes(e.target.value)} disabled={isInputDisabled} className={classnames.subInput} defaultValue={!isInputDisabled? 0 : null}/>
+                        <input type="number" onInput={(e)=> setMinutes(e.target.value)} disabled={isInputDisabled} className={classnames.subInput} placeholder={!isInputDisabled? 0 : null}/>
                     </div>
                     <div className='flex justify-between gap-2 items-center'>
                         <label className={classnames.label}>ساعة</label>
-                        <input type="number" onInput={e=> setHours(e.target.value)} disabled={isInputDisabled} className={classnames.subInput} defaultValue={!isInputDisabled? 0: null} />
+                        <input type="number" onInput={e=> setHours(e.target.value)} disabled={isInputDisabled} className={classnames.subInput} placeholder={!isInputDisabled? 0: null} />
                     </div>
                 </div>
             </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import eruda from 'eruda';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import Cookies from 'js-cookie';
@@ -14,7 +14,12 @@ const PrivateRoutes = () => {
   }, [])
 
   return (
-    token? <> <Navbar token={token} /> <Outlet /> </> : <Navigate to='/login' replace state={{from: location}} />
+    token? 
+    <> 
+      <Navbar token={token} /> 
+      <Outlet /> 
+    </> 
+    : <Navigate to='/login' replace state={{from: location}} />
   )
 }
 export default PrivateRoutes
