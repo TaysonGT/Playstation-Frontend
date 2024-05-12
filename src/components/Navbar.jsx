@@ -39,8 +39,7 @@ const Navbar = ({token}) => {
 
   useEffect(()=>{
       setCurrentLocation(location)
-      !Cookies.get('access_token') && nav('/login')
-  },[location, nav])
+  },[location])
 
 
   return ( 

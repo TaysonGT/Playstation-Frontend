@@ -41,8 +41,8 @@ const Device = ({device, sessions, trigger, setTrigger, deviceTypes, devices, se
     const startDeviceHandler = (e)=>{
       e.preventDefault();
       let date = new Date()
-      date.setHours(date.getHours()+hours)
-      date.setMinutes(date.getMinutes()+minutes)
+      date.setHours(date.getHours()+parseInt(hours))
+      date.setMinutes(date.getMinutes()+parseInt(minutes))
       setUnavailableDevices(null)
       axios.post(`/sessions/${e.target.id}`, {play_type: playType, time_type: timeType, end_time: date}, {withCredentials: true})
       .then(({data})=>{
