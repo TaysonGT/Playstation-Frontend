@@ -14,20 +14,13 @@ const Login = () => {
   const [password, setPassword] = useState('')
   const [newUser, setNewUser] = useState(false)
   const [newUserPopup, setNewUserPopup] = useState(false)
-
-  const handleUsername = (e)=>{
-    setUsername(e.target.value);
-  }
-  const handlePassword = (e)=>{
-    setPassword(e.target.value);
-  }
   
   const navigate = useNavigate();
   const handleLogin = (e)=>{
     e.preventDefault();
     let token = Cookies.get('access_token')
     if(!token){
-      axios.post('/login', { username, password}, {withCredentials: true})
+      axios.post('/login', {username, password}, {withCredentials: true})
       .then(({data})=>{
         if(data.success){
           Cookies.set('access_token', data.token, {expires: new Date(data.expires), secure: true, path: '/'})
@@ -38,7 +31,6 @@ const Login = () => {
           toast.error(data.message)
         }
       })
-      .catch(err=> toast.error("حدث خطأ"))
     }else{
       toast.error("لقد سجلت دخولك بالفعل!")
       navigate('/')
@@ -65,9 +57,15 @@ const Login = () => {
           <h1 className='text-center text-xl mb-4'>تسجيل الدخول</h1>
           <form className="flex flex-col gap-2 pb-4 w-full mt-6">
             <label>اسم المستخدم</label>
-            <input placeholder="ادخل اسم المستخدم" onInput={handleUsername} className=' w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500 bg-gray-700 text-white duration-300' type="text"/>
+            <input placeholder="ادخل اسم المستخدم" onInput={e=>
+            setUsername(e.target.value)} className=' w-full px-3 py-2 border rounded-md
+            focus:outline-none focus:border-blue-500 bg-gray-700 text-white
+            duration-300' type="text" name="username" />
             <label>كلمة المرور</label>
-            <input  placeholder="ادخل كلمة المرور" onInput={handlePassword} className=" w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500 bg-gray-700 text-white duration-300" type="password"/>
+            <input  placeholder="ادخل كلمة المرور"
+            onInput={(e)=>setPassword(e.target.value)} className=" w-full px-3 py-2 border
+            rounded-md focus:outline-none focus:border-blue-500 bg-gray-700
+            text-white duration-300" type="password"/>
             <button onClick={handleLogin} className='bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-400 focus:outline-none focus:shadow-outline-blue mt-6 duration-150'>دخول</button>
           </form>
           {newUser&& <>

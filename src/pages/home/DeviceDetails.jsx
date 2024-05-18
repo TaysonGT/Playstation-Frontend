@@ -120,7 +120,9 @@ const DeviceDetails = ({setShowDetails, currentSession ,device, currentDeviceTyp
     }
     
     const changePlayTypeHandler = () =>{
-      let play_type = document.getElementById('changePlayType').value;
+      let play_type = document.getElementById('changePlayType').value
+      setUnavailableDevices()
+      setUnavailableDevices()
       axios.put(`/sessions/play-type/${currentSession.id}`, {play_type}, {withCredentials: true})
       .then(({data})=>{
         if(data.message) data.success? toast.success(data.message) : toast.error(data.message);
