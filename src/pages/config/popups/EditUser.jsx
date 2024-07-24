@@ -14,14 +14,13 @@ const NewUser = ({setEditPopup, currentUser}) => {
 
     const addHandler = (e)=>{
       e.preventDefault();
-      alert(admin)
-      // axios.post('/users', {username, password, admin}, {withCredentials: true})
-      // .then(({data})=> {
-      //   if(data.message){
-      //     setNewUserPopup(false)
-      //     data.success&& setNewUser(false) 
-      //   }
-      // })
+      axios.put(`/users/${currentUser}`, {username, password, admin}, {withCredentials: true})
+      .then(({data})=> {
+        if(data.message){
+          setEditPopup(false)
+          data.success&& toast.success(data.message) 
+        }
+      })
     }
     
     useEffect(() => {
@@ -30,6 +29,7 @@ const NewUser = ({setEditPopup, currentUser}) => {
         setPrevUsername(data.user.username)
         setPrevPassword(data.user.password)
         setPrevAdmin(data.user.admin)
+        setAdmin(data.user.admin)
       })
     }, [currentUser])
     
