@@ -19,7 +19,7 @@ function App() {
     <>
       <BrowserRouter>
       <Toaster position='top-left' containerStyle={
-        { zIndex: 15, marginTop: '80px', userSelect: "none"} 
+        { zIndex: 9999, marginTop: '80px', userSelect: "none"} 
       }/>
         <Routes>
           <Route path='/login' element={<LoginRoute children={<Login />} />} />

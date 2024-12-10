@@ -3,12 +3,12 @@ import React, { useState, useEffect } from 'react'
 import toast from 'react-hot-toast'
 const NewUser = ({setEditPopup, currentUser}) => {
         
-    const [password, setPassword ] = useState()
-    const [username, setUsername ] = useState()
-    const [admin, setAdmin ] = useState(false)
+    const [password, setPassword ] = useState('')
+    const [username, setUsername ] = useState('')
+    const [admin, setAdmin ] = useState()
     
-    const [prevUsername, setPrevUsername] = useState()
-    const [prevPassword, setPrevPassword] = useState()
+    const [prevUsername, setPrevUsername] = useState('')
+    const [prevPassword, setPrevPassword] = useState('')
     const [prevAdmin, setPrevAdmin] = useState()
     
 
@@ -17,8 +17,9 @@ const NewUser = ({setEditPopup, currentUser}) => {
       axios.put(`/users/${currentUser}`, {username, password, admin}, {withCredentials: true})
       .then(({data})=> {
         if(data.message){
+          data.success? toast.success(data.message) 
+          : toast.error(data.message)
           setEditPopup(false)
-          data.success&& toast.success(data.message) 
         }
       })
     }
@@ -29,7 +30,11 @@ const NewUser = ({setEditPopup, currentUser}) => {
         setPrevUsername(data.user.username)
         setPrevPassword(data.user.password)
         setPrevAdmin(data.user.admin)
-        setAdmin(data.user.admin)
+        if(data.user.admin){
+          setAdmin("admin")
+        }else{
+          setAdmin("employee")
+        }
       })
     }, [currentUser])
     
@@ -58,12 +63,15 @@ const NewUser = ({setEditPopup, currentUser}) => {
             />
           </div>
           <div className="mb-4  flex items-center gap-4">
-            <label className="block mb-1">ادمن:</label>
-            <input
-              type="checkbox"
-              checked={prevAdmin}
-              onInput={e=> setAdmin(e.target.value)}
-            />
+            <label className="block mb-1">الدور:</label>
+            <select 
+            name="role" 
+            onInput={e=> setAdmin(e.target.value)}
+            className="border px-3 py-2 w-full text-md bg-white"
+            >
+              <option value="admin">ادمن</option>
+              <option selected={prevAdmin==false} value="employee">موظف</option>
+            </select>
           </div>
           <div className="flex gap-2 justify-end">
             <button type='submit' onClick={addHandler} className="px-4 py-2 bg-blue-500 hover:bg-indigo-400 duration-150 text-white rounded">تعديل</button>
