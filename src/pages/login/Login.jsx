@@ -23,9 +23,9 @@ const Login = () => {
       axios.post('/login', {username, password}, {withCredentials: true})
       .then(({data})=>{
         if(data.success){
-          Cookies.set('access_token', data.token, {expires: new Date(data.expires), secure: true, path: '/'})
-          Cookies.set('username', data.username, {expires: new Date(data.expires), secure: true, path: '/'})
-          Cookies.set('user_id', data.user_id, {expires: new Date(data.expires), secure: true, path: '/'})
+          Cookies.set('access_token', data.token, {expires: new Date(data.expDate), secure: true, path: '/'})
+          Cookies.set('username', data.username, {expires: new Date(data.expDate), secure: true, path: '/'})
+          Cookies.set('user_id', data.user_id, {expires: new Date(data.expDate), secure: true, path: '/'})
           navigate('/')
         }else{
           toast.error(data.message)

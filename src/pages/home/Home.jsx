@@ -5,8 +5,8 @@ import { MoonLoader } from 'react-spinners'
 
 
 const Home = () => {
-    const [devices, setDevices] = useState(false)    
-    const [sessions, setSessions] = useState()    
+    const [devices, setDevices] = useState(false)
+    const [sessions, setSessions] = useState()
     const [deviceTypes, setDeviceTypes] = useState()
 
     const [availableDevices, setAvailableDevices] = useState()
@@ -21,9 +21,9 @@ const Home = () => {
       })
       axios.get('/device-types', {withCredentials:true})
       .then(({data})=> setDeviceTypes(data.deviceTypes))
-      
+
     }, [trigger, sessions])
-    
+
     useEffect(()=>{
       setAvailableDevices(false)
       setUnavailableDevices(false)
@@ -32,7 +32,7 @@ const Home = () => {
             setSessions(data.sessions)
         })
     },[trigger])
-    
+
     useEffect(()=>{
       setAvailableDevices(false)
       setUnavailableDevices(false)
@@ -59,7 +59,7 @@ const Home = () => {
                   <Device key={i} {...{device, setTrigger, trigger, deviceTypes,devices, refresh, setRefresh, setUnavailableDevices}} />)
                   )
                 }
-                
+
             </div>
         </div>
         }
@@ -74,6 +74,6 @@ const Home = () => {
     </div>
   )
 }
-  
+
 
 export default Home
