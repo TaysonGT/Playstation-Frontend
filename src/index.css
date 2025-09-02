@@ -1,7 +1,22 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
+@theme { 
+  --shadow-soft: 0 2px 10px 0 rgba(0, 0, 0, 0.05);
+  --shadow-hard: 0px 2px 4px rgba(0, 0, 0, 0.3);
+  --shadow-hover: 0px 2px 10px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 15px rgba(59, 130, 246, 0.5);
+  --shadow-inner-lg: inset 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+  --animate-appear: appear 0.5s;
+}
+
+@keyframes appear {
+    from {
+        opacity: 0%;
+    }
+    to{
+        opacity: 100%;
+    }
+}
 
 @font-face {
     font-family: Alexandria;

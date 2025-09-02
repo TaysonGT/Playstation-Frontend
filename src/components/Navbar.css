@@ -10,7 +10,6 @@
     transform:scaleX(0);
     height:2px;
     bottom:-3px;
-    left:0;
     background-color:#fff;
     transform-origin:bottom right;
     transition:transform .25s ease-out
