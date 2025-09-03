@@ -2,6 +2,7 @@ import React, {useEffect, useState } from 'react'
 import DeviceDetails from './DeviceDetails'
 import { IDevice } from './types'
 import { useDevices } from '../../context/DeviceContext'
+import toast from 'react-hot-toast'
 
 
 const Device = ({device}:{device: IDevice}) => {
@@ -31,6 +32,7 @@ const Device = ({device}:{device: IDevice}) => {
     e.preventDefault();
     let end_time = undefined
     if(timeType === 'time') {
+        if(!hours&&!minutes) return toast.error('برجاء ملء البيانات')
         end_time = new Date()
         end_time.setHours(end_time.getHours()+hours)
         end_time.setMinutes(end_time.getMinutes()+minutes)
@@ -77,8 +79,8 @@ const Device = ({device}:{device: IDevice}) => {
       if(session.time_type === "open") {
           increment()
           run = setInterval(increment, 1000)
-      }else if(session.time_type === "time"){
-        run = setInterval(decrement ,1000)
+        }else if(session.time_type === "time"){
+        run = setInterval(decrement, 1000)
       }
       
       setTimerState(true)
@@ -88,11 +90,11 @@ const Device = ({device}:{device: IDevice}) => {
   return (
     <>
     {(showDetails&&session)&&<>
-        <div onClick={()=>setShowDetails(false)} className='fixed left-0 top-0 w-screen h-screen bg-layout backdrop-blur-sm animate-alert duration-150 z-[100]'></div>
+        <div onClick={()=>{setShowDetails(false)}} className='fixed left-0 top-0 w-screen h-screen bg-black/70 animate-appear duration-500 z-[50]'/>
         <DeviceDetails {...{device, session, clock, deviceType: deviceType!}} />
     </>
     }
-    <div className='bg-[#ffffff] w-[250px] border-2 border-[#e0e0e0] flex flex-col items-center rounded p-5 text-[#333] shadow-lg duration-[.3s] h-[320px]'>
+    <div className='bg-[#ffffff] w-60 border-2 border-[#e0e0e0] flex flex-col items-center rounded p-5 text-[#333] shadow-lg duration-[.3s]'>
         <div className='flex justify-between w-full items-center'>
             <h1 className={'font-semibold px-[20px] py-[3px] text-white rounded ' + (device.status?  'bg-red-500' : 'bg-[#3cb75b]')}>{device.name}</h1>
             <div className='bg-white border-2 border-black text-black p-1 px-4 rounded font-medium'>{deviceType?.name}</div>
@@ -100,14 +102,14 @@ const Device = ({device}:{device: IDevice}) => {
         { !device.status? 
         <form dir="rtl" className='w-full flex flex-grow flex-col gap-1 text-sm font-bold mt-6'>
             <div className='flex justify-between gap-2 items-center'>
-                <label className="font-bold text-sm w-[100px]">نوع اللعب:</label>
+                <label className="font-bold text-sm w-[100px] text-nowrap">نوع اللعب:</label>
                 <select onInput={e=> setPlayType(e.currentTarget.value)} className={classnames.input}>
                     <option value="single">سنجل</option>
                     <option value="multi">ملتي</option>
                 </select>
             </div>
             <div className='flex justify-between gap-2 items-center mt-4 '>
-                <label className="font-bold text-sm w-[100px]">نوع الوقت:</label>
+                <label className="font-bold text-sm w-[100px] text-nowrap">نوع الوقت:</label>
                 <select onInput={(e)=> timeTypeHandler(e.currentTarget.value)} className={classnames.input}>
                     <option value="open">مفتوح</option>
                     <option value="time">وقت</option>
@@ -134,7 +136,7 @@ const Device = ({device}:{device: IDevice}) => {
                 <p className={'text-sm font-medium p-3 py-2 rounded-sm w-full text-white ' + (session?.time_type==="open" ?  'bg-red-700': 'bg-teal-600')} >{session?.time_type.toUpperCase()}</p>
                 <p className='text-sm font-medium p-3 py-2 bg-slate-700 rounded-sm w-full text-white'>{session?.play_type.toUpperCase()}</p>
             </div>
-            <button onClick={()=> setShowDetails(true)} id={device.id} className=' bg-[#00b4d8] p-3 text-md rounded-md text-white hover:bg-[#90e0ef] duration-200 active:shadow-hardInner mt-auto w-full text-center '>تفاصيل</button>
+            <button onClick={()=> setShowDetails(true)} id={device.id} className=' bg-[#00b4d8] p-3 text-md rounded-md text-white hover:bg-[#70d1e2] duration-200 active:shadow-hardInner mt-auto w-full text-center '>تفاصيل</button>
         </ div>
         }
 

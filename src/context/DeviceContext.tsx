@@ -32,15 +32,19 @@ export const DevicesProvider:React.FC<React.PropsWithChildren<{}>> = ({children}
   const [isLoading, setIsLoading] = useState(true);
 
   const getAll = async () => {
+    setDevices([]);
+    setAvailableDevices([]);
+    setUnavailableDevices([]);
+    setSessions([]);
     setIsLoading(true);
     try {
         const { data:devData } = await fetchDevices();
         const { data:sessData } = await fetchSessions();
         setDevices(devData.devices);
+        setAvailableDevices(devData.availableDevices);
+        setUnavailableDevices(devData.unavailableDevices);
         setDeviceTypes(devData.deviceTypes);
         setSessions(sessData.sessions);
-        setAvailableDevices(devData.devices?.filter((device: IDevice)=> device.status === false))
-        setUnavailableDevices(devData.devices?.filter((device: IDevice)=> device.status === true))
     } catch(error){
       console.log(error)
     }finally {
@@ -85,8 +89,11 @@ export const DevicesProvider:React.FC<React.PropsWithChildren<{}>> = ({children}
   const transferSession = async (session_id: string, destination: string) => {
     setIsLoading(true);
     await transfer(session_id, destination)
-    .then(({data})=> data.success? toast.success(data.message) : toast.error(data.message))
-    .finally(()=>getAll())
+    .then(({data})=> {
+      if(!data.success) return toast.error(data.message)
+      toast.success(data.message)
+      getAll()
+    })
   }
 
   const changePlayType = async (session_id: string, play_type: string) => {
@@ -97,14 +104,20 @@ export const DevicesProvider:React.FC<React.PropsWithChildren<{}>> = ({children}
 
   const startSession = async ({device_id, play_type, time_type, end_time}:{device_id:string, play_type: string, time_type: string, end_time?: Date})=>{
     await createSession({device_id, play_type, time_type, end_time})
-    .then(({data})=> data.success? toast.success(data.message) : toast.error(data.message))
-    .finally(()=>getAll())
+    .then(({data})=> {
+      if(!data.success) return toast.error(data.message)
+      toast.success(data.message)
+      getAll()
+    })
   }
 
   const endSession = async (session_id:string)=>{
     await removeSession(session_id)
-    .then(({data})=> data.success? toast.success(data.message) : toast.error(data.message))
-    .finally(()=>getAll())
+    .then(({data})=> {
+      if(!data.success) return toast.error(data.message)
+      toast.success(data.message)
+      getAll()
+    })
   }
 
   useEffect(() => { 

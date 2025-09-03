@@ -10,7 +10,7 @@ export const fetchDeviceTypes = ()=> axios.get('/device-types', {withCredentials
 
 export const fetchSessions = ()=> axios.get('/sessions', {withCredentials: true})
 export const createSession = ({device_id, play_type, time_type, end_time}:{device_id: string, play_type: string, time_type: string, end_time?: Date})=> 
-    axios.post('/sessions', {device_id, play_type, time_type, end_time}, {withCredentials: true})
+    axios.post(`/sessions/${device_id}`, {play_type, time_type, end_time}, {withCredentials: true})
 export const transfer = (session_id: string, destination: string)=> axios.put(`/sessions/change-device/${session_id}`, {destination}, {withCredentials: true})
 export const updatePlayType = (session_id: string, play_type: string)=> axios.put(`/sessions/change-play-type/${session_id}`, {play_type}, {withCredentials: true})
 export const removeSession = (id: string)=> axios.delete(`/sessions/${id}`, {withCredentials: true})

@@ -29,7 +29,7 @@ const DeviceDetails:React.FC<Props> = ({session, device, deviceType, clock}) => 
     const [products, setProducts] = useState<IProduct[]>([])
     const [freeDevices, setFreeDevices] = useState<IDevice[]>([])
     const [selectedPlayType, setSelectedPlayType] = useState<string>(session.play_type)
-    const [selectedTransfer, setSelectedTransfer] = useState<string>()
+    const [selectedTransfer, setSelectedTransfer] = useState<string|null>()
     
     const [orderProduct, setOrderProduct] = useState<string>()
     const [orderQuantity, setOrderQuantity] = useState<number>(0)
@@ -78,10 +78,13 @@ const DeviceDetails:React.FC<Props> = ({session, device, deviceType, clock}) => 
       
       session&& refetchOrders()
 
-      devices&& setFreeDevices(devices.filter((dev)=> (dev.status === false&&dev.id!==device.id)))
+      if(devices){
+        const free = devices.filter((dev)=> (dev.status === false&&dev.id!==device.id))
+        setFreeDevices(free)
+        setSelectedTransfer(free[0]?.id || null)
+      }
 
     },[session, devices])
-
 
   return (
     <div dir='rtl' className="text-center grid grid-cols-3 p-8 gap-8 fixed z-[102] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border border-gray-300 shadow-md rounded-lg lg:w-auto w-[90vw]" style={{gridAutoRows: '180px 290px'}}>

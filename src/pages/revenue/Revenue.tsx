@@ -56,13 +56,13 @@ const Revenue = () => {
     setDate(currDate)
   }
 
-  const fetchFinances = (date: string)=>{
+  const fetchFinances = async(date: string)=>{
     setIsLoading(true)
     setDay(arabicWeekNames[new Date(date).getDay()])
-    axios.get(`/finances/${new Date(date).toLocaleTimeString()}/${currentUser||'all'}`, {withCredentials:true})
+    await axios.get(`/finances/${new Date(date).toLocaleTimeString()}/${currentUser||'all'}`, {withCredentials:true})
     .then(({data})=>{
       setFinances(data)
-      setCurrentFinances(data.currentDayFinances)
+      setCurrentFinances(data.finances)
     }).finally(()=>
       setIsLoading(false)
     )
@@ -194,7 +194,7 @@ const Revenue = () => {
           </div>
           <div className="flex flex-col text-center bg-gray-200 rounded-lg shadow-md text-black col-start-2 row-start-2 col-end-4 lg:col-end-5 lg:row-end-6 row-end-5 overflow-hidden">
             <div className='p-6 flex flex-col gap-4 overflow-y-auto'>
-              {currentFinances?.sort((b,a)=> new Date(a.added_at).getTime() - new Date(b.added_at).getTime()).map((finance, i ) =>
+              {currentFinances.map((finance, i ) =>
                 <div key={i} className="bg-white shadow-lg rounded-lg flex flex-col justify-between overflow-hidden">
                   <div className="p-4 flex-1">
                     <h3 className="text-lg font-semibold">{finance.type==="Device" || finance.type ==="devices" ? "جهاز" : finance.type === "outerReceipt" ? "فاتورة خارجية" : "خصم"}</h3>

@@ -14,7 +14,8 @@ const AddDevicePopup = ({onAction, deviceTypes}:{onAction:()=>void, deviceTypes:
     }else{
       axios.post('/devices', {name: deviceName, type: deviceType}, {withCredentials: true})
       .then(({data})=>{
-        data.success? toast.success(data.message) : toast.error(data.message)
+        if(!data.success) return toast.error(data.message);
+        toast.success(data.message)
         onAction()
       })
     }

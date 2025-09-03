@@ -1,64 +1,60 @@
 import { useEffect, useState } from 'react'
-import DeleteIcon from '../../assets/delete.png'
-import EditIcon from '../../assets/edit.png'
-import axios from 'axios'
 import AddDevicePopup from './AddDevicePopup'
 import DeleteConfirm from './DeleteConfirm'
 import { fetchDevices } from '../../api/devices'
 import { IDevice, IDeviceType } from '../home/types'
 import Loader from '../../components/Loader'
 import toast from 'react-hot-toast'
+import { RiDeleteBin6Fill, RiEdit2Fill } from 'react-icons/ri'
 
 
 const Devices = () => {
     const [deviceTypes, setDeviceTypes] = useState<IDeviceType[]>([])
     const [devices, setDevices] = useState<IDevice[]>([])
     const [showPopup, setShowPopup] = useState(false)
-    const [deleteId, setDeleteId] = useState<string|null>(null)
+    const [deleteDevice, setDeleteDevice] = useState<IDevice|null>(null)
     const [isLoading, setIsLoading] = useState(true)
     const [deleteConfirm, setDeleteConfirm] = useState(false)
 
-    const refetchDevices = ()=>{ 
+    const refetchDevices = async ()=>{ 
         setIsLoading(true)
         fetchDevices()
         .then(({data})=> {
             setDevices(data.devices)
+            setDeviceTypes(data.deviceTypes)
         }).finally(()=>setIsLoading(false))
     }
 
     useEffect(()=>{
-        axios.get('/device-types', {withCredentials: true})
-        .then(({data})=> setDeviceTypes(data.deviceTypes))
-        .finally(()=>refetchDevices())
+        refetchDevices()
     }, [])
 
     const tableHead = [
         "اسم الجهاز",
         "نوع الجهاز",
         "الحالة",
+        "الأوامر"
     ]
-
-    useEffect(()=>{
-        deleteId? setDeleteConfirm(true) : setDeleteConfirm(false)
-    }, [deleteId])
   
   return (
     <>
-        {(showPopup&&deviceTypes)&& <>
-            <div onClick={(e)=>{console.log(e.target); setShowPopup(false)}} className='fixed left-0 top-0 w-screen h-screen bg-layout backdrop-blur-sm animate-alert duration-150 z-[99]'></div>
-            <AddDevicePopup {...{onAction: ()=>{
-                fetchDevices()
-            }, deviceTypes}} />
+    {(showPopup&&deviceTypes)&& <>
+        <div onClick={()=>{setShowPopup(false)}} className='fixed left-0 top-0 w-screen h-screen bg-black/70 animate-appear duration-500 z-[50]'/>
+        <AddDevicePopup {...{onAction: async()=>{
+            await refetchDevices()
+            setShowPopup(false)
+        }, deviceTypes}} />
         </>
-        }
-        {deleteConfirm&&<>
-            <div onClick={()=>setDeleteConfirm(false)} className='fixed left-0 top-0 w-screen h-screen bg-layout backdrop-blur-sm animate-alert duration-150 z-[100]' ></div>
-            <DeleteConfirm {...{deleteId, hide: ()=> setDeleteConfirm(false), onAction: ()=>{
-                setDeleteId(null)
+    }
+    {deleteConfirm&&deleteDevice&&<>
+        <div onClick={()=>{setDeleteConfirm(false); setDeleteDevice(null)}} className='fixed left-0 top-0 w-screen h-screen bg-black/70 animate-appear duration-500 z-[50]'/>
+            <DeleteConfirm {...{device: deleteDevice, hide: ()=> setDeleteConfirm(false), onAction: ()=>{
+                setDeleteDevice(null)
                 setDeleteConfirm(false)
                 refetchDevices()
             }}} />
-        </>}
+        </>
+    }
     <div className='py-6 lg:px-36 px-10 bg-[#0d47a1] h-full flex flex-col' dir='rtl'>
         <div className='w-full flex justify-between items-start'>
             <h1 className='text-white text-3xl font-bold'>الأجهزة</h1>
@@ -79,38 +75,37 @@ const Devices = () => {
                 <p className='text-sm font-bold mt-4 text-gray-300'>برجاء إضافة أجهزة جديدة ...</p>
             </div>
             :
-        <table className='w-full text-black mt-6 select-none'>
-            <thead className='bg-gray-50 border-b-2 border-gray-200'>
-                <tr>
+        <div className='w-full flex flex-col grow min-h-0 text-black mt-6 select-none rounded-md overflow-hidden'>
+            <div className='bg-gray-50 border-b-2 border-gray-200 flex'>
                 {tableHead.map((key, i)=> 
-                <th key={i} className='p-3 text-sm font-semibold text-right  '>{key}</th>
-                )}
-                </tr>
-            </thead>
-            <tbody className='relative'>
+                <div key={i} className='p-3 text-sm font-semibold text-right flex-1'>{key}</div>
+            )}
+            </div>
+            <div className='relative grow min-h-0 overflow-y-auto'>
                 {devices.map((device, i)=> 
-                <tr key={i} className={ 'relative ' + (i%2 !== 0 ? 'bg-gray-50': 'bg-white')}>
-                    <td className='pr-7 font-bold text-blue-500 p-4'>{device.name}</td>
-                    <td>
-                        <p className=''>{deviceTypes?.filter((type)=> type.id === device.type)[0]?.name}</p>
-                    </td>
-                    <td>
-                        <span className={'p-1.5 text-xs font-bold uppercase tracking-wider bg-opcaity-50 rounded-lg ' + (!device.status? "text-green-800 bg-green-200" : "text-red-800 bg-red-200")}>{!device.status? "متاح" : "مشغول"}</span>
-                    </td>
-                    <div  className='absolute top-[50%] translate-y-[-50%] left-[2%] flex gap-4 items-center'>
-                        <button>
-                            <img src={EditIcon} className='h-[30px] z-20 bg-indigo-950 hover:bg-indigo-400 duration-100 rounded p-1' alt="" />
-                        </button>
-                        <button id={"btn_" +device.id} onClick={(e)=>{
-                            setDeleteId(e.currentTarget.id.slice(4))
-                        }}>
-                            <img id={"img_" +device.id} src={DeleteIcon} className='h-[30px] z-20 bg-red-300 hover:bg-red-700 duration-100 rounded p-1' alt="" />
-                        </button>
+                <div key={i} className={`relative items-stretch flex ${i%2 !== 0 ? 'bg-gray-50': 'bg-white'}`}>
+                    <div className='pr-7 font-bold text-blue-500 p-3 flex-1'>{device.name}</div>
+                    <div className='flex-1 p-3 flex items-center'>
+                        {deviceTypes?.filter((type)=> type.id === device.type)[0]?.name}
                     </div>
-                </tr>
+                    <div className='flex-1 p-3 flex items-center'>
+                        <span className={'p-1.5 text-xs font-bold uppercase tracking-wider bg-opcaity-50 rounded-lg ' + (!device.status? "text-green-800 bg-green-200" : "text-red-800 bg-red-200")}>{!device.status? "متاح" : "مشغول"}</span>
+                    </div>
+                    <div className='flex-1 flex gap-4 items-center p-3'>
+                        <div className='bg-indigo-100 cursor-pointer hover:text-indigo-400 duration-100 rounded-md p-1 text-2xl'>
+                            <RiEdit2Fill/>
+                        </div>
+                        <div className='rounded-md cursor-pointer bg-red-100 text-red-600 hover:text-red-400 duration-100 p-1 text-2xl' onClick={()=>{
+                            setDeleteDevice(device)
+                            setDeleteConfirm(true)
+                        }}>
+                            <RiDeleteBin6Fill />
+                        </div>
+                    </div>
+                </div>
                 )}
-            </tbody>
-        </table>
+            </div>
+        </div>
         }
     </div>
     </>
