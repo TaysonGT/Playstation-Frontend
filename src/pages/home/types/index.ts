@@ -1,10 +1,12 @@
+import { IProduct } from "../../stock/types";
+
 export interface ISession {
     id: string,
-    device_id: string,
+    device: IDevice,
     time_type: "time"|"open",
     play_type: "single"|"multi",
-    start_at: string,
-    end_at: string
+    started_at: string,
+    ended_at: string
 }
 
 export interface IDeviceType {
@@ -17,26 +19,34 @@ export interface IDeviceType {
 export interface IDevice {
     id: string,
     name: string,
-    type: string,
+    type: IDeviceType,
+    session: ISession,
     status: boolean
 }
 
 export interface IReceipt {
     id: string,
-    cashier: string,
-    device_name: string,
-    orders: string,
-    time_orders: string,
+    cashier: IUser,
+    device: IDevice,
+    orders: IOrder[],
+    time_orders: ITimeOrder[],
     orders_cost: number
-    end_at: string,
+    type: 'deduction'|'session'|'outer'
+    ended_at: string,
+    created_at: string,
     total: number,
 }
 
-export interface IOuterReceipt {
-    id: string,
-    cashier: string,
-    ordered_at: string,
-    total: number,
+export interface IUser{
+    id: string;
+    username: string;
+    admin: boolean;
+}
+
+export interface IUserFinances extends IUser{
+    admin: boolean;
+    dailyFinances: number;
+    monthlyFinances: number;
 }
 
 export interface DevicePayload {
@@ -48,29 +58,15 @@ export interface DevicePayload {
 export interface IOrder {
     cost: number,
     quantity: string,
-    product: string,
-    product_name: string
+    product: IProduct,
 }
 
 export interface ITimeOrder {
     cost: number
     play_type: string;
-    start_at: string;
-    end_at: string;
+    started_at: string;
+    ended_at: string;
     timeString: string;
-}
-
-export interface IFinance {
-    finances: number;
-    type: string;
-    username: string;
-    dailyFinances: number;
-    monthlyFinances: number;
-    admin: boolean;
-    cashier: string; 
-    cashier_id: string; 
-    description: string
-    added_at: string;
 }
 
 export interface IFinanceReport{

@@ -1,20 +1,26 @@
-import React, { useRef } from 'react'
-import { IOrder, IOuterReceipt } from '../../../home/types'
+import React, { useEffect, useRef, useState } from 'react'
+import { IReceipt } from '../../../home/types'
+import axios from 'axios'
 
 interface Props {
-    receiptData: IOuterReceipt,
-    orders: IOrder[],
-    hide: ()=>void, 
-    configs: {name: string, phone: string}
+    receipt: IReceipt,
+    hide: ()=>void
 }
 
-const OuterReceipt:React.FC<Props> = ({receiptData, hide, orders, configs}) => {
+const OuterReceipt:React.FC<Props> = ({receipt, hide}) => {
     const invoiceRef = useRef<HTMLDivElement>(null)
+    const [configs, setConfigs] = useState<{name: string, phone: string}>();
     // const handler = useReactToPrint({
     //     content: ()=> invoiceRef.current,
     //     documentTitle: "Invoice",
     //     onAfterPrint: ()=> toast.success("طباعة ناجحة")
     // })
+    useEffect(()=>{
+        axios.get('/config', {withCredentials:true})
+        .then(({data})=>{
+          setConfigs({name: data.nameConfig?.value, phone: data.phoneConfig?.value})
+        })
+    },[])
 
   return (
     <div className='fixed z-[100] left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] bg-[#eee] p-4 rounded-lg'>
@@ -32,29 +38,31 @@ const OuterReceipt:React.FC<Props> = ({receiptData, hide, orders, configs}) => {
                 <p>{configs?.phone}</p>
                 </div>
                 <div>
-                <p className="text-sm">التاريخ: {new Date(receiptData?.ordered_at).toLocaleDateString()}</p>
-                <p className="text-sm">الوقت: {new Date(receiptData?.ordered_at).toLocaleTimeString()}</p>
+                <p className="text-sm">التاريخ: {new Date(receipt?.created_at).toLocaleDateString()}</p>
+                <p className="text-sm">الوقت: {new Date(receipt?.created_at).toLocaleTimeString()}</p>
                 </div>
             </div>
             <div className="flex gap-6 mb-4">
                 <div>
                 <h1 className="text-sm font-bold">الكاشير</h1>
-                <p>{receiptData?.cashier}</p>
+                <p>{receipt?.cashier.username}</p>
                 </div>
             </div>
-            <div className="mb-4">
-                <h2 className="text-lg font-bold mb-2">الطلبات</h2>
-                {orders.map((order, index) => (
-                <div key={index} className="flex justify-between mb-2">
-                    <span className='flex-[.45]'>{order.product_name}</span>
-                    <span className='flex-[.33]'>{order.quantity}</span>
-                    <span>{order.cost}ج</span>
+            {receipt.orders&&receipt.orders.length>0&&
+                <div className="mb-4">
+                    <h2 className="text-lg font-bold mb-2">الطلبات</h2>
+                    {receipt.orders.map((order, index) => (
+                    <div key={index} className="flex justify-between mb-2">
+                        <span className='flex-[.45]'>{order.product.name}</span>
+                        <span className='flex-[.33]'>{order.quantity}</span>
+                        <span>{order.cost}ج</span>
+                    </div>
+                    ))}
                 </div>
-                ))}
-            </div>
+            }
             <div className="flex justify-between pt-2 border-t-2 border-gray-300">
                 <span className="font-bold">الاجمالي:</span>
-                <span>{receiptData?.total}ج</span>
+                <span>{receipt?.total}ج</span>
             </div>
         </div>
         </div>

@@ -6,11 +6,8 @@ import toast from 'react-hot-toast'
 
 
 const Device = ({device}:{device: IDevice}) => {
-  const {deviceTypes, sessions, startSession} = useDevices()
+  const {startSession} = useDevices()
 
-  const deviceType = deviceTypes.find((t)=>t.id===device.type)
-  const session = sessions.find((s)=>s.device_id===device.id)
-  
   const [timerState, setTimerState] = useState(false)
   const [clock, setClock] = useState<string>('')
   const [isInputDisabled, setIsInputDisabled] = useState(true)
@@ -58,13 +55,13 @@ const Device = ({device}:{device: IDevice}) => {
   }
   
   const increment = ()=>{
-    let time = Math.floor((Date.now() - new Date(session!.start_at).getTime()) /1000)
+    let time = Math.floor((Date.now() - new Date(device.session?.started_at).getTime()) /1000)
     setClock(getStringTime(time))
     time ++;
   }
   
   const decrement = ()=>{
-    let time =  Math.floor((new Date(session!.end_at).getTime() - new Date().getTime()) /1000)
+    let time =  Math.floor((new Date(device.session?.ended_at).getTime() - new Date().getTime()) /1000)
     if (time>0) {
         setClock(getStringTime(time))
         time --;
@@ -75,11 +72,11 @@ const Device = ({device}:{device: IDevice}) => {
   
   useEffect(()=>{
     let run:any=null
-    if(!timerState&&session){
-      if(session.time_type === "open") {
+    if(!timerState&&device.session){
+        if(device.session.time_type === "open") {
           increment()
           run = setInterval(increment, 1000)
-        }else if(session.time_type === "time"){
+        }else if(device.session.time_type === "time"){
         run = setInterval(decrement, 1000)
       }
       
@@ -89,15 +86,15 @@ const Device = ({device}:{device: IDevice}) => {
 
   return (
     <>
-    {(showDetails&&session)&&<>
+    {(showDetails&&device.session)&&<>
         <div onClick={()=>{setShowDetails(false)}} className='fixed left-0 top-0 w-screen h-screen bg-black/70 animate-appear duration-500 z-[50]'/>
-        <DeviceDetails {...{device, session, clock, deviceType: deviceType!}} />
+        <DeviceDetails {...{device, clock}} />
     </>
     }
     <div className='bg-[#ffffff] w-60 border-2 border-[#e0e0e0] flex flex-col items-center rounded p-5 text-[#333] shadow-lg duration-[.3s]'>
         <div className='flex justify-between w-full items-center'>
             <h1 className={'font-semibold px-[20px] py-[3px] text-white rounded ' + (device.status?  'bg-red-500' : 'bg-[#3cb75b]')}>{device.name}</h1>
-            <div className='bg-white border-2 border-black text-black p-1 px-4 rounded font-medium'>{deviceType?.name}</div>
+            <div className='bg-white border-2 border-black text-black p-1 px-4 rounded font-medium'>{device.type.name}</div>
         </div>
         { !device.status? 
         <form dir="rtl" className='w-full flex flex-grow flex-col gap-1 text-sm font-bold mt-6'>
@@ -131,10 +128,10 @@ const Device = ({device}:{device: IDevice}) => {
             <button onClick={startDeviceHandler} id={device.id} className=' bg-[#37474f] text-white p-3 text-md rounded-md hover:bg-[#4f6874]  duration-150 active:shadow-hardInner mt-auto '>بدء</button>
         </form> :
         <div className='mt-5 flex flex-col items-center gap-3 h-full w-full'>
-            <div className={'w-[90%] p-4 text-center text-3xl font-bold bg-[#212121] text-white bg-center bg-cover border-emerald-50 border rounded  ' + (session?.time_type === "open"? 'text-red-500' :  'text-green-500')}>{clock? clock : "00:00:00"}</div>
+            <div className={'w-[90%] p-4 text-center text-3xl font-bold bg-[#212121] text-white bg-center bg-cover border-emerald-50 border rounded  ' + (device.session?.time_type === "open"? 'text-red-500' :  'text-green-500')}>{clock? clock : "00:00:00"}</div>
             <div className='flex justify-between gap-4 p-2 '>
-                <p className={'text-sm font-medium p-3 py-2 rounded-sm w-full text-white ' + (session?.time_type==="open" ?  'bg-red-700': 'bg-teal-600')} >{session?.time_type.toUpperCase()}</p>
-                <p className='text-sm font-medium p-3 py-2 bg-slate-700 rounded-sm w-full text-white'>{session?.play_type.toUpperCase()}</p>
+                <p className={'text-sm font-medium p-3 py-2 rounded-sm w-full text-white ' + (device.session?.time_type==="open" ?  'bg-red-700': 'bg-teal-600')} >{device.session?.time_type.toUpperCase()}</p>
+                <p className='text-sm font-medium p-3 py-2 bg-slate-700 rounded-sm w-full text-white'>{device.session?.play_type.toUpperCase()}</p>
             </div>
             <button onClick={()=> setShowDetails(true)} id={device.id} className=' bg-[#00b4d8] p-3 text-md rounded-md text-white hover:bg-[#70d1e2] duration-200 active:shadow-hardInner mt-auto w-full text-center '>تفاصيل</button>
         </ div>

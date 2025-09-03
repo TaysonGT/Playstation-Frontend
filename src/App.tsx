@@ -21,21 +21,25 @@ function App() {
       <Toaster position='top-left' containerStyle={
         { zIndex: 9999, marginTop: '80px', userSelect: "none"} 
       }/>
-        <DevicesProvider>
+        {/* <DevicesProvider> */}
         <Routes>
           <Route path='/login' element={<LoginRoute/>}>
             <Route path='/login' element={<Login/>}/>
           </Route>
           <Route path='/' element={<PrivateRoutes />}>
-              <Route index element={<Home />} path='/' />
-              <Route element={<Devices /> } path='/devices'  />
+            <Route index element={ 
+              <DevicesProvider>
+                <Home />
+              </DevicesProvider>
+            }/>
+            <Route element={<Devices /> } path='/devices'  />
             <Route element ={<Orders />} path='/orders'  />
             <Route element ={<Stock />} path='/stock'  />
             <Route element={<Config />} path='/settings'  />
             <Route element={<Revenue />} path='/revenue'  />
           </Route>
         </Routes>
-        </DevicesProvider>
+        {/* </DevicesProvider> */}
       </BrowserRouter>
     </> 
   )

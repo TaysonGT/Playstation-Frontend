@@ -1,32 +1,23 @@
+import React from 'react'
+import { IUser } from '../../home/types'
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 
 interface Props{
-  currentUser: string, 
+  user: IUser, 
   onAction: ()=>void, 
   hide: ()=>void
 }
 
-const DeleteConfirm:React.FC<Props> = ({currentUser, onAction, hide}) => {
-    
-    const [user, setUser] = useState<{username:string, firstname:string, lastname: string}>()
-    
+const DeleteConfirm:React.FC<Props> = ({user, onAction, hide}) => {
     const deleteHandler = ()=>{
-        axios.delete(`/users/${currentUser}}`, {withCredentials: true})
+        axios.delete(`/users/${user.id}}`, {withCredentials: true})
         .then(({data})=>{
             if(data.message){
                 data.success? toast.success(data.message) : toast.error(data.message)
             }
           }).finally(()=>onAction())
     }
-      
-    useEffect(()=>{
-      currentUser&& axios.get(`/users/${currentUser}`, {withCredentials:true})
-      .then(({data})=>{
-        setUser(data.user)
-      })
-    },[currentUser])
     
     return (
     <div className='fixed left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] bg-white shadow-large flex-col flex z-[102] select-none px-6 py-4'>

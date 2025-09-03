@@ -1,15 +1,13 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { IDevice, IDeviceType, IOrder, ISession, ITimeOrder } from './types';
+import { IDevice, IOrder, ITimeOrder } from './types';
 import { IProduct } from '../stock/types';
 import { useDevices } from '../../context/DeviceContext';
 import { fetchOrders } from '../../api/devices';
 
 interface Props {
-  session: ISession,
   device: IDevice,
-  deviceType: IDeviceType,
   clock: string,
 }
 
@@ -20,7 +18,7 @@ interface ITotalCost {
   currentTimeCost: number
 }
 
-const DeviceDetails:React.FC<Props> = ({session, device, deviceType, clock}) => {
+const DeviceDetails:React.FC<Props> = ({device, clock}) => {
     const [orders, setOrders] = useState<IOrder[]>([])
     const [timeOrders, setTimeOrders] = useState<ITimeOrder[]>([])
 
@@ -28,7 +26,7 @@ const DeviceDetails:React.FC<Props> = ({session, device, deviceType, clock}) => 
 
     const [products, setProducts] = useState<IProduct[]>([])
     const [freeDevices, setFreeDevices] = useState<IDevice[]>([])
-    const [selectedPlayType, setSelectedPlayType] = useState<string>(session.play_type)
+    const [selectedPlayType, setSelectedPlayType] = useState<string>(device.session.play_type)
     const [selectedTransfer, setSelectedTransfer] = useState<string|null>()
     
     const [orderProduct, setOrderProduct] = useState<string>()
@@ -37,7 +35,7 @@ const DeviceDetails:React.FC<Props> = ({session, device, deviceType, clock}) => 
     const {devices, newOrder, endSession, changePlayType, transferSession} = useDevices()
 
     const refetchOrders = ()=>{
-      fetchOrders(session.id)
+      fetchOrders(device.session.id)
       .then(({data})=> {
         setOrders(data.arrangedOrders)
         setTimeOrders(data.timeOrders)
@@ -59,13 +57,13 @@ const DeviceDetails:React.FC<Props> = ({session, device, deviceType, clock}) => 
       
       let time = null;
       let currentTimeCost = 0
-      if(session.time_type === "time" && new Date(session.end_at) < new Date() ) {
-        time = (new Date(session.end_at).getTime() - new Date(session.start_at).getTime()) / (1000 * 60 * 60);
-      } else time = (Date.now() - new Date(session.start_at).getTime()) / (1000 * 60 * 60)
+      if(device.session.time_type === "time" && new Date(device.session.ended_at) < new Date() ) {
+        time = (new Date(device.session.ended_at).getTime() - new Date(device.session.started_at).getTime()) / (1000 * 60 * 60);
+      } else time = (Date.now() - new Date(device.session.started_at).getTime()) / (1000 * 60 * 60)
       
-      session.play_type==="multi" ? 
-        currentTimeCost = Math.ceil(time * deviceType.multi_price )
-        : currentTimeCost = Math.ceil(time * deviceType.single_price) 
+      device.session.play_type==="multi" ? 
+        currentTimeCost = Math.ceil(time * device.type.multi_price )
+        : currentTimeCost = Math.ceil(time * device.type.single_price) 
       
       timeCost += currentTimeCost;
       const overall = timeCost + ordersCost;
@@ -76,7 +74,7 @@ const DeviceDetails:React.FC<Props> = ({session, device, deviceType, clock}) => 
       axios.get(`/products`, {withCredentials:true})
       .then(({data})=> setProducts(data.products))
       
-      session&& refetchOrders()
+      device.session&& refetchOrders()
 
       if(devices){
         const free = devices.filter((dev)=> (dev.status === false&&dev.id!==device.id))
@@ -84,7 +82,7 @@ const DeviceDetails:React.FC<Props> = ({session, device, deviceType, clock}) => 
         setSelectedTransfer(free[0]?.id || null)
       }
 
-    },[session, devices])
+    },[devices])
 
   return (
     <div dir='rtl' className="text-center grid grid-cols-3 p-8 gap-8 fixed z-[102] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border border-gray-300 shadow-md rounded-lg lg:w-auto w-[90vw]" style={{gridAutoRows: '180px 290px'}}>
@@ -97,8 +95,8 @@ const DeviceDetails:React.FC<Props> = ({session, device, deviceType, clock}) => 
             <p className="text-xl font-bold mt-4 text-red-600">{total?.currentTimeCost}<span className='tracking-widest font-noto my-2'>ج</span></p>
 
             <div className='flex justify-center gap-6 mt-2'>
-              <div className='text-md font-medium border-b-4 pb-1 border-gray-600'>{session?.play_type === "multi"? "ملتي" : "سنجل" }</div>
-              <div className='text-md font-medium border-b-4 pb-1 border-gray-600'>{session?.time_type === "open"? "مفتوح" : "وقت"}</div>
+              <div className='text-md font-medium border-b-4 pb-1 border-gray-600'>{device.session.play_type === "multi"? "ملتي" : "سنجل" }</div>
+              <div className='text-md font-medium border-b-4 pb-1 border-gray-600'>{device.session.time_type === "open"? "مفتوح" : "وقت"}</div>
             </div>
 
           </div>
@@ -131,7 +129,7 @@ const DeviceDetails:React.FC<Props> = ({session, device, deviceType, clock}) => 
                   toast.error("برجاء إدخال كل البيانات")
                   return;
                 }
-                await newOrder(session.id, orderProduct, orderQuantity)
+                await newOrder(device.session.id, orderProduct, orderQuantity)
                 refetchOrders()
               }}
               className="w-full bg-gray-700 text-white py-2 px-4 rounded-md hover:bg-gray-800"
@@ -160,7 +158,7 @@ const DeviceDetails:React.FC<Props> = ({session, device, deviceType, clock}) => 
           </div>
           <button onClick={(e)=>{
             e.preventDefault();
-            endSession(session.id)
+            endSession(device.session.id)
           }} className='p-2 mt-auto bg-red-700 text-white rounded hover:bg-red-600 duration-150'>إنهاء الوقت</button>
         </div>
         
@@ -178,7 +176,7 @@ const DeviceDetails:React.FC<Props> = ({session, device, deviceType, clock}) => 
           <button
             onClick={(e)=>{
               e.preventDefault()
-              changePlayType(session.id, selectedPlayType)
+              changePlayType(device.session.id, selectedPlayType)
             }}
             className="w-full bg-gray-700 text-white py-2 px-4 rounded-md hover:bg-gray-800"
           >
@@ -203,7 +201,7 @@ const DeviceDetails:React.FC<Props> = ({session, device, deviceType, clock}) => 
                 toast.error("برجاء اختيار جهاز لنقل الجلسة إليه")
                 return;
               }
-              transferSession(session.id, selectedTransfer)
+              transferSession(device.session.id, selectedTransfer)
             }} 
             className="w-full bg-gray-700 text-white py-2 px-4 rounded-md hover:bg-gray-800"
           >
@@ -218,7 +216,7 @@ const DeviceDetails:React.FC<Props> = ({session, device, deviceType, clock}) => 
             {orders?.map((order, index) => (
               <li key={index} className='flex justify-end px-4'>
                 <span className='ml-auto'>{order.quantity}</span>
-                <span className='font-semibold'>{order.product}</span>  
+                <span className='font-semibold'>{order.product.name}</span>  
                 <span className='mr-auto'>{order.cost}ج</span>
               </li>
             ))}

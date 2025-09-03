@@ -51,10 +51,10 @@ const DeviceReceiptTable:React.FC<Props> = ({receipts, products}) => {
         {receipts?.map((receipt, i)=>
             <li key={i} className='flex items-stretch w-full'>
                 <div className="py-4  border-b border-gray-200 flex-1 flex items-center justify-center flex-col bg-white">
-                  <div>{new Date(receipt.end_at).toLocaleDateString()}</div>
-                  <div>{new Date(receipt.end_at).toLocaleTimeString()}</div>
+                  <div>{new Date(receipt.ended_at).toLocaleDateString()}</div>
+                  <div>{new Date(receipt.ended_at).toLocaleTimeString()}</div>
                 </div>
-                <div className="py-4 border-b border-gray-200 text-lg flex-[.5] flex items-center justify-center bg-white font-bold">{receipt.device_name}</div>
+                <div className="py-4 border-b border-gray-200 text-lg flex-[.5] flex items-center justify-center bg-white font-bold">{receipt.device?.name}</div>
                 <div className="py-4  border-b border-gray-200 flex-1 flex items-center justify-center">{receipt.orders_cost>0? (receipt.orders_cost + "ج"): "--"}</div>
                 <div className="py-4  border-b border-gray-200 flex-1 flex items-center justify-center">{receipt.total}ج</div>
                 <div className="py-4  border-b border-gray-200 flex-1 flex items-center justify-center  text-ellipsis overflow-hidden"><button onClick={()=>getReceiptHandler(receipt.id)} className='p-2 bg-green-500 hover:bg-green-400 duration-100 text-white rounded-md'>عرض الطلبات</button></div>

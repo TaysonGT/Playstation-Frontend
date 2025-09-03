@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import OuterReceipt from '../receipt/OuterReceipt'
-import { IOrder, IOuterReceipt } from '../../../home/types';
+import { IOrder, IReceipt } from '../../../home/types';
 import OrderPopup from '../popup/OrderPopup';
 import Loader from '../../../../components/Loader';
 
@@ -11,7 +11,7 @@ const OuterReceipts = () => {
   const [orders, setOrders] = useState<IOrder[]>([])
   const [showInvoice, setShowInvoice] = useState(false)
   const [configs, setConfigs] = useState({name: '', phone: ''})
-  const [receipts, setReceips] = useState<IOuterReceipt[]>([]) 
+  const [receipts, setReceips] = useState<IReceipt[]>([]) 
   const [isLoading, setIsLoading] = useState(true) 
 
   const refetch = async()=>{
@@ -49,7 +49,7 @@ const OuterReceipts = () => {
   return ( <>
     {(showInvoice&&receiptData)&& 
       <>
-          <OuterReceipt {... {receiptData, orders, hide: ()=>setShowInvoice(false), configs}} />
+          <OuterReceipt {... {receipt: receiptData, orders, hide: ()=>setShowInvoice(false)}} />
           <div onClick={()=>setShowInvoice(false)} className='fixed left-0 top-0 w-screen h-screen bg-layout backdrop-blur-sm animate-alert duration-150 z-[99]'></div>
       </>
     }
@@ -68,9 +68,9 @@ const OuterReceipts = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-2">
       {receipts?.map((receipt, index) => (
           <div key={index} className="bg-white shadow-lg rounded-lg overflow-hidden p-4">
-            <h2 className="text-xl font-semibold mb-2">{receipt.cashier}</h2>
-            <p className="text-gray-600">التاريخ: {new Date(receipt.ordered_at).toLocaleDateString()}</p>
-            <p className="text-gray-600">الوقت: {new Date(receipt.ordered_at).toLocaleTimeString()}</p>
+            <h2 className="text-xl font-semibold mb-2">{receipt.cashier.username}</h2>
+            <p className="text-gray-600">التاريخ: {new Date(receipt.created_at).toLocaleDateString()}</p>
+            <p className="text-gray-600">الوقت: {new Date(receipt.created_at).toLocaleTimeString()}</p>
             <p className="text-gray-800 mt-2">الاجمالي:  {receipt.total}ج</p>
             <div className="mt-4 flex justify-between items-center">
               <span className="text-sm text-gray-500">{receipt.total}</span>

@@ -1,13 +1,14 @@
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import toast from 'react-hot-toast'
+import { IUser } from '../../home/types'
 
 interface Props {
   onAction: ()=>void,
-  currentUser: string
+  user: IUser
 }
 
-const NewUser:React.FC<Props> = ({onAction, currentUser}) => {
+const NewUser:React.FC<Props> = ({onAction, user}) => {
         
     const [password, setPassword ] = useState('')
     const [username, setUsername ] = useState('')
@@ -20,7 +21,7 @@ const NewUser:React.FC<Props> = ({onAction, currentUser}) => {
 
     const addHandler = (e:React.MouseEvent<HTMLElement>)=>{
       e.preventDefault();
-      axios.put(`/users/${currentUser}`, {username, password, admin}, {withCredentials: true})
+      axios.put(`/users/${user.id}`, {username, password, admin}, {withCredentials: true})
       .then(({data})=> {
         if(data.message){
           data.success? toast.success(data.message) 
@@ -31,7 +32,7 @@ const NewUser:React.FC<Props> = ({onAction, currentUser}) => {
     }
     
     useEffect(() => {
-      currentUser && axios.get(`/users/${currentUser}`, {withCredentials:true})
+      axios.get(`/users/${user.id}`, {withCredentials:true})
       .then(({data})=>{
         setPrevUsername(data.user.username)
         setPrevPassword(data.user.password)
@@ -42,8 +43,7 @@ const NewUser:React.FC<Props> = ({onAction, currentUser}) => {
           setAdmin("employee")
         }
       })
-    }, [currentUser])
-    
+    }, [user])
     
   return (
     <div className={`fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-[102] flex items-center justify-center text-black font-medium`}>

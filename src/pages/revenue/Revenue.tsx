@@ -1,8 +1,10 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import AddDeducionPopup from './popups/AddDeductionPopup';
-import { IFinance, IFinanceReport } from '../home/types';
+import { IFinanceReport, IReceipt } from '../home/types';
 import Loader from '../../components/Loader';
+import { RiEyeLine } from 'react-icons/ri';
+import OuterReceipt from '../orders/partials/receipt/OuterReceipt';
 
 const Revenue = () => {
   const [finances, setFinances] = useState<IFinanceReport>({
@@ -40,12 +42,14 @@ const Revenue = () => {
     productsGrowthLossSign: true
   })
 
-  const [currentFinances, setCurrentFinances] = useState<IFinance[]>([])
+  const [currentFinances, setCurrentFinances] = useState<IReceipt[]>([])
   const [date, setDate] = useState<string>()
   const [day, setDay] = useState('')
   const [currentUser, setCurrentUser] = useState('')
   const [showAddDeductionPopup, setShowAddDeductionPopup] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [showFinanceModal, setShowFinanceModal] = useState(false)
+  const [selectedFinance, setSelectedFinance] = useState<IReceipt|null>(null)
   
   const [users, setUsers] = useState<{id:string, username:string}[]>()
 
@@ -53,7 +57,7 @@ const Revenue = () => {
 
   const currentDateHandler = (e:React.InputEvent<HTMLInputElement>)=>{
     let currDate = e.currentTarget.value;
-    setDate(currDate)
+    setDate(new Date(currDate).toISOString())
   }
 
   const fetchFinances = async(date: string)=>{
@@ -69,7 +73,7 @@ const Revenue = () => {
   }
 
   useEffect(()=>{
-    setDate(new Date(new Date().setHours(0, 0, 0, 0)).toLocaleDateString())
+    setDate(new Date(new Date().setHours(0, 0, 0, 0)).toISOString())
   }, [])
 
   useEffect(()=>{
@@ -94,6 +98,13 @@ const Revenue = () => {
         }}} />
       </>
       }
+
+      {showFinanceModal&&selectedFinance&& 
+      <>
+        <div onClick={()=>setShowFinanceModal(false)} className='fixed left-0 top-0 w-screen h-screen bg-layout backdrop-blur-sm animate-alert duration-100 z-[99]'></div>
+        <OuterReceipt {...{receipt:selectedFinance, hide: ()=>setShowFinanceModal(false)}} />
+      </>
+      }
     
       <div className='flex justify-between items-center'>
         <h1 className="text-3xl align-middle lg font-semibold text-white">لوحة المعلومات</h1>
@@ -112,7 +123,7 @@ const Revenue = () => {
             </div>
             <div className='flex gap-4 items-end'>
               <p className="text-2xl font-bold">{day}</p>
-              <p className={`text-lg font-bold`}>{date}</p>
+              <p className={`text-lg font-bold`}>{date&& new Date(date).toLocaleDateString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'})}</p>
             </div>
           </div>
 
@@ -192,16 +203,37 @@ const Revenue = () => {
               }
             </div>
           </div>
-          <div className="flex flex-col text-center bg-gray-200 rounded-lg shadow-md text-black col-start-2 row-start-2 col-end-4 lg:col-end-5 lg:row-end-6 row-end-5 overflow-hidden">
-            <div className='p-6 flex flex-col gap-4 overflow-y-auto'>
+          <div className="flex flex-col bg-gray-200 rounded-lg shadow-md text-black col-start-2 row-start-2 col-end-4 lg:col-end-5 lg:row-end-6 row-end-5 overflow-hidden">
+            <div className='flex items-stretch border-b border-gray-400 bg-white px-10'>
+              <div className='flex-1 p-3 flex items-center'>النوع</div>
+              <div className='flex-1 p-3 flex items-center'>الموظف</div>
+              <div className='flex-1 p-3 flex items-center'>الوقت</div>
+              <div className='flex-[0.5] p-3 flex items-center'>المبلغ</div>
+              <div className='flex-[0.5] p-3 flex items-center'>عرض</div>
+            </div>
+            <div className='p-2 flex flex-col gap-2 overflow-y-auto'>
               {currentFinances.map((finance, i ) =>
-                <div key={i} className="bg-white shadow-lg rounded-lg flex flex-col justify-between overflow-hidden">
-                  <div className="p-4 flex-1">
-                    <h3 className="text-lg font-semibold">{finance.type==="Device" || finance.type ==="devices" ? "جهاز" : finance.type === "outerReceipt" ? "فاتورة خارجية" : "خصم"}</h3>
-                    <p className="text-gray-600 text-sm ">{finance.description}</p>
+                <div key={i} className="bg-white shadow-lg rounded-lg flex items-stretch px-4">
+                  <div className="flex-1 p-3">
+                    {finance.type==="session" ? "جهاز" : finance.type === "outer" ? "فاتورة خارجية" : "خصم"}
                   </div>
-                  <div className="bg-gray-100 p-1 flex-[.2]">
-                    <p className={"font-bold text-md " + (finance.type === "deduction"? "text-red-600" : "text-green-500")}>{finance.finances}ج</p>
+                  <div className="flex-1 p-3">
+                    {finance.cashier.username}
+                  </div>
+                  <div className="flex-1 p-3 flex gap-2 items-center">
+                    <p>{new Date(finance.created_at).toLocaleTimeString()}</p> -
+                    <p>{new Date(finance.created_at).toLocaleDateString()}</p>
+                  </div>
+                  <div className={"font-bold flex-[0.5] p-3 " + (finance.type === "deduction"? "text-red-600" : "text-green-500")}>
+                    {finance.total}ج
+                  </div>
+                  <div
+                    onClick={()=>{
+                      setSelectedFinance(finance)
+                      setShowFinanceModal(true)
+                    }}
+                   className="text-2xl flex items-center hover:text-cyan-700 cursor-pointer flex-[0.5] p-3 ">
+                    <RiEyeLine />
                   </div>
                 </div>
               )}

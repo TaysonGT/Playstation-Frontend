@@ -5,7 +5,7 @@ import NewUser from './popups/NewUser';
 import EditUser from './popups/EditUser'
 import DeleteConfirm from './popups/DeleteConfirm';
 import toast from 'react-hot-toast';
-import { IDeviceType, IFinance } from '../home/types';
+import { IDeviceType, IUser, IUserFinances } from '../home/types';
 import { fetchDeviceTypes } from '../../api/devices';
 import DarkBackground from '../../components/DarkBackground';
 
@@ -15,7 +15,7 @@ const Config = () => {
   const [playstationName, setPlaystationName] = useState('')
   const [phone, setPhone] = useState('')
 
-  const [currentUser, setCurrentUser] = useState<string|null>(null)
+  const [currentUser, setCurrentUser] = useState<IUser|null>(null)
   
   const [editPopup, setEditPopup] = useState(false)
   const [addPopup, setAddPopup] = useState(false)
@@ -29,13 +29,13 @@ const Config = () => {
   const [singlePrice, setSinglePrice] = useState<number>(0)
   const [multiPrice, setMultiPrice] = useState<number>(0)
   
-  const [userFinances, setUserFinances] = useState<IFinance[]>([])
+  const [users, setUsers] = useState<IUserFinances[]>([])
 
   const getAll = async()=>{
     setIsLoading(true)
     await axios.get('/finances/users', {withCredentials: true})
     .then(({data})=>{
-      setUserFinances(data.usersFinances)
+      setUsers(data.usersFinances)
     })
     await fetchDeviceTypes().then(({data})=>{
       if(data.success){
@@ -100,7 +100,7 @@ const Config = () => {
         <EditUser {...{onAction: async()=>{
           setEditPopup(false)
           await getAll()
-          }, currentUser}}/>
+          }, user:currentUser}}/>
         <div onClick={(e)=>{e.preventDefault(); setEditPopup(false)}} className='fixed left-0 top-0 w-screen h-screen bg-layout backdrop-blur-sm animate-alert duration-150 z-[99]'></div>
       </>
       }
@@ -108,7 +108,7 @@ const Config = () => {
         <DeleteConfirm {...{onAction: async()=>{
           setConfirmDelete(false)
           await getAll()
-        }, hide: ()=> setConfirmDelete(false), currentUser}}/>
+        }, hide: ()=> setConfirmDelete(false), user:currentUser}}/>
         <div onClick={(e)=>{e.preventDefault(); setConfirmDelete(false)}} className='fixed left-0 top-0 w-screen h-screen bg-layout backdrop-blur-sm animate-alert duration-150 z-[99]'></div>
       </>
       }
@@ -163,18 +163,18 @@ const Config = () => {
                 <div className='flex-1'>الدور</div>
               </div> 
               <ul className='flex flex-col grow shadow-inner overflow-y-auto bg-slate-200 rounded-b-sm border-b-[3px] border-slate-700'>
-                {userFinances?.map((finance, i)=>
+                {users?.map((user, i)=>
                   <li
                   onClick={()=>
                     setCurrentUser(prev=>{
-                      return prev === finance.cashier_id? finance.cashier_id : null
+                      return prev?.id === user.id? user : null
                     }) 
                   }
-                  className={'text-black flex w-full py-1 gap-2 text-center hover:bg-slate-300 ' + (i==0&& ' pt-2 ') + (currentUser == finance.cashier_id&& ' bg-slate-400 hover:bg-slate-400 text-slate-200 ')} key={i}>
-                    <div className='flex-1'>{finance.username}</div>
-                    <div className='flex-1'>{finance.dailyFinances}<span className='font-noto font-bold'>ج</span></div>
-                    <div className='flex-1'>{finance.monthlyFinances}<span className='font-noto font-bold'>ج</span></div>
-                    <div className='flex-1'>{finance.admin? "ادمن": "موظف"}</div>
+                  className={'text-black flex w-full py-1 gap-2 text-center hover:bg-slate-300 ' + (i==0&& ' pt-2 ') + (currentUser?.id === user.id&& ' bg-slate-400 hover:bg-slate-400 text-slate-200 ')} key={i}>
+                    <div className='flex-1'>{user.username}</div>
+                    <div className='flex-1'>{user.dailyFinances}<span className='font-noto font-bold'>ج</span></div>
+                    <div className='flex-1'>{user.monthlyFinances}<span className='font-noto font-bold'>ج</span></div>
+                    <div className='flex-1'>{user.admin? "ادمن": "موظف"}</div>
                   </li> 
                 )}
               </ul>

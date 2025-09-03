@@ -86,7 +86,7 @@ const Devices = () => {
                 <div key={i} className={`relative items-stretch flex ${i%2 !== 0 ? 'bg-gray-50': 'bg-white'}`}>
                     <div className='pr-7 font-bold text-blue-500 p-3 flex-1'>{device.name}</div>
                     <div className='flex-1 p-3 flex items-center'>
-                        {deviceTypes?.filter((type)=> type.id === device.type)[0]?.name}
+                        {device.type.name}
                     </div>
                     <div className='flex-1 p-3 flex items-center'>
                         <span className={'p-1.5 text-xs font-bold uppercase tracking-wider bg-opcaity-50 rounded-lg ' + (!device.status? "text-green-800 bg-green-200" : "text-red-800 bg-red-200")}>{!device.status? "متاح" : "مشغول"}</span>
