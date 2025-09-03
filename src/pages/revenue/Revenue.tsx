@@ -81,9 +81,9 @@ const Revenue = () => {
   },[date, currentUser])
 
   return isLoading? 
-    <div className='pt-30'><Loader size={50} thickness={10}/></div>
+    <div className='flex justify-center items-center h-full'><Loader size={50} thickness={10}/></div>
   :(
-    <div dir='rtl' className="lg:px-36 px-10 bg-[navy] pt-32 pb-10 flex flex-col gap-6 h-screen ">
+    <div dir='rtl' className="lg:px-36 px-10 bg-[navy] py-6 flex flex-col gap-6 h-full min-h-0 overflow-y-auto ">
     
       {showAddDeductionPopup&& 
       <>

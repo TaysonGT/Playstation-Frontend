@@ -59,7 +59,7 @@ const Devices = () => {
                 refetchDevices()
             }}} />
         </>}
-    <div className='pt-32 lg:px-36 px-10 bg-[#0d47a1] min-h-screen flex flex-col' dir='rtl'>
+    <div className='py-6 lg:px-36 px-10 bg-[#0d47a1] h-full flex flex-col' dir='rtl'>
         <div className='w-full flex justify-between items-start'>
             <h1 className='text-white text-3xl font-bold'>الأجهزة</h1>
             <button onClick={()=>{ 
@@ -73,8 +73,8 @@ const Devices = () => {
             <div className='mt-16 flex justify-center items-center'>
                 <Loader size={50} color='white' thickness={10}/>
             </div>
-        :devices?.length<1? 
-            <div dir='rtl' className='text-center mt-10'>
+        :devices.length<1? 
+            <div dir='rtl' className='flex flex-col items-center mt-20'>
                 <h1 className='text-xl font-bold text-white'>لا توجد أجهزة</h1>
                 <p className='text-sm font-bold mt-4 text-gray-300'>برجاء إضافة أجهزة جديدة ...</p>
             </div>
@@ -88,7 +88,7 @@ const Devices = () => {
                 </tr>
             </thead>
             <tbody className='relative'>
-                {devices?.map((device, i)=> 
+                {devices.map((device, i)=> 
                 <tr key={i} className={ 'relative ' + (i%2 !== 0 ? 'bg-gray-50': 'bg-white')}>
                     <td className='pr-7 font-bold text-blue-500 p-4'>{device.name}</td>
                     <td>

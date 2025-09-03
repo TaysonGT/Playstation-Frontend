@@ -58,7 +58,7 @@ const Stock = () => {
         />
     </>}
 
-    <div className='pt-32 pb-10 px-10 lg:px-36 bg-[#0d47a1] min-h-screen' dir='rtl'>
+    <div className='py-6 px-10 lg:px-36 bg-[#0d47a1] h-full' dir='rtl'>
     
         <div className='w-full flex justify-between items-start '>
             <h1 className='text-white text-3xl font-bold'>المخزن</h1>

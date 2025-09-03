@@ -43,7 +43,7 @@ const Navbar = ({token}:{token:string}) => {
 
 
   return ( 
-    <div className=' w-full fixed bg-[#1b1b1f] shadow-large py-6 xl:px-32 px-8 flex justify-between items-center select-none z-[99] text-sm'>
+    <div className='w-full bg-[#1b1b1f] shadow-large py-6 xl:px-32 px-8 flex justify-between items-center select-none z-[99] text-sm'>
       {token&& <>
         <div className='flex gap-2 items-center cursor-pointer'>
           <img src={UserIcon} className='sm:h-[40px] h-[30px] mr-auto' alt="" />

@@ -8,10 +8,12 @@ const PrivateRoutes = () => {
   
   return (
     token? 
-    <> 
+    <div className='flex flex-col h-screen overflow-hidden'> 
       <Navbar token={token} /> 
-      <Outlet /> 
-    </> 
+      <div className='grow min-h-0'>
+        <Outlet /> 
+      </div>
+    </div> 
     : <Navigate to='/login' replace state={{from: location}} />
   )
 }

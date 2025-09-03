@@ -111,10 +111,6 @@ export const DevicesProvider:React.FC<React.PropsWithChildren<{}>> = ({children}
     getAll();
   }, []);
 
-  useEffect(() => { 
-    console.log(isLoading);
-  }, [isLoading]);
-
   return (
     <DeviceContext.Provider
       value={{

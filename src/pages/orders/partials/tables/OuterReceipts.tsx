@@ -1,20 +1,35 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import OuterReceipt from '../receipt/OuterReceipt'
 import { IOrder, IOuterReceipt } from '../../../home/types';
 import OrderPopup from '../popup/OrderPopup';
+import Loader from '../../../../components/Loader';
 
-interface Props {
-  receipts: IOuterReceipt[]
-}
-
-const OuterReceipts:React.FC<Props> = ({ receipts }) => {
+const OuterReceipts = () => {
   const [showPopup, setShowPopup] = useState(false)
   const [receiptData, setReceiptData] = useState()
   const [orders, setOrders] = useState<IOrder[]>([])
   const [showInvoice, setShowInvoice] = useState(false)
   const [configs, setConfigs] = useState({name: '', phone: ''})
+  const [receipts, setReceips] = useState<IOuterReceipt[]>([]) 
+  const [isLoading, setIsLoading] = useState(true) 
 
+  const refetch = async()=>{
+    setIsLoading(true)
+    await axios.get('/receipts/outer', {withCredentials:true})
+    .then(({data}) => {
+      setReceips(data.receipts?.reverse())    
+    })
+    .catch(err=> (err))
+    .finally(
+      ()=>
+      setIsLoading(false)
+    )
+  }
+
+  useEffect(()=>{
+    refetch()
+  },[])
 
   useEffect(()=>{
       receiptData&&setShowInvoice(true)
@@ -44,11 +59,12 @@ const OuterReceipts:React.FC<Props> = ({ receipts }) => {
         <div onClick={()=>setShowPopup(false)} className='fixed left-0 top-0 w-screen h-screen bg-layout backdrop-blur-sm animate-alert duration-100 z-[100]'></div>
       </>
     }
-    <div className="container mx-auto">
+    <div className="container mx-auto h-full flex flex-col">
       <h1 className="text-3xl font-bold mb-4 text-white">الفواتير الخارجية</h1>
-      <button className='px-4 py-2 hover:bg-green-500 duration-150 bg-green-600 text-white rounded-lg shadow-md' onClick={()=>setShowPopup(true)}>إضافة طلب</button>
-      {!receipts? <div className='mt-16 flex justify-center items-center'>Loading...</div>
+      <button className='px-4 py-2 self-start hover:bg-green-500 duration-150 bg-green-600 text-white rounded-lg shadow-md' onClick={()=>setShowPopup(true)}>إضافة طلب</button>
+      {isLoading? <div className='grow flex justify-center'><Loader size={40} thickness={10} color='white' /></div>
       :
+      receipts.length>0?
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-2">
       {receipts?.map((receipt, index) => (
           <div key={index} className="bg-white shadow-lg rounded-lg overflow-hidden p-4">
@@ -63,6 +79,9 @@ const OuterReceipts:React.FC<Props> = ({ receipts }) => {
           </div>
         ))}
       </div>
+      : <div dir='rtl' className='text-center grow pt-10'>
+            <h1 className='text-xl text-gray-200'>لا توجد فواتير خارجية...</h1>
+        </div>
       }
     </div>
     </>

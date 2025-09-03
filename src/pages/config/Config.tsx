@@ -79,7 +79,7 @@ const Config = () => {
   },[])
   
   return (
-    <div dir='rtl' className="flex flex-col h-screen overflow-hidden pb-10 bg-[#0d47a1] pt-32 lg:px-36 px-10 font-alexandria">
+    <div dir='rtl' className="flex flex-col h-full overflow-hidden py-6 bg-[#0d47a1] lg:px-36 px-10 font-alexandria">
       {typePopup&& <>
         <DevTypePopup {...{onAction: async()=>{
           setTypePopup(false)

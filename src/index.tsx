@@ -10,7 +10,9 @@ axios.interceptors.request.use(config => {
    const accessToken = Cookies.get('access_token');
    const username = Cookies.get('username');
    const user_id = Cookies.get('user_id');
-
+   
+   if(!accessToken) return config;
+   
    config.headers.Authorization = `Bearer ${accessToken}`;
    config.headers.username = `Bearer ${username}`;
    config.headers.user_id = `Bearer ${user_id}`;
