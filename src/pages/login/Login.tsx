@@ -55,10 +55,10 @@ const Login = () => {
           <h1 className='text-center text-xl mb-4'>تسجيل الدخول</h1>
           <form className="flex flex-col gap-2 pb-4 w-full mt-6">
             <label>اسم المستخدم</label>
-            <input placeholder="ادخل اسم المستخدم" onInput={e=>
-            setUsername(e.currentTarget.value)} className=' w-full px-3 py-2 border border-gray-400 placeholder:text-gray-400 rounded-md
-            focus:outline-none focus:border-blue-500
-            duration-300' type="text" name="username" />
+            <input 
+              placeholder="ادخل اسم المستخدم" autoFocus onInput={(e)=>setUsername(e.currentTarget.value)} 
+              className=' w-full px-3 py-2 border border-gray-400 placeholder:text-gray-400 rounded-md focus:outline-none focus:border-blue-500 duration-300' type="text" 
+              name="username" />
             <label>كلمة المرور</label>
             <input  placeholder="ادخل كلمة المرور"
             onInput={(e)=>setPassword(e.currentTarget.value)} className=" w-full px-3 py-2 border border-gray-400 placeholder:text-gray-400 rounded-md

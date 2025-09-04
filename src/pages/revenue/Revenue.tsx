@@ -5,6 +5,7 @@ import { IFinanceReport, IReceipt } from '../home/types';
 import Loader from '../../components/Loader';
 import { RiEyeLine } from 'react-icons/ri';
 import OuterReceipt from '../orders/partials/receipt/OuterReceipt';
+import SessionReceipt from '../orders/partials/receipt/SessionReceipt';
 
 const Revenue = () => {
   const [finances, setFinances] = useState<IFinanceReport>({
@@ -91,7 +92,7 @@ const Revenue = () => {
     
       {showAddDeductionPopup&& 
       <>
-        <div onClick={()=>setShowAddDeductionPopup(false)} className='fixed left-0 top-0 w-screen h-screen bg-layout backdrop-blur-sm animate-alert duration-100 z-[99]'></div>
+        <div onClick={()=>setShowAddDeductionPopup(false)} className='fixed left-0 top-0 w-screen h-screen bg-black/70 animate-appear duration-500 z-[50]'/>
         <AddDeducionPopup {...{onAction: ()=>{
           setShowAddDeductionPopup(false)
           date&& fetchFinances(date)
@@ -101,8 +102,11 @@ const Revenue = () => {
 
       {showFinanceModal&&selectedFinance&& 
       <>
-        <div onClick={()=>setShowFinanceModal(false)} className='fixed left-0 top-0 w-screen h-screen bg-layout backdrop-blur-sm animate-alert duration-100 z-[99]'></div>
-        <OuterReceipt {...{receipt:selectedFinance, hide: ()=>setShowFinanceModal(false)}} />
+        <div onClick={()=>setShowFinanceModal(false)} className='fixed left-0 top-0 w-screen h-screen bg-black/70 animate-appear duration-500 z-[50]'/>
+        {selectedFinance.type==='outer'?
+          <OuterReceipt {...{receipt:selectedFinance, hide: ()=>setShowFinanceModal(false)}} />
+          : <SessionReceipt {...{receiptData:selectedFinance, hide: ()=>setShowFinanceModal(false)}} />
+        }
       </>
       }
     

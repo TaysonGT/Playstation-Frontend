@@ -1,21 +1,30 @@
 import React, { useRef, useState, useEffect } from 'react'
 import { IOrder, IReceipt } from '../../../home/types'
+import axios from 'axios'
 
 interface Props {
   receiptData: IReceipt, 
   hide: ()=>void, 
-  configs: {name:string, phone:string}
 }
 
-const SessionReceipt:React.FC<Props> = ({receiptData, hide, configs}) => {
+const SessionReceipt:React.FC<Props> = ({receiptData, hide}) => {
     const [totalPlayed, setTotalPlayed] = useState<string>('')
     const invoiceRef = useRef<HTMLDivElement>(null)
+    const [configs, setConfigs] = useState<{name: string, phone: string}>();
 
     // const handler = useReactToPrint({
     //     content: ()=> invoiceRef.current,
     //     documentTitle: "Invoice",
     //     onAfterPrint: ()=> toast.success("طباعة ناجحة")
     // })
+
+    useEffect(()=>{
+      axios.get('/config', {withCredentials:true})
+      .then(({data})=>{
+        setConfigs({name: data.nameConfig?.value, phone: data.phoneConfig?.value})
+      })
+    },[])
+
 
     const timeConv = ({start, end, secs}:{start?:string, end?:string, secs?: number})=>{
       let time = null
@@ -67,14 +76,14 @@ const SessionReceipt:React.FC<Props> = ({receiptData, hide, configs}) => {
                 <p>{configs?.phone}</p>
                 </div>
                 <div>
-                <p className="text-sm">التاريخ: {new Date(receiptData?.ended_at).toLocaleDateString()}</p>
-                <p className="text-sm">الوقت: {new Date(receiptData?.ended_at).toLocaleTimeString()}</p>
+                <p className="text-sm">التاريخ: {new Date(receiptData?.created_at).toLocaleDateString()}</p>
+                <p className="text-sm">الوقت: {new Date(receiptData?.created_at).toLocaleTimeString()}</p>
                 </div>
             </div>
             <div className="flex gap-6 mb-4">
                 <div>
                 <h1 className="text-sm font-bold">الكاشير</h1>
-                <p>{receiptData?.cashier.username}</p>
+                <p>{receiptData.cashier?.username||'Deleted User'}</p>
                 </div>
             </div>
             {(receiptData.orders && receiptData.orders?.length > 0)&&

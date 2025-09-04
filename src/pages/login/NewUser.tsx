@@ -29,6 +29,7 @@ const NewUser:React.FC<Props> = ({assignUser}) => {
         <div className="mb-4">
           <label className="block mb-1">اسم المستخدم:</label>
           <input
+            autoFocus
             type="text"
             placeholder='ادخل اسم المستخدم'
             name="username" onInput={e=> setUsername(e.currentTarget.value)}

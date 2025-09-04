@@ -68,7 +68,7 @@ const OuterReceipts = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-2">
       {receipts?.map((receipt, index) => (
           <div key={index} className="bg-white shadow-lg rounded-lg overflow-hidden p-4">
-            <h2 className="text-xl font-semibold mb-2">{receipt.cashier.username}</h2>
+            <h2 className="text-xl font-semibold mb-2">{receipt.cashier?.username}</h2>
             <p className="text-gray-600">التاريخ: {new Date(receipt.created_at).toLocaleDateString()}</p>
             <p className="text-gray-600">الوقت: {new Date(receipt.created_at).toLocaleTimeString()}</p>
             <p className="text-gray-800 mt-2">الاجمالي:  {receipt.total}ج</p>

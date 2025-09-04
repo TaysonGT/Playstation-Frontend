@@ -27,7 +27,7 @@ const AddDevicePopup = ({onAction, deviceTypes}:{onAction:()=>void, deviceTypes:
       <form className='flex flex-col gap-4 text-right'>
         <div>
           <label className='block '>اسم الجهاز</label>
-          <input className="p-2 mt-2 border border-gray-300 px-3 py-2 w-64" onInput={(e)=>setDeviceName(e.currentTarget.value)} type="text" placeholder='مثلا: PS6 أو 6' />    
+          <input className="p-2 mt-2 border border-gray-300 px-3 py-2 w-64" autoFocus onInput={(e)=>setDeviceName(e.currentTarget.value)} type="text" placeholder='مثلا: PS6 أو 6' />    
         </div>
         <div>
           <label className=' block'>نوع الجهاز</label>
