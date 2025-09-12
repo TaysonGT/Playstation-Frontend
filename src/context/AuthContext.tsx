@@ -22,18 +22,17 @@ export const AuthProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }
   const loginUser = async (username: string, password: string) => {
     if(currentUser){
         toast.error("لقد سجلت دخولك بالفعل!")
-        console.log(currentUser)
         navigate('/')
         return;
     }
 
     await login({username, password})
-    .then(({data})=>{
+    .then(async({data})=>{
         if(data.success){
             toast.success(data.message)
             Cookies.set('access_token', data.token, {expires: new Date(data.expDate), secure: true, path: '/'})
+            await getUserData()
             navigate('/')
-            setCurrentUser(data.user)
         }else{
             toast.error(data.message)
         }
@@ -42,12 +41,12 @@ export const AuthProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }
 
   const firstLogin = async (username: string, password: string) => {
     await createFirstUser({username, password})
-    .then(({data})=>{
+    .then(async({data})=>{
         if(data.success){
             toast.success(data.message)
             Cookies.set('access_token', data.token, {expires: new Date(data.expDate), secure: true, path: '/'})
+            await getUserData()
             navigate('/')
-            setCurrentUser(data.user)
         }else{
             toast.error(data.message)
         }

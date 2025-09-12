@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import Home from '../assets/home.png' 
 import UserIcon from '../assets/user.png'
 import RevenueIcon from '../assets/revenue.png'
@@ -11,9 +10,8 @@ import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 
-const Navbar = ({token}:{token:string}) => {
+const Navbar = () => {
   let location = useLocation()
-  const [currentLocation, setCurrentLocation] =  useState(location)
 
   const links = [
     {link: 'الرئيسية', path: "/", image: Home},
@@ -26,14 +24,9 @@ const Navbar = ({token}:{token:string}) => {
 
   const {currentUser, logoutUser} = useAuth()
 
-  useEffect(()=>{
-      setCurrentLocation(location)
-  },[location])
-
-
   return ( 
     <div className='w-full bg-[#1b1b1f] shadow-large py-6 xl:px-32 px-8 flex justify-between items-center select-none z-[99] text-sm'>
-      {token&& <>
+      {currentUser&& <>
         <div className='flex gap-2 items-center cursor-pointer'>
           <img src={UserIcon} className='sm:h-[40px] h-[30px] mr-auto' alt="" />
           <p className='sm:font-medium text-white'>{currentUser?.username}</p>
@@ -41,7 +34,7 @@ const Navbar = ({token}:{token:string}) => {
         
         <ul className=' lg:gap-12 sm:gap-6 hidden justify-between sm:flex lg:absolute lg:left-[50%] lg:translate-x-[-50%]'>
            {links.map(({link, path, image}, i)=>
-            <li key={i} className={'text-white flex flex-col items-center cursor-pointer nav-link ' + ("/" +currentLocation.pathname.split('/')[1] === path && "active")}>
+            <li key={i} className={'text-white flex flex-col items-center cursor-pointer nav-link ' + ("/" +location.pathname.split('/')[1] === path && "active")}>
               <Link to={path} className='flex flex-col items-center' >
               <img src={image} className=' h-[30px]' alt="" /> 
               <p className=' font-semibold duration-150 mt-1'>{link}</p>

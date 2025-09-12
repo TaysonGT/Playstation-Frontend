@@ -1,16 +1,11 @@
-import Cookies from 'js-cookie';
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
-import {useState, useEffect} from 'react'
+import { useAuth } from '../context/AuthContext';
 
 const LoginRoute = () => {
     const location = useLocation();
-    const [token, setToken] = useState(Cookies.get('access_token'))
-  
-    useEffect(() => {
-      setToken(Cookies.get('access_token'))
-    }, [])
+    const {currentUser} = useAuth()
     
-    if(!token){
+    if(!currentUser){
         return <>
             <Outlet/>
         </>

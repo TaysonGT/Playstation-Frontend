@@ -1,15 +1,15 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import Cookies from 'js-cookie';
 import Navbar from '../components/Navbar';
+import { useAuth } from '../context/AuthContext';
 
 const PrivateRoutes = () => {
   const location = useLocation()
-  const token = Cookies.get('access_token')
+  const {currentUser} = useAuth()
   
   return (
-    token? 
+    currentUser? 
     <div className='flex flex-col h-screen overflow-hidden'> 
-      <Navbar token={token} /> 
+      <Navbar /> 
       <div className='grow min-h-0'>
         <Outlet /> 
       </div>
