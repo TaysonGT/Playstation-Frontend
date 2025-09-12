@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import OuterReceipt from '../receipt/OuterReceipt'
-import { IOrder, IReceipt } from '../../../home/types';
+import { IOrder, IReceipt } from '../../../../types';
 import OrderPopup from '../popup/OrderPopup';
 import Loader from '../../../../components/Loader';
 

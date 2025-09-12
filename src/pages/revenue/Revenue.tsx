@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import AddDeducionPopup from './popups/AddDeductionPopup';
-import { IFinanceReport, IReceipt } from '../home/types';
+import { IFinanceReport, IReceipt } from '../../types';
 import Loader from '../../components/Loader';
 import { RiEyeLine } from 'react-icons/ri';
 import OuterReceipt from '../orders/partials/receipt/OuterReceipt';

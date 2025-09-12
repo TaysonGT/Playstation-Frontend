@@ -5,7 +5,7 @@ interface Props {
     show: boolean
 }
 
-const DarkBackground:React.FC<Props> = ({cancel, show})=>{
+const DarkBackground:React.FC<Props> = ({cancel})=>{
     return (
         <div 
             className={`w-screen h-screen fixed top-0 left-0 z-[99] bg-black/60 animate-appear`} 

@@ -1,5 +1,5 @@
 import React from 'react'
-import { IUser } from '../../home/types'
+import { IUser } from '../../../types'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 

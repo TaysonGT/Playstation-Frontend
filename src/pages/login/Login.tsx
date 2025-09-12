@@ -1,53 +1,17 @@
-import Cookies from 'js-cookie'
-import axios from 'axios'
-import React, { useEffect, useState } from 'react'
-import {useNavigate } from 'react-router-dom'
-import toast from 'react-hot-toast'
+import React, { useState } from 'react'
 import NewUser from './NewUser';
-
+import { useAuth } from '../../context/AuthContext'
 
 const Login = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-
-  const [newUser, setNewUser] = useState(false)
   const [newUserPopup, setNewUserPopup] = useState(false)
-  
-  const navigate = useNavigate();
-
-  const assignUser = (data: {token: string, username: string, user_id:string, expDate: Date})=>{
-    Cookies.set('access_token', data.token, {expires: new Date(data.expDate), secure: true, path: '/'})
-    Cookies.set('username', data.username, {expires: new Date(data.expDate), secure: true, path: '/'})
-    Cookies.set('user_id', data.user_id, {expires: new Date(data.expDate), secure: true, path: '/'})
-    navigate('/')
-  }
+  const {loginUser, newUser} = useAuth()
 
   const handleLogin = (e: React.FormEvent<HTMLElement>)=>{
     e.preventDefault();
-    let token = Cookies.get('access_token')
-    if(!token){
-      axios.post('/login', {username, password}, {withCredentials: true})
-      .then(({data})=>{
-        if(data.success){
-          toast.success(data.message)
-          assignUser(data)
-        }else{
-          toast.error(data.message)
-        }
-      })
-    }else{
-      toast.error("لقد سجلت دخولك بالفعل!")
-      navigate('/')
-    }
+    loginUser(username, password)
   }
-
-  useEffect(()=>{
-    axios.get('/firstuser')
-      .then(({data})=> 
-        data.existing? setNewUser(false) : setNewUser(true)
-      )
-  }, [])
-
 
   return (
     <div className='min-h-screen w-full bg-[url(/src/assets/login-bg.webp)] bg-cover bg-center flex justify-center items-center text-black font-medium'>
@@ -70,7 +34,7 @@ const Login = () => {
             <button onClick={()=> setNewUserPopup(true)} className='cursor-pointer'>هل تريد إضافة مستخدم جديد؟</button>
             {newUserPopup && <>
             <div onClick={()=>setNewUserPopup(false)} className='fixed left-0 top-0 w-screen h-screen bg-black/70 animate-appear duration-500 z-[50]'></div>
-              <NewUser {... {assignUser}} />
+              <NewUser/>
             </>
             }
           </>}

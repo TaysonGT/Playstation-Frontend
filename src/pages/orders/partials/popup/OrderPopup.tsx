@@ -1,6 +1,6 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { IProduct } from '../../../stock/types'
+import { IProduct } from '../../../../types'
 import toast from 'react-hot-toast'
 
 const OrderPopup = ({hide}:{hide: ()=>void}) => {

@@ -4,7 +4,7 @@ import EditIcon from '../../assets/edit.png'
 import DeleteProductDialogue from './DeleteProductDialogue';
 import CreateProductDialogue from './CreateProductDialogue'
 import EditProductDialogue from './EditProductDialogue'
-import { IProduct, ProductPayload } from './types'
+import { IProduct, ProductPayload } from '../../types'
 import { useProducts } from './hooks/useProducts'
 import DarkBackground from '../../components/DarkBackground';
 

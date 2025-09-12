@@ -12,6 +12,8 @@ import Stock from './pages/stock/Stock';
 import Config from './pages/config/Config';
 import Revenue from './pages/revenue/Revenue';
 import { DevicesProvider } from './context/DeviceContext';
+import NotFoundPage from './pages/404';
+import { AuthProvider } from './context/AuthContext';
 
 function App() {
 
@@ -21,7 +23,7 @@ function App() {
       <Toaster position='top-left' containerStyle={
         { zIndex: 9999, marginTop: '80px', userSelect: "none"} 
       }/>
-        {/* <DevicesProvider> */}
+        <AuthProvider>
         <Routes>
           <Route path='/login' element={<LoginRoute/>}>
             <Route path='/login' element={<Login/>}/>
@@ -38,8 +40,9 @@ function App() {
             <Route element={<Config />} path='/settings'  />
             <Route element={<Revenue />} path='/revenue'  />
           </Route>
+          <Route path='*' element={<NotFoundPage/>}/>
         </Routes>
-        {/* </DevicesProvider> */}
+        </AuthProvider>
       </BrowserRouter>
     </> 
   )

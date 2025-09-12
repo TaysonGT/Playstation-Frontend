@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { fetchProducts, createProduct, updateProduct, deleteProduct } from '../../../api/products';
 import toast from 'react-hot-toast';
-import { IProduct, ProductPayload } from '../types';
+import { IProduct, ProductPayload } from '../../../types';
 
 
 export function useProducts() {

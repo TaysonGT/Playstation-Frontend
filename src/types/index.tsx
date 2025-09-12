@@ -1,4 +1,26 @@
-import { IProduct } from "../../stock/types";
+export interface IProduct {
+    id: string
+    name: string
+    stock: number
+    price: number
+    consumed: number
+}
+
+export interface ProductPayload {
+    name?: string
+    stock?: number
+    price?: number
+    consumed?: number
+}
+
+export interface IAuthContext {
+  currentUser: IUser | null;
+  isLoading: boolean;
+  loginUser: (username: string, password: string) => Promise<void>;
+  firstLogin: (username: string, password: string) => Promise<void>;
+  logoutUser: () => Promise<void>;
+  newUser: boolean;
+}
 
 export interface ISession {
     id: string,
@@ -40,11 +62,10 @@ export interface IReceipt {
 export interface IUser{
     id: string;
     username: string;
-    admin: boolean;
+    role: 'admin'|'employee';
 }
 
 export interface IUserFinances extends IUser{
-    admin: boolean;
     dailyFinances: number;
     monthlyFinances: number;
 }

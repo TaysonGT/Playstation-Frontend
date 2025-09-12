@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { IProduct, ProductPayload } from './types'
+import { IProduct, ProductPayload } from '../../types'
 
 interface Props {
     onCancel: ()=> void,

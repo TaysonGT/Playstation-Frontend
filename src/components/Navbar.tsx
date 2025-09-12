@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react'
-import Cookies from 'js-cookie'
+import { useEffect, useState } from 'react'
 import Home from '../assets/home.png' 
 import UserIcon from '../assets/user.png'
 import RevenueIcon from '../assets/revenue.png'
@@ -8,14 +7,12 @@ import DevicesIcon from '../assets/devices-icon.png'
 import OrdersIcon from '../assets/orders.png'
 import ConfigIcon from '../assets/config.png'
 import './Navbar.css'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 
 const Navbar = ({token}:{token:string}) => {
-
   let location = useLocation()
-  let username = Cookies.get('username')
-
   const [currentLocation, setCurrentLocation] =  useState(location)
 
   const links = [
@@ -27,15 +24,7 @@ const Navbar = ({token}:{token:string}) => {
     {link: 'الاعدادات', path: "/settings", image: ConfigIcon},
   ]
 
-  const nav = useNavigate()
-
-  const logoutHandler = (e:React.MouseEvent<HTMLElement>)=>{
-    e.preventDefault()
-    Cookies.remove('access_token')
-    Cookies.remove('username')
-    Cookies.remove('user_id')
-    nav('/login')
-  }
+  const {currentUser, logoutUser} = useAuth()
 
   useEffect(()=>{
       setCurrentLocation(location)
@@ -47,7 +36,7 @@ const Navbar = ({token}:{token:string}) => {
       {token&& <>
         <div className='flex gap-2 items-center cursor-pointer'>
           <img src={UserIcon} className='sm:h-[40px] h-[30px] mr-auto' alt="" />
-          <p className='sm:font-medium text-white'>{username}</p>
+          <p className='sm:font-medium text-white'>{currentUser?.username}</p>
         </div>
         
         <ul className=' lg:gap-12 sm:gap-6 hidden justify-between sm:flex lg:absolute lg:left-[50%] lg:translate-x-[-50%]'>
@@ -60,7 +49,7 @@ const Navbar = ({token}:{token:string}) => {
             </li>
            )}
         </ul>
-        <button  onClick={logoutHandler} className='bg-red-600 rounded-sm hover:bg-red-400 duration-150 text-white px-3 py-2 font-bold text-md'>تسجيل الخروج</button>
+        <button  onClick={logoutUser} className='bg-red-600 rounded-sm hover:bg-red-400 duration-150 text-white px-3 py-2 font-bold text-md'>تسجيل الخروج</button>
         </>
         }
     </div>

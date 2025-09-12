@@ -1,25 +1,15 @@
-import axios from 'axios'
 import React, { useState } from 'react'
-import toast from 'react-hot-toast'
+import { useAuth } from '../../context/AuthContext'
 
-interface Props {assignUser: (p: any)=>void}
-
-const NewUser:React.FC<Props> = ({assignUser}) => {
+const NewUser:React.FC = () => {
     const [password, setPassword ] = useState('')
     const [username, setUsername ] = useState('')
 
+    const {firstLogin} = useAuth()
+
     const addHandler = (e:React.FormEvent<HTMLElement>)=>{
       e.preventDefault();
-      let admin = true;
-      axios.post('/firstuser', {username, password, admin}, {withCredentials: true})
-      .then(({data})=> {
-        if(data.success){
-          toast.success(data.message)
-          assignUser(data)
-        }else{
-          toast.error(data.message)
-        }
-      })
+      firstLogin(username, password)
     }
     
   return (

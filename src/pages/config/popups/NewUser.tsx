@@ -5,11 +5,11 @@ const NewUser = ({onAction}:{onAction: ()=>void}) => {
         
     const [password, setPassword ] = useState('')
     const [username, setUsername ] = useState('')
-    const [admin, setAdmin ] = useState(false)
+    const [role, setRole ] = useState<'admin'|'employee'>('employee')
 
     const addHandler = (e: React.MouseEvent<HTMLElement>)=>{
       e.preventDefault();
-      axios.post('/users', {username, password, admin}, {withCredentials: true})
+      axios.post('/users', {username, password, role}, {withCredentials: true})
       .then(({data})=> {
         if(data.message){
           data.success? toast.success(data.message) : toast.error(data.message) 
@@ -47,8 +47,7 @@ const NewUser = ({onAction}:{onAction: ()=>void}) => {
               type="checkbox"
               id='admin'
               onChange={e=> {
-                setAdmin(e.target.checked)
-                console.log(e.target.checked)
+                setRole(e.target.checked?'admin':'employee')
               }}
             />
           </div>

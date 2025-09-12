@@ -1,7 +1,7 @@
 import axios from 'axios'
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
-import { IDeviceType } from '../home/types'
+import { IDeviceType } from '../../types'
 
 const AddDevicePopup = ({onAction, deviceTypes}:{onAction:()=>void, deviceTypes: IDeviceType[]}) => {
   const [deviceName, setDeviceName] = useState('')

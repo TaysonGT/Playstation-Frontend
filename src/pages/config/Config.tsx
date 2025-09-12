@@ -5,9 +5,10 @@ import NewUser from './popups/NewUser';
 import EditUser from './popups/EditUser'
 import DeleteConfirm from './popups/DeleteConfirm';
 import toast from 'react-hot-toast';
-import { IDeviceType, IUser, IUserFinances } from '../home/types';
+import { IDeviceType, IUser, IUserFinances } from '../../types';
 import { fetchDeviceTypes } from '../../api/devices';
 import DarkBackground from '../../components/DarkBackground';
+import Loader from '../../components/Loader';
 
 const Config = () => {
   const [configs, setConfigs] = useState<{name: string, phone: string}>();
@@ -112,6 +113,11 @@ const Config = () => {
         <div onClick={(e)=>{e.preventDefault(); setConfirmDelete(false)}} className='fixed left-0 top-0 w-screen h-screen bg-layout backdrop-blur-sm animate-alert duration-150 z-[99]'></div>
       </>
       }
+      {isLoading&& <>
+        <Loader size={40} thickness={10} className='fixed top-1/2 left-1/2 -translate-1/2'/>
+        <div className='fixed left-0 top-0 w-screen h-screen bg-layout backdrop-blur-sm animate-alert duration-150 z-[99]'></div>
+      </>
+      }
         <h1 className="text-white text-3xl font-bold mb-4">الاعدادات</h1>
         <div className='p-10 grow flex flex-col lg:flex-row gap-4 lg:gap-y-4 gap-y-8 bg-white rounded-lg shadow-large lg:overflow-y-hidden overflow-y-auto'>
           <div className='flex-1/2 shrink gap-4 flex flex-col lg:overflow-y-auto'>
@@ -174,7 +180,7 @@ const Config = () => {
                     <div className='flex-1'>{user.username}</div>
                     <div className='flex-1'>{user.dailyFinances}<span className='font-noto font-bold'>ج</span></div>
                     <div className='flex-1'>{user.monthlyFinances}<span className='font-noto font-bold'>ج</span></div>
-                    <div className='flex-1'>{user.admin? "ادمن": "موظف"}</div>
+                    <div className='flex-1'>{user.role}</div>
                   </li> 
                 )}
               </ul>

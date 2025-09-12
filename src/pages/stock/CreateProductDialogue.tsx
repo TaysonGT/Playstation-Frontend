@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { ProductPayload } from './types'
+import { ProductPayload } from '../../types'
 import toast from 'react-hot-toast'
 
 interface Props{

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ProductPayload } from '../pages/stock/types'
+import { ProductPayload } from '../types'
 
 export const fetchDevices = ()=> axios.get('/devices', {withCredentials: true})
 export const createDevice = (form: ProductPayload)=> axios.post('/devices', form, {withCredentials:true})

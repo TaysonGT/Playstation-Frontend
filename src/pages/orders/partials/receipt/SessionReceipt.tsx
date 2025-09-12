@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react'
-import { IOrder, IReceipt } from '../../../home/types'
+import { IOrder, IReceipt } from '../../../../types'
 import axios from 'axios'
 
 interface Props {

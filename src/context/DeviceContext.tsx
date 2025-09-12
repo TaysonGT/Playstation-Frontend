@@ -1,7 +1,7 @@
 import { useState, useEffect, createContext, useContext } from 'react';
 import { fetchDevices, createSession, createDevice, updateDevice, deleteDevice, fetchSessions, addOrder, transfer, removeSession, updatePlayType } from '../api/devices';
 import toast from 'react-hot-toast';
-import { DevicePayload, IDevice, IDeviceType, ISession } from '../pages/home/types';
+import { DevicePayload, IDevice, IDeviceType, ISession } from '../types';
 
 interface IDeviceContext {
   devices: IDevice[], 

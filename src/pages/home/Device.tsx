@@ -1,14 +1,12 @@
 import React, {useEffect, useState } from 'react'
 import DeviceDetails from './DeviceDetails'
-import { IDevice } from './types'
+import { IDevice } from '../../types'
 import { useDevices } from '../../context/DeviceContext'
 import toast from 'react-hot-toast'
 
 
 const Device = ({device}:{device: IDevice}) => {
   const {startSession} = useDevices()
-
-  const [timerState, setTimerState] = useState(false)
   const [clock, setClock] = useState<string>('')
   const [isInputDisabled, setIsInputDisabled] = useState(true)
   const [showDetails, setShowDetails] = useState(false)
@@ -71,18 +69,12 @@ const Device = ({device}:{device: IDevice}) => {
   }
   
   useEffect(()=>{
-    let run:any=null
-    if(!timerState&&device.session){
-        if(device.session.time_type === "open") {
-          increment()
-          run = setInterval(increment, 1000)
-        }else if(device.session.time_type === "time"){
-        run = setInterval(decrement, 1000)
-      }
-      
-      setTimerState(true)
-    }
-  },[timerState])
+    if(!device.session) return;
+
+    const run = device.session.time_type? setInterval(increment, 1000) :  setInterval(decrement, 1000)
+
+    return ()=> clearInterval(run)
+  },[])
 
   return (
     <>

@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import SessionReceipt from '../receipt/SessionReceipt';
-import { IReceipt } from '../../../home/types';
-import { IProduct } from '../../../stock/types';
+import { IReceipt, IProduct } from '../../../../types';
 
 interface Props {
   receipts: IReceipt[], 

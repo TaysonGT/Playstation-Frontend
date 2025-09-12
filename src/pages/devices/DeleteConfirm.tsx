@@ -1,6 +1,6 @@
 import axios from 'axios'
 import toast from 'react-hot-toast'
-import { IDevice } from '../home/types'
+import { IDevice } from '../../types'
 
 const DeleteConfirm = ({device, onAction, hide}:{device:IDevice, onAction: ()=>void, hide: ()=>void}) => {
     const deleteHandler = ()=>{

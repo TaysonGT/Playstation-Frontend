@@ -1,8 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { IDevice, IOrder, ITimeOrder } from './types';
-import { IProduct } from '../stock/types';
+import { IProduct, IDevice, IOrder, ITimeOrder } from '../../types';
 import { useDevices } from '../../context/DeviceContext';
 import { fetchOrders } from '../../api/devices';
 
