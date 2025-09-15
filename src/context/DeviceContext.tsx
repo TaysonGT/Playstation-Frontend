@@ -1,13 +1,13 @@
 import { useState, useEffect, createContext, useContext } from 'react';
-import { fetchDevices, createSession, createDevice, updateDevice, deleteDevice, fetchSessions, addOrder, transfer, removeSession, updatePlayType } from '../api/devices';
+import { fetchDevices, createSession, createDevice, updateDevice, deleteDevice, addOrder, transfer, removeSession, updatePlayType } from '../api/devices';
 import toast from 'react-hot-toast';
-import { DevicePayload, IDevice, IDeviceType, ISession } from '../types';
+import { DevicePayload, IDevice, IDeviceType } from '../types';
 
 interface IDeviceContext {
   devices: IDevice[], 
   availableDevices: IDevice[], 
   unavailableDevices: IDevice[], 
-  sessions: ISession[], 
+  // sessions: ISession[], 
   deviceTypes: IDeviceType[], 
   create: (payload: DevicePayload) => Promise<void>, 
   update: (id:string, payload: DevicePayload)=> Promise<void>,
@@ -28,23 +28,23 @@ export const DevicesProvider:React.FC<React.PropsWithChildren<{}>> = ({children}
   const [availableDevices, setAvailableDevices] = useState<IDevice[]>([]);
   const [unavailableDevices, setUnavailableDevices] = useState<IDevice[]>([]);
   const [deviceTypes, setDeviceTypes] = useState<IDeviceType[]>([]);
-  const [sessions, setSessions] = useState<ISession[]>([]);
+  // const [sessions, setSessions] = useState<ISession[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const getAll = async () => {
     setDevices([]);
     setAvailableDevices([]);
     setUnavailableDevices([]);
-    setSessions([]);
+    // setSessions([]);
     setIsLoading(true);
     try {
         const { data:devData } = await fetchDevices();
-        const { data:sessData } = await fetchSessions();
+        // const { data:sessData } = await fetchSessions();
         setDevices(devData.devices);
         setAvailableDevices(devData.availableDevices);
         setUnavailableDevices(devData.unavailableDevices);
         setDeviceTypes(devData.deviceTypes);
-        setSessions(sessData.sessions);
+        // setSessions(sessData.sessions);
     } catch(error){
       console.log(error)
     }finally {
@@ -131,7 +131,7 @@ export const DevicesProvider:React.FC<React.PropsWithChildren<{}>> = ({children}
         availableDevices, 
         unavailableDevices, 
         deviceTypes, 
-        sessions,
+        // sessions,
         startSession, 
         endSession,
         create, 

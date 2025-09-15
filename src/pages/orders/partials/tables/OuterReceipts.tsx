@@ -4,6 +4,7 @@ import OuterReceipt from '../receipt/OuterReceipt'
 import { IOrder, IReceipt } from '../../../../types';
 import OrderPopup from '../popup/OrderPopup';
 import Loader from '../../../../components/Loader';
+import DarkBackground from '../../../../components/DarkBackground';
 
 const OuterReceipts = () => {
   const [showPopup, setShowPopup] = useState(false)
@@ -50,13 +51,13 @@ const OuterReceipts = () => {
     {(showInvoice&&receiptData)&& 
       <>
           <OuterReceipt {... {receipt: receiptData, orders, hide: ()=>setShowInvoice(false)}} />
-          <div onClick={()=>setShowInvoice(false)} className='fixed left-0 top-0 w-screen h-screen bg-layout backdrop-blur-sm animate-alert duration-150 z-[99]'></div>
+          <DarkBackground setShow={setShowInvoice}/>
       </>
     }
     {showPopup&&
       <>
         <OrderPopup {...{ hide: ()=>setShowPopup(false)}}  />
-        <div onClick={()=>setShowPopup(false)} className='fixed left-0 top-0 w-screen h-screen bg-layout backdrop-blur-sm animate-alert duration-100 z-[100]'></div>
+        <DarkBackground setShow={setShowPopup}/>
       </>
     }
     <div className="container mx-auto h-full flex flex-col">

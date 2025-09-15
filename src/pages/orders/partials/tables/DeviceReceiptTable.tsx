@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import SessionReceipt from '../receipt/SessionReceipt';
 import { IReceipt, IProduct } from '../../../../types';
+import DarkBackground from '../../../../components/DarkBackground';
 
 interface Props {
   receipts: IReceipt[], 
@@ -9,7 +10,7 @@ interface Props {
 }
 
 const DeviceReceiptTable:React.FC<Props> = ({receipts, products}) => {
-    const [receiptData, setReceiptData] = useState<IReceipt>()
+    const [selectedReceipt, setSelectedReceipt] = useState<IReceipt|null>(null)
     const [showInvoice, setShowInvoice] = useState(false)
     const [configs, setConfigs] = useState<{name:string, phone:string}>({name: '', phone: ''})
 
@@ -17,24 +18,13 @@ const DeviceReceiptTable:React.FC<Props> = ({receipts, products}) => {
         axios.get('/config', {withCredentials: true})
           .then(({data})=> setConfigs({name: data.nameConfig?.value, phone: data.phoneConfig?.value}))
     }, [])
-    
-    useEffect(()=>{
-      (receiptData&&configs)&& setShowInvoice(true)
-    }, [configs, receiptData])
-
-    const getReceiptHandler = (id:string)=>{
-        axios.get(`/receipts/session/${id}`, {withCredentials: true})
-        .then(({data})=> {
-          setReceiptData(data.timeReceipt)
-        })
-    }
 
   return (
     <div className="shadow-lg rounded-lg overflow-hidden grow ">
-        {(showInvoice&&receiptData)&& 
+        {(showInvoice&&selectedReceipt)&& 
             <>
-                <SessionReceipt {... {receiptData, hide: ()=>setShowInvoice(false), configs, products}} />
-                <div onClick={()=>setShowInvoice(false)} className='fixed left-0 top-0 w-screen h-screen bg-layout backdrop-blur-sm animate-alert duration-150 z-[99]'></div>
+                <SessionReceipt {... {receipt: selectedReceipt, hide: ()=>setShowInvoice(false), configs, products}} />
+                <DarkBackground setShow={setShowInvoice}/>
             </>
         }
         <ul className='w-full bg-white'>
@@ -54,8 +44,10 @@ const DeviceReceiptTable:React.FC<Props> = ({receipts, products}) => {
                 </div>
                 <div className="py-4 border-b border-gray-200 text-lg flex-[.5] flex items-center justify-center bg-white font-bold">{receipt.device?.name||'--'}</div>
                 <div className="py-4  border-b border-gray-200 flex-1 flex items-center justify-center">{receipt.total}ج</div>
-                <div className="py-4  border-b border-gray-200 flex-1 flex items-center justify-center  text-ellipsis overflow-hidden"><button onClick={()=>getReceiptHandler(receipt.id)} className='p-2 bg-green-500 hover:bg-green-400 duration-100 text-white rounded-md'>عرض الطلبات</button></div>
-                </li>
+                <div className="py-4  border-b border-gray-200 flex-1 flex items-center justify-center  text-ellipsis overflow-hidden">
+                  <button onClick={()=>{setSelectedReceipt(receipt); setShowInvoice(true)}} className='p-2 bg-green-500 hover:bg-green-400 duration-100 text-white rounded-md'>عرض الطلبات</button>
+                </div>
+            </li>
             )} 
         </ul>
     </div>

@@ -45,7 +45,7 @@ const OuterReceipt:React.FC<Props> = ({receipt, hide}) => {
             <div className="flex gap-6 mb-4">
                 <div>
                 <h1 className="text-sm font-bold">الكاشير</h1>
-                <p>{receipt?.cashier.username}</p>
+                <p>{receipt?.cashier?.username}</p>
                 </div>
             </div>
             {receipt.orders&&receipt.orders.length>0&&

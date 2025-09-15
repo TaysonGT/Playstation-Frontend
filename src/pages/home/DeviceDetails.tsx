@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { IProduct, IDevice, IOrder, ITimeOrder } from '../../types';
 import { useDevices } from '../../context/DeviceContext';
 import { fetchOrders } from '../../api/devices';
+import { useSearchParams } from 'react-router';
 
 interface Props {
   device: IDevice,
@@ -20,6 +21,7 @@ interface ITotalCost {
 const DeviceDetails:React.FC<Props> = ({device, clock}) => {
     const [orders, setOrders] = useState<IOrder[]>([])
     const [timeOrders, setTimeOrders] = useState<ITimeOrder[]>([])
+    const [searchParams, setSearchParams] = useSearchParams()
 
     const [total, setTotal] = useState<ITotalCost>({overall:0 , ordersCost: 0, timeCost: 0, currentTimeCost: 0})
 
@@ -71,7 +73,10 @@ const DeviceDetails:React.FC<Props> = ({device, clock}) => {
 
     useEffect(()=>{
       axios.get(`/products`, {withCredentials:true})
-      .then(({data})=> setProducts(data.products))
+      .then(({data})=> {
+        setProducts(data.products)
+        setOrderProduct(data.products[0]?.id||undefined)
+      })
       
       device.session&& refetchOrders()
 
@@ -106,9 +111,9 @@ const DeviceDetails:React.FC<Props> = ({device, clock}) => {
           <h2 className="text-lg font-semibold mb-4 text-gray-800">طلب جديد</h2>
           <form>
 
-            <select id='selectProduct'
+            <select
               className="w-full px-3 py-2 border border-gray-300 rounded-md mb-2"
-              onSelect={(e)=> setOrderProduct(e.currentTarget.value)}
+              onChange={(e)=> setOrderProduct(e.currentTarget.value)}
             >
               {products?.map((product, index) => (
                 <option key={index} value={product.id}>{product.name}</option>
@@ -155,9 +160,11 @@ const DeviceDetails:React.FC<Props> = ({device, clock}) => {
             <p className="text-xl font-bold text-blue-700">الاجمالي</p>
             <p className='text-xl font-bold text-blue-700'>{total?.overall}<span className=' font-bold tracking-widest font-noto'>ج</span></p>
           </div>
-          <button onClick={(e)=>{
+          <button onClick={async(e)=>{
             e.preventDefault();
-            endSession(device.session.id)
+            await endSession(device.session.id)
+            searchParams.delete('selected')
+            setSearchParams(searchParams)
           }} className='p-2 mt-auto bg-red-700 text-white rounded hover:bg-red-600 duration-150'>إنهاء الوقت</button>
         </div>
         
@@ -194,13 +201,15 @@ const DeviceDetails:React.FC<Props> = ({device, clock}) => {
           
           </select>
           <button
-            onClick={(e)=>{
+            onClick={async(e)=>{
               e.preventDefault()
               if(!selectedTransfer) {
                 toast.error("برجاء اختيار جهاز لنقل الجلسة إليه")
                 return;
               }
-              transferSession(device.session.id, selectedTransfer)
+              await transferSession(device.session.id, selectedTransfer)
+              searchParams.delete('selected')
+              setSearchParams(searchParams)
             }} 
             className="w-full bg-gray-700 text-white py-2 px-4 rounded-md hover:bg-gray-800"
           >
@@ -211,12 +220,12 @@ const DeviceDetails:React.FC<Props> = ({device, clock}) => {
         <div className='flex flex-col col-start-1 row-start-1 row-end-2 h-auto'>
           <h2 className="text-lg font-semibold mb-2 text-gray-800">الطلبات</h2>
           {orders?.length>0?
-          <ul className='mt-2 overflow-y-scroll shadow-inner bg-gray-100'>
+          <ul className='mt-2 overflow-y-auto shadow-inner bg-gray-100'>
             {orders?.map((order, index) => (
-              <li key={index} className='flex justify-end px-4'>
-                <span className='ml-auto'>{order.quantity}</span>
-                <span className='font-semibold'>{order.product.name}</span>  
-                <span className='mr-auto'>{order.cost}ج</span>
+              <li key={index} className='flex basis-0 justify-end px-4 py-1'>
+                <div className='flex-1 text-right'>{order.quantity}</div>
+                <div className='flex-1 font-semibold'>{order.product?.name}</div>
+                <div className='flex-1 mr-auto text-left'>{order.cost}ج</div>
               </li>
             ))}
             </ul> : 
@@ -226,7 +235,7 @@ const DeviceDetails:React.FC<Props> = ({device, clock}) => {
         <div className='flex flex-col col-start-1 row-start-2 row-end-3 h-auto'>
           <h2 className="text-lg font-semibold mb-2 text-gray-800">اجمالي الوقت</h2>
           {timeOrders?.length>0?
-          <ul className='overflow-y-scroll shadow-inner bg-gray-100 mt-2 py-2'>
+          <ul className='overflow-y-auto shadow-inner bg-gray-100 mt-2 py-2'>
             {timeOrders?.map((order, index) => (
               <li key={index} className="flex flex-end px-4">
                 <span className="ml-auto">{order.timeString}</span> 

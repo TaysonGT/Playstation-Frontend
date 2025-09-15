@@ -9,6 +9,7 @@ import { IDeviceType, IUser, IUserFinances } from '../../types';
 import { fetchDeviceTypes } from '../../api/devices';
 import DarkBackground from '../../components/DarkBackground';
 import Loader from '../../components/Loader';
+import LightBackground from '../../components/LightBackground';
 
 const Config = () => {
   const [configs, setConfigs] = useState<{name: string, phone: string}>();
@@ -87,14 +88,14 @@ const Config = () => {
           await getAll()
         }, hide: ()=>setTypePopup(false)}} />
         <DarkBackground {... {show: typePopup
-        , cancel: ()=>setTypePopup(false)}}/>
+        , setShow: setTypePopup}}/>
       </>}
       {addPopup&& <>
         <NewUser {...{onAction: async()=>{
           setAddPopup(false)
           await getAll()
         }}}/>
-        <div onClick={(e)=>{e.preventDefault(); setAddPopup(false)}} className='fixed left-0 top-0 w-screen h-screen bg-layout backdrop-blur-sm animate-alert duration-150 z-[99]'></div>
+        <DarkBackground setShow={setAddPopup} show={addPopup}/>
       </>
       }
       {(editPopup&&currentUser)&& <>
@@ -102,7 +103,7 @@ const Config = () => {
           setEditPopup(false)
           await getAll()
           }, user:currentUser}}/>
-        <div onClick={(e)=>{e.preventDefault(); setEditPopup(false)}} className='fixed left-0 top-0 w-screen h-screen bg-layout backdrop-blur-sm animate-alert duration-150 z-[99]'></div>
+        <DarkBackground setShow={setEditPopup} show={editPopup}/>
       </>
       }
       {(confirmDelete&&currentUser)&& <>
@@ -110,17 +111,17 @@ const Config = () => {
           setConfirmDelete(false)
           await getAll()
         }, hide: ()=> setConfirmDelete(false), user:currentUser}}/>
-        <div onClick={(e)=>{e.preventDefault(); setConfirmDelete(false)}} className='fixed left-0 top-0 w-screen h-screen bg-layout backdrop-blur-sm animate-alert duration-150 z-[99]'></div>
+        <DarkBackground setShow={setConfirmDelete} show={confirmDelete}/>
       </>
       }
       {isLoading&& <>
-        <Loader size={40} thickness={10} className='fixed top-1/2 left-1/2 -translate-1/2'/>
-        <div className='fixed left-0 top-0 w-screen h-screen bg-layout backdrop-blur-sm animate-alert duration-150 z-[99]'></div>
+        <Loader size={40} thickness={10} className='fixed z-100 top-1/2 left-1/2 -translate-1/2'/>
+        <LightBackground/>
       </>
       }
         <h1 className="text-white text-3xl font-bold mb-4">الاعدادات</h1>
-        <div className='p-10 grow flex flex-col lg:flex-row gap-4 lg:gap-y-4 gap-y-8 bg-white rounded-lg shadow-large lg:overflow-y-hidden overflow-y-auto'>
-          <div className='flex-1/2 shrink gap-4 flex flex-col lg:overflow-y-auto'>
+        <div className='p-10 grow flex flex-col lg:flex-row gap-16 bg-white rounded-lg shadow-large lg:overflow-y-hidden overflow-y-auto'>
+          <div className='flex-1/2 shrink gap-10 flex flex-col lg:overflow-y-auto'>
             <form onSubmit={handleSaveInfo} className='flex flex-col gap-4'>
               <h1 className='font-bold text-xl' >بيانات المحل</h1>
               <div className='flex flex-col'>

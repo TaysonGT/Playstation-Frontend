@@ -31,7 +31,7 @@ const Stock = () => {
   return (
     <>
     {showCreate&& <>
-        <DarkBackground {...{show: showCreate, cancel: ()=> setShowCreate(false)}}/>
+        <DarkBackground setShow={setShowCreate}/>
         <CreateProductDialogue {...{onCancel:()=> setShowCreate(false), onCreate: async(payload: ProductPayload)=>{
             await create(payload)
             setShowCreate(false)
@@ -40,7 +40,7 @@ const Stock = () => {
     }
 
     {(showDelete&&selectedProd)&& <>
-        <DarkBackground {...{show: showDelete, cancel: ()=> setShowDelete(false)}}/>
+        <DarkBackground setShow={setShowDelete}/>
         <DeleteProductDialogue {...{product: selectedProd, onCancel: ()=> setShowDelete(false), onDelete: async(id: string)=>{
             await remove(id)
             setShowDelete(false)
@@ -48,7 +48,7 @@ const Stock = () => {
     </>}
 
     {(showEdit&&selectedProd)&& <>
-        <DarkBackground {...{show: showEdit, cancel: ()=> setShowEdit(false)}}/>
+        <DarkBackground setShow={setShowEdit}/>
         <EditProductDialogue {...{product: selectedProd, 
             onEdit: async(id: string, payload: ProductPayload)=>{
                 await update(id, payload)

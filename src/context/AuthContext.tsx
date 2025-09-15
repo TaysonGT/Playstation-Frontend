@@ -25,31 +25,34 @@ export const AuthProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }
         navigate('/')
         return;
     }
-
+    setIsLoading(true)
     await login({username, password})
     .then(async({data})=>{
         if(data.success){
-            toast.success(data.message)
-            Cookies.set('access_token', data.token, {expires: new Date(data.expDate), secure: true, path: '/'})
-            await getUserData()
-            navigate('/')
+          toast.success(data.message)
+          Cookies.set('access_token', data.token, {expires: new Date(data.expDate), secure: true, path: '/'})
+          await getUserData()
+          navigate('/')
         }else{
-            toast.error(data.message)
+          toast.error(data.message)
+          setIsLoading(false)
         }
     })
   };
 
   const firstLogin = async (username: string, password: string) => {
+    setIsLoading(true)
     await createFirstUser({username, password})
     .then(async({data})=>{
-        if(data.success){
-            toast.success(data.message)
-            Cookies.set('access_token', data.token, {expires: new Date(data.expDate), secure: true, path: '/'})
-            await getUserData()
-            navigate('/')
-        }else{
-            toast.error(data.message)
-        }
+      if(data.success){
+        toast.success(data.message)
+        Cookies.set('access_token', data.token, {expires: new Date(data.expDate), secure: true, path: '/'})
+        await getUserData()
+        navigate('/')
+      }else{
+        toast.error(data.message)
+      setIsLoading(false)
+      }
     })
   };
 
@@ -57,7 +60,6 @@ export const AuthProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }
     getCurrentSession()
     .then(({data})=>{
         if(!data.success) {
-          setIsLoading(false)
           logoutUser()
           return
         };

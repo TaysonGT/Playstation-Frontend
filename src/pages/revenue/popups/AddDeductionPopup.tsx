@@ -15,7 +15,7 @@ const AddDeductionPopup:React.FC<Props> = ({onAction}) => {
     axios.post('/finances/deduction', {finances, description},{withCredentials: true})
     .then(({data})=>{
       if(data.message){
-        data.success? toast.success(data.message) : toast.error(data.message);
+        if(!data.success) return toast.error(data.message);
         onAction()
       }
     })

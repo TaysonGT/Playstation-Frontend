@@ -1,25 +1,21 @@
-import Home from '../assets/home.png' 
 import UserIcon from '../assets/user.png'
-import RevenueIcon from '../assets/revenue.png'
-import StockIcon from '../assets/stock.png'
-import DevicesIcon from '../assets/devices-icon.png'
-import OrdersIcon from '../assets/orders.png'
-import ConfigIcon from '../assets/config.png'
 import './Navbar.css'
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { IoBarChart, IoGameController, IoHome, IoReceipt, IoSettings } from 'react-icons/io5'
+import { MdStorage } from 'react-icons/md'
 
 
 const Navbar = () => {
   let location = useLocation()
 
   const links = [
-    {link: 'الرئيسية', path: "/", image: Home},
-    {link: 'الأجهزة', path: "/devices", image: DevicesIcon},
-    {link: 'الفواتير', path: "/orders", image: OrdersIcon},
-    {link: 'المخزن', path: '/stock', image: StockIcon},
-    {link: 'الحسابات', path: "/revenue", image: RevenueIcon},
-    {link: 'الاعدادات', path: "/settings", image: ConfigIcon},
+    {name: 'الرئيسية', path: "/", icon: <IoHome/>},
+    {name: 'الأجهزة', path: "/devices", icon: <IoGameController/>},
+    {name: 'الفواتير', path: "/orders", icon: <IoReceipt/>},
+    {name: 'المخزن', path: '/stock', icon: <MdStorage/>},
+    {name: 'الحسابات', path: "/revenue", icon: <IoBarChart/>},
+    {name: 'الاعدادات', path: "/settings", icon: <IoSettings/>},
   ]
 
   const {currentUser, logoutUser} = useAuth()
@@ -32,12 +28,12 @@ const Navbar = () => {
           <p className='sm:font-medium text-white'>{currentUser?.username}</p>
         </div>
         
-        <ul className=' lg:gap-12 sm:gap-6 hidden justify-between sm:flex lg:absolute lg:left-[50%] lg:translate-x-[-50%]'>
-           {links.map(({link, path, image}, i)=>
-            <li key={i} className={'text-white flex flex-col items-center cursor-pointer nav-link ' + ("/" +location.pathname.split('/')[1] === path && "active")}>
-              <Link to={path} className='flex flex-col items-center' >
-              <img src={image} className=' h-[30px]' alt="" /> 
-              <p className=' font-semibold duration-150 mt-1'>{link}</p>
+        <ul className='text-white lg:gap-12 sm:gap-6 hidden justify-between sm:flex lg:absolute lg:left-[50%] lg:translate-x-[-50%]'>
+           {links.map((link, i)=>
+            <li key={i} className={'cursor-pointer nav-link hover:text-[#06ced4] after:bg-[#06ced4] duration-150 ' + ("/" +location.pathname.split('/')[1] === link.path && "active text-[#06ced4]")}>
+              <Link to={link.path} className='flex flex-col items-center' >
+                <div className='text-3xl'>{link.icon}</div>
+                <p className=' font-semibold duration-150 mt-1'>{link.name}</p>
               </Link>
             </li>
            )}

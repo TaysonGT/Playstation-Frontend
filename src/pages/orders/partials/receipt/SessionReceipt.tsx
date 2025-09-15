@@ -3,11 +3,11 @@ import { IOrder, IReceipt } from '../../../../types'
 import axios from 'axios'
 
 interface Props {
-  receiptData: IReceipt, 
+  receipt: IReceipt, 
   hide: ()=>void, 
 }
 
-const SessionReceipt:React.FC<Props> = ({receiptData, hide}) => {
+const SessionReceipt:React.FC<Props> = ({receipt, hide}) => {
     const [totalPlayed, setTotalPlayed] = useState<string>('')
     const invoiceRef = useRef<HTMLDivElement>(null)
     const [configs, setConfigs] = useState<{name: string, phone: string}>();
@@ -50,15 +50,15 @@ const SessionReceipt:React.FC<Props> = ({receiptData, hide}) => {
     }
     
     useEffect(() => {
-      if(receiptData){
+      if(receipt){
         let totalTime = 0;
-        receiptData.time_orders?.map((order) => {
+        receipt.time_orders?.map((order) => {
           totalTime+= new Date(order.ended_at).getTime() - new Date(order.started_at).getTime()
         })
         const convertedTime = timeConv({secs:totalTime})
         setTotalPlayed(convertedTime)
       }
-    }, [receiptData])
+    }, [receipt])
     
   return (
     <div className='fixed z-[100] left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] bg-[#eee] p-4 rounded-lg'>
@@ -76,20 +76,20 @@ const SessionReceipt:React.FC<Props> = ({receiptData, hide}) => {
                 <p>{configs?.phone}</p>
                 </div>
                 <div>
-                <p className="text-sm">التاريخ: {new Date(receiptData?.created_at).toLocaleDateString()}</p>
-                <p className="text-sm">الوقت: {new Date(receiptData?.created_at).toLocaleTimeString()}</p>
+                <p className="text-sm">التاريخ: {new Date(receipt?.created_at).toLocaleDateString()}</p>
+                <p className="text-sm">الوقت: {new Date(receipt?.created_at).toLocaleTimeString()}</p>
                 </div>
             </div>
             <div className="flex gap-6 mb-4">
                 <div>
                 <h1 className="text-sm font-bold">الكاشير</h1>
-                <p>{receiptData.cashier?.username||'Deleted User'}</p>
+                <p>{receipt.cashier?.username||'Deleted User'}</p>
                 </div>
             </div>
-            {(receiptData.orders && receiptData.orders?.length > 0)&&
+            {(receipt.orders && receipt.orders?.length > 0)&&
             <div className="mb-4">
                 <h2 className="text-lg font-bold mb-2">الطلبات</h2>
-                {receiptData.orders.map((order:IOrder, i) => (
+                {receipt.orders.map((order:IOrder, i) => (
                 <div key={i} className="flex justify-between mb-2">
                     <span className='flex-[.45]'>{order.product.name}</span>
                     <span className='flex-[.33]'>{order.quantity}</span>
@@ -98,10 +98,10 @@ const SessionReceipt:React.FC<Props> = ({receiptData, hide}) => {
                 ))}
             </div>
             }
-            {(receiptData.time_orders && receiptData.time_orders?.length > 0)&&
+            {(receipt.time_orders && receipt.time_orders?.length > 0)&&
             <div className="mb-4">
                 <h2 className="text-lg font-bold mb-2">وقت اللعب</h2>
-                {receiptData.time_orders.map((order, i) => (
+                {receipt.time_orders.map((order, i) => (
                 <div key={i} className="flex mb-2">
                     <span className='ml-auto w-1/3'>{timeConv({start: order.started_at, end: order.ended_at})}</span>
                     <span className='text-center'>{order.play_type.toUpperCase()}</span>
@@ -116,7 +116,7 @@ const SessionReceipt:React.FC<Props> = ({receiptData, hide}) => {
             }
             <div className="flex justify-between pt-2 border-t-2 border-gray-300">
                 <span className="font-bold">الاجمالي:</span>
-                <span>{receiptData?.total}<span className='font-noto text-lg font-bold'>ج</span></span>
+                <span>{receipt?.total}<span className='font-noto text-lg font-bold'>ج</span></span>
             </div>
         </div>
         </div>

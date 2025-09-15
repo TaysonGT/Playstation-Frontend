@@ -112,7 +112,7 @@ const Revenue = () => {
     
       <div className='flex justify-between items-center'>
         <h1 className="text-3xl align-middle lg font-semibold text-white">لوحة المعلومات</h1>
-        <select onChange={e=> setCurrentUser(e.currentTarget.value)} className='px-3 py-2 rounded'>
+        <select onChange={e=> setCurrentUser(e.currentTarget.value)} className='px-3 py-2 rounded bg-white '>
           <option value='all'>الكلي</option>
           {users?.map((user, i)=>
           <option key={i} value={user.id}>{user.username}</option>)}
@@ -207,15 +207,15 @@ const Revenue = () => {
               }
             </div>
           </div>
-          <div className="flex flex-col bg-gray-200 rounded-lg shadow-md text-black col-start-2 row-start-2 col-end-4 lg:col-end-5 lg:row-end-6 row-end-5 overflow-hidden">
-            <div className='flex items-stretch border-b border-gray-400 bg-white px-10'>
+          <div className="flex flex-col rounded-lg shadow-md text-black col-start-2 row-start-2 col-end-4 lg:col-end-5 lg:row-end-6 row-end-5 overflow-hidden">
+            <div className='flex items-stretch border-b border-gray-400 text-white bg-gray-600 px-10'>
               <div className='flex-1 p-3 flex items-center'>النوع</div>
               <div className='flex-1 p-3 flex items-center'>الموظف</div>
               <div className='flex-1 p-3 flex items-center'>الوقت</div>
               <div className='flex-[0.5] p-3 flex items-center'>المبلغ</div>
               <div className='flex-[0.5] p-3 flex items-center'>عرض</div>
             </div>
-            <div className='p-2 flex flex-col gap-2 overflow-y-auto'>
+            <div className='p-2 flex flex-col gap-2 overflow-y-auto bg-gray-200 grow'>
               {currentFinances.map((finance, i ) =>
                 <div key={i} className="bg-white shadow-lg rounded-lg flex items-stretch px-4">
                   <div className="flex-1 p-3">

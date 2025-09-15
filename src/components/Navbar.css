@@ -1,6 +1,5 @@
 .nav-link{
     position:relative;
-    color:#fff;
 }
 
 .nav-link:after{
@@ -10,7 +9,6 @@
     transform:scaleX(0);
     height:2px;
     bottom:-3px;
-    background-color:#fff;
     transform-origin:bottom right;
     transition:transform .25s ease-out
 }

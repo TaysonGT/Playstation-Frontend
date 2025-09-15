@@ -3,6 +3,7 @@ import DeviceDetails from './DeviceDetails'
 import { IDevice } from '../../types'
 import { useDevices } from '../../context/DeviceContext'
 import toast from 'react-hot-toast'
+import { useSearchParams } from 'react-router'
 
 
 const Device = ({device}:{device: IDevice}) => {
@@ -10,6 +11,7 @@ const Device = ({device}:{device: IDevice}) => {
   const [clock, setClock] = useState<string>('')
   const [isInputDisabled, setIsInputDisabled] = useState(true)
   const [showDetails, setShowDetails] = useState(false)
+  const [searchParams, setSearchParams] = useSearchParams()
   
   const [timeType, setTimeType] = useState<string>("open")
   const [playType, setPlayType] = useState<string>("single")
@@ -69,6 +71,9 @@ const Device = ({device}:{device: IDevice}) => {
   }
   
   useEffect(()=>{
+    const isSelected = searchParams.get('selected') === device.id
+
+    isSelected&& setShowDetails(true)
     if(!device.session) return;
 
     const run = device.session.time_type? setInterval(increment, 1000) :  setInterval(decrement, 1000)
@@ -79,7 +84,7 @@ const Device = ({device}:{device: IDevice}) => {
   return (
     <>
     {(showDetails&&device.session)&&<>
-        <div onClick={()=>{setShowDetails(false)}} className='fixed left-0 top-0 w-screen h-screen bg-black/70 animate-appear duration-500 z-[50]'/>
+        <div onClick={()=>{setShowDetails(false); searchParams.delete('selected'); setSearchParams(searchParams)}} className='fixed left-0 top-0 w-screen h-screen bg-black/70 animate-appear duration-500 z-[50]'/>
         <DeviceDetails {...{device, clock}} />
     </>
     }
@@ -125,7 +130,11 @@ const Device = ({device}:{device: IDevice}) => {
                 <p className={'text-sm font-medium p-3 py-2 rounded-sm w-full text-white ' + (device.session?.time_type==="open" ?  'bg-red-700': 'bg-teal-600')} >{device.session?.time_type.toUpperCase()}</p>
                 <p className='text-sm font-medium p-3 py-2 bg-slate-700 rounded-sm w-full text-white'>{device.session?.play_type.toUpperCase()}</p>
             </div>
-            <button onClick={()=> setShowDetails(true)} id={device.id} className=' bg-[#00b4d8] p-3 text-md rounded-md text-white hover:bg-[#70d1e2] duration-200 active:shadow-hardInner mt-auto w-full text-center '>تفاصيل</button>
+            <button onClick={()=> {
+                setShowDetails(true)
+                searchParams.set('selected', device.id)
+                setSearchParams(searchParams)
+                }} id={device.id} className=' bg-[#00b4d8] p-3 text-md rounded-md text-white hover:bg-[#70d1e2] duration-200 active:shadow-hardInner mt-auto w-full text-center '>تفاصيل</button>
         </ div>
         }
 
