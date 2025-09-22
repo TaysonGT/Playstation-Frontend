@@ -30,7 +30,7 @@ const Navbar = () => {
         
         <ul className='text-white lg:gap-12 sm:gap-6 hidden justify-between sm:flex lg:absolute lg:left-[50%] lg:translate-x-[-50%]'>
            {links.map((link, i)=>
-            <li key={i} className={'cursor-pointer nav-link hover:text-[#06ced4] after:bg-[#06ced4] duration-150 ' + ("/" +location.pathname.split('/')[1] === link.path && "active text-[#06ced4]")}>
+            <li key={i} className={'cursor-pointer nav-link hover:text-amber-300 after:bg-amber-300 duration-300 ' + ("/" +location.pathname.split('/')[1] === link.path && "active text-amber-300")}>
               <Link to={link.path} className='flex flex-col items-center' >
                 <div className='text-3xl'>{link.icon}</div>
                 <p className=' font-semibold duration-150 mt-1'>{link.name}</p>
@@ -38,7 +38,7 @@ const Navbar = () => {
             </li>
            )}
         </ul>
-        <button  onClick={logoutUser} className='bg-red-600 rounded-sm hover:bg-red-400 duration-150 text-white px-3 py-2 font-bold text-md'>تسجيل الخروج</button>
+        <button  onClick={logoutUser} className='bg-red-600 cursor-pointer hover:bg-red-500 duration-150 text-white px-4 py-3 font-bold text-md'>تسجيل الخروج</button>
         </>
         }
     </div>

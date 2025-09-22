@@ -60,9 +60,15 @@ const OuterReceipt:React.FC<Props> = ({receipt, hide}) => {
                     ))}
                 </div>
             }
+            {receipt.description&&
+            <div className="mb-4">
+                <h2 className="text-sm font-bold">ملاحظات</h2>
+                <p>{receipt.description}</p>
+            </div>
+            }
             <div className="flex justify-between pt-2 border-t-2 border-gray-300">
                 <span className="font-bold">الاجمالي:</span>
-                <span>{receipt?.total}ج</span>
+                <span>{receipt?.total}جـ</span>
             </div>
         </div>
         </div>

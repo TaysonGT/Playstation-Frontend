@@ -13,13 +13,16 @@
     transition:transform .25s ease-out
 }
 
-
 .nav-link.active:after{
-    transform-origin: bottom center;
+    transform-origin: bottom left;
     transform:scaleX(1);
 }
 
-.nav-link:hover:after{
+/* .nav-link:hover:after{
     transform:scaleX(1);
     transform-origin:bottom left
+} */
+
+button{
+    cursor: pointer;
 }

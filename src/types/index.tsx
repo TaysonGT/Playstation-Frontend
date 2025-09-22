@@ -50,6 +50,7 @@ export interface IReceipt {
     id: string,
     cashier: IUser,
     device: IDevice,
+    description: string,
     orders: IOrder[],
     time_orders: ITimeOrder[],
     orders_cost: number
@@ -92,39 +93,30 @@ export interface ITimeOrder {
 
 export interface IFinanceReport{
     // Day Report
-    dailyFinances: number;
-    dailyGrowthLoss: number;
-    dailyGrowthLossSign: boolean;
-    dailyDeduction: number;
-    dailyDeductionGrowthLoss: number;
-    dailyDeductionGrowthLossSign: boolean;
+    today: number;
+    todayGrowthLoss: number;
+    todayDeduction: number;
+    todayDeductionGrowthLoss: number;
 
     // Week Report
-    weeklyFinances: number;
-    weeklyGrowthLoss: number;
-    weeklyGrowthLossSign: boolean;
-    weeklyDeduction: number;
-    weeklyDeductionGrowthLoss: number;
-    weeklyDeductionGrowthLossSign: boolean;
+    currentWeek: number;
+    currentWeekGrowthLoss: number;
+    currentWeekDeduction: number;
+    currentWeekDeductionGrowthLoss: number;
 
     // Month Report 
-    monthlyFinances: number;
-    monthlyGrowthLoss: number;
-    monthlyGrowthLossSign: boolean;
-    monthlyDeduction: number;
-    monthlyDeductionGrowthLoss: number;
-    monthlyDeductionGrowthLossSign: boolean;
+    currentMonth: number;
+    currentMonthGrowthLoss: number;
+    currentMonthDeduction: number;
+    currentMonthDeductionGrowthLoss: number;
 
     // Year Report
-    yearlyFinances: number;
-    yearlyGrowthLoss: number;
-    yearlyGrowthLossSign: boolean;
-    yearlyDeduction: number;
-    yearlyDeductionGrowthLoss: number;
-    yearlyDeductionGrowthLossSign: boolean;
-    
+    currentYear: number;
+    currentYearGrowthLoss: number;
+    currentYearDeduction: number;
+    currentYearDeductionGrowthLoss: number;
+
     // Products Report
     productsRevenue: number;
     productsGrowthLoss: number;
-    productsGrowthLossSign: boolean;
 }

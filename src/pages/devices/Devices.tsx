@@ -30,8 +30,8 @@ const Devices = () => {
     }, [])
 
     const tableHead = [
-        "اسم الجهاز",
-        "نوع الجهاز",
+        "الاسم",
+        "النوع",
         "الحالة",
         "الأوامر"
     ]
@@ -75,23 +75,23 @@ const Devices = () => {
                 <p className='text-sm font-bold mt-4 text-gray-300'>برجاء إضافة أجهزة جديدة ...</p>
             </div>
             :
-        <div className='w-full flex flex-col grow min-h-0 text-black mt-6 select-none rounded-md overflow-hidden'>
+        <div className='w-full flex flex-col grow min-h-0 text-black mt-6 text-center rounded-md overflow-hidden'>
             <div className='bg-gray-50 border-b-2 border-gray-200 flex'>
                 {tableHead.map((key, i)=> 
-                <div key={i} className='p-3 text-sm font-semibold text-right flex-1'>{key}</div>
+                <div key={i} className='p-3 text-sm font-semibold text-center flex-1'>{key}</div>
             )}
             </div>
             <div className='relative grow min-h-0 overflow-y-auto'>
                 {devices.map((device, i)=> 
                 <div key={i} className={`relative items-stretch flex ${i%2 !== 0 ? 'bg-gray-50': 'bg-white'}`}>
-                    <div className='pr-7 font-bold text-blue-500 p-3 flex-1'>{device.name}</div>
-                    <div className='flex-1 p-3 flex items-center'>
+                    <div className='p-3 font-bold text-blue-500 flex-1'>{device.name}</div>
+                    <div className='flex-1 p-3 flex items-center justify-center'>
                         {device.type.name}
                     </div>
-                    <div className='flex-1 p-3 flex items-center'>
+                    <div className='flex-1 p-3 flex items-center justify-center'>
                         <span className={'p-1.5 text-xs font-bold uppercase tracking-wider bg-opcaity-50 rounded-lg ' + (!device.status? "text-green-800 bg-green-200" : "text-red-800 bg-red-200")}>{!device.status? "متاح" : "مشغول"}</span>
                     </div>
-                    <div className='flex-1 flex gap-4 items-center p-3'>
+                    <div className='flex-1 flex gap-4 items-center p-3 justify-center'>
                         <div className='bg-indigo-100 cursor-pointer hover:text-indigo-400 duration-100 rounded-md p-1 text-2xl'>
                             <RiEdit2Fill/>
                         </div>
