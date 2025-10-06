@@ -4,26 +4,31 @@ import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { IoBarChart, IoGameController, IoHome, IoReceipt, IoSettings } from 'react-icons/io5'
 import { MdStorage } from 'react-icons/md'
-
+import { useTranslation } from 'react-i18next'
+import { getDirection } from '../i18n'
+// import ArLogo from '../assets/ar.png'
+// import EnLogo from '../assets/en.png'
 
 const Navbar = () => {
   let location = useLocation()
+  const {t, i18n} = useTranslation()
+  const currentDirection = getDirection(i18n.language);
 
   const links = [
-    {name: 'الرئيسية', path: "/", icon: <IoHome/>},
-    {name: 'الأجهزة', path: "/devices", icon: <IoGameController/>},
-    {name: 'الفواتير', path: "/orders", icon: <IoReceipt/>},
-    {name: 'المخزن', path: '/stock', icon: <MdStorage/>},
-    {name: 'الحسابات', path: "/revenue", icon: <IoBarChart/>},
-    {name: 'الاعدادات', path: "/settings", icon: <IoSettings/>},
+    {name: t('navigation.home'), path: "/", icon: <IoHome/>},
+    {name: t('navigation.devices'), path: "/devices", icon: <IoGameController/>},
+    {name: t('navigation.receipts'), path: "/receipts", icon: <IoReceipt/>},
+    {name: t('navigation.stock'), path: '/stock', icon: <MdStorage/>},
+    {name: t('navigation.dashboard'), path: "/dashboard", icon: <IoBarChart/>},
+    {name: t('navigation.settings'), path: "/settings", icon: <IoSettings/>},
   ]
 
   const {currentUser, logoutUser} = useAuth()
 
   return ( 
-    <div className='w-full bg-[#1b1b1f] shadow-large py-6 xl:px-32 px-8 flex justify-between items-center select-none z-[99] text-sm'>
+    <div dir={currentDirection} className='w-full bg-[#1b1b1f] shadow-large py-6 xl:px-32 px-8 flex justify-between items-center select-none z-[99] text-sm'>
       {currentUser&& <>
-        <div className='flex gap-2 items-center cursor-pointer'>
+        <div dir='ltr' className='flex gap-2 items-center cursor-pointer'>
           <img src={UserIcon} className='sm:h-[40px] h-[30px] mr-auto' alt="" />
           <p className='sm:font-medium text-white'>{currentUser?.username}</p>
         </div>
@@ -38,7 +43,33 @@ const Navbar = () => {
             </li>
            )}
         </ul>
-        <button  onClick={logoutUser} className='bg-red-600 cursor-pointer hover:bg-red-500 duration-150 text-white px-4 py-3 font-bold text-md'>تسجيل الخروج</button>
+        <div className='flex gap-20 items-center'>
+          <div className='space-y-1 text-center text-white '>
+            <p>{t('navigation.changeLanguage')}</p>
+            {/* <div className='flex h-10'>
+              <button onClick={()=>{
+                localStorage.setItem('i18nextLng', 'ar')
+                window.location.reload()
+              }} className={'px-2 py-1 rounded-l border border-gray-600 ' + (i18n.language === 'ar' ? 'bg-amber-300 text-black font-bold' : 'hover:bg-gray-700 duration-150')}><img src={ArLogo} className='h-full'/></button>
+              <button onClick={()=>{
+                localStorage.setItem('i18nextLng', 'en')
+                window.location.reload()
+              }} className={'px-2 py-1 rounded-r border border-gray-600 ' + (i18n.language === 'en' ? 'bg-amber-300 text-black font-bold' : 'hover:bg-gray-700 duration-150')}><img src={EnLogo} className='h-full'/></button>
+            </div> */}
+            <div className='flex'>
+              <button onClick={()=>{
+                localStorage.setItem('i18nextLng', 'ar')
+                window.location.reload()
+              }} className={'px-2 py-1 rounded-l border border-gray-600 ' + (i18n.language === 'ar' ? 'bg-amber-300 text-black font-bold' : 'hover:bg-gray-700 duration-150')}>العربية</button>
+              <button onClick={()=>{
+                localStorage.setItem('i18nextLng', 'en')
+                window.location.reload()
+              }} className={'px-2 py-1 rounded-r border border-gray-600 ' + (i18n.language === 'en' ? 'bg-amber-300 text-black font-bold' : 'hover:bg-gray-700 duration-150')}>English</button>
+
+            </div>
+          </div>
+          <button  onClick={logoutUser} className='bg-red-600 cursor-pointer hover:bg-red-500 duration-150 text-white px-4 py-2 font-bold text-sm'>{t('navigation.logout')}</button>
+        </div>
         </>
         }
     </div>

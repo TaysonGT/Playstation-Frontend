@@ -7,12 +7,16 @@ import EditProductDialogue from './EditProductDialogue'
 import { IProduct, ProductPayload } from '../../types'
 import { useProducts } from './hooks/useProducts'
 import DarkBackground from '../../components/DarkBackground';
+import { useTranslation } from 'react-i18next';
+import { getDirection } from '../../i18n';
 
 const Stock = () => {
     const [showCreate, setShowCreate] = useState(false)
     const [showDelete, setShowDelete] = useState(false)
     const [showEdit, setShowEdit] = useState(false)
     const [selectedProd, setSelectedProd] = useState<IProduct|null>(null)
+    const {t, i18n} = useTranslation()
+    const currentDirection = getDirection(i18n.language);
     
     const {products, isLoading, refetch, remove, create, update} = useProducts()
 
@@ -21,11 +25,10 @@ const Stock = () => {
     }, [])
 
     const tableHead = [
-        "اسم المنتج",
-        "الكمية",
-        "المستهلك",
-        "السعر",
-        "الأوامر"
+        t('stock.productName'),
+        t('tables.quantity'),
+        t('tables.price'),
+        t('tables.actions')
     ]
 
   return (
@@ -58,12 +61,12 @@ const Stock = () => {
         />
     </>}
 
-    <div className='py-6 px-10 lg:px-36 bg-[#0d47a1] h-full' dir='rtl'>
+    <div className='py-6 px-10 lg:px-36 bg-[#0d47a1] h-full' dir={currentDirection}>
     
         <div className='w-full flex justify-between items-start '>
-            <h1 className='text-white text-3xl font-bold'>المخزن</h1>
+            <h1 className='text-white text-3xl font-bold'>{t('stock.inventory')}</h1>
             <button onClick={()=> setShowCreate(true)} className='mt-4 px-4 p-2 shadow-sm cursor-pointer rounded text-md text-white bg-blue-700 hover:bg-blue-500 duration-100 flex gap-3 items-center'>
-                إضافة منتج <span className='text-xl font-bold'>+</span> 
+                {t('stock.addProduct')} <span className='text-xl font-bold'>+</span> 
             </button>
         </div>
         {isLoading? 
@@ -75,20 +78,19 @@ const Stock = () => {
             <ul className='bg-gray-50 border-b-2 border-gray-200'>
                 <li className='flex w-full items-stretch'>
                 {tableHead?.map((key, i)=> 
-                    <div key={i} className='flex-1/5 p-4 text-sm font-semibold text-right'>{key}</div>
+                    <div key={i} className='flex-1 p-4 text-sm font-semibold text-center'>{key}</div>
                 )}
                 </li>
             </ul>
             <ul>
                 {products?.map((product, i)=> 
                 <li key={i} className={ 'relative flex w-full items-stretch  ' + (i%2 !== 0 ? 'bg-gray-50': 'bg-white')}>
-                    <div className='flex-1/5 font-bold text-blue-500 p-4 flex items-center'>{product.name}</div>
-                    <div className='flex flex-1/5 items-center'>
+                    <div className='flex-1 font-bold text-blue-500 py-4 flex text-center justify-center items-center'>{product.name}</div>
+                    <div className='flex flex-1 items-center justify-center'>
                         <span className={'p-1.5 text-xs font-bold uppercase tracking-wider bg-opcaity-50 rounded-lg ' + (product.stock>20? "text-green-800 bg-green-200" : "text-red-800 bg-red-200")}>{product.stock}</span>
                     </div>
-                    <div className='flex flex-1/5 items-center'>{product.consumed}</div>
-                    <div className='flex flex-1/5 items-center'>{product.price}ج</div>
-                    <div  className='flex flex-1/5 gap-4 items-center'>
+                    <div className='flex flex-1 text-center justify-center items-center'>{product.price}ج</div>
+                    <div  className='flex flex-1 gap-4 items-center justify-center'>
                         <button 
                             onClick={()=>setShowEdit(true)}
                             onMouseOver={()=>setSelectedProd(product)}>

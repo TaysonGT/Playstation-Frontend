@@ -4,6 +4,8 @@ import { IDevice } from '../../types'
 import { useDevices } from '../../context/DeviceContext'
 import toast from 'react-hot-toast'
 import { useSearchParams } from 'react-router'
+import { useTranslation } from 'react-i18next'
+import { getDirection } from '../../i18n'
 
 
 const Device = ({device}:{device: IDevice}) => {
@@ -17,6 +19,9 @@ const Device = ({device}:{device: IDevice}) => {
   const [playType, setPlayType] = useState<string>("single")
   const [minutes, setMinutes] = useState<number>(0)
   const [hours, setHours] = useState<number>(0)
+
+  const {t, i18n} = useTranslation()
+  const currentDirection = getDirection(i18n.language);
 
   const classnames = {
       input: 'w-[75%] text-[#161925] border border-[#161925] p-1',
@@ -76,7 +81,7 @@ const Device = ({device}:{device: IDevice}) => {
     isSelected&& setShowDetails(true)
     if(!device.session) return;
 
-    const run = device.session.time_type? setInterval(increment, 1000) :  setInterval(decrement, 1000)
+    const run = device.session.time_type === 'open' ? setInterval(increment, 1000) :  setInterval(decrement, 1000)
 
     return ()=> clearInterval(run)
   },[])
@@ -94,35 +99,35 @@ const Device = ({device}:{device: IDevice}) => {
             <div className='bg-white border-2 border-black text-black p-1 px-4 rounded font-medium'>{device.type.name}</div>
         </div>
         { !device.status? 
-        <form dir="rtl" className='w-full flex flex-grow flex-col gap-1 text-sm font-bold mt-6'>
+        <form dir={currentDirection} className='w-full flex flex-grow flex-col gap-1 text-sm font-bold mt-6'>
             <div className='flex justify-between gap-2 items-center'>
-                <label className="font-bold text-sm w-[100px] text-nowrap">نوع اللعب:</label>
+                <label className="font-bold text-sm w-[100px] text-nowrap">{t('devices.playType')}:</label>
                 <select onInput={e=> setPlayType(e.currentTarget.value)} className={classnames.input}>
-                    <option value="single">سنجل</option>
-                    <option value="multi">ملتي</option>
+                    <option value="single">{t('devices.single')}</option>
+                    <option value="multi">{t('devices.multi')}</option>
                 </select>
             </div>
             <div className='flex justify-between gap-2 items-center mt-4 '>
-                <label className="font-bold text-sm w-[100px] text-nowrap">نوع الوقت:</label>
+                <label className="font-bold text-sm w-[100px] text-nowrap">{t('devices.timeType')}:</label>
                 <select onInput={(e)=> timeTypeHandler(e.currentTarget.value)} className={classnames.input}>
-                    <option value="open">مفتوح</option>
-                    <option value="time">وقت</option>
+                    <option value="open">{t('devices.open')}</option>
+                    <option value="time">{t('devices.time')}</option>
                 </select>
             </div>
             <div className='mt-4 flex flex-col items-center'>
-                <label className='font-bold text-md'>الوقت</label>
+                <label className='font-bold text-md'>{t('devices.time')}</label>
                 <div className='flex gap-4 justify-between my-3'>
                     <div className='flex justify-between gap-2 items-center'>
-                        <label className={classnames.label} >دقيقة</label>
+                        <label className={classnames.label} >{t('devices.minutes')}</label>
                         <input type="number" onInput={(e)=> setMinutes(parseInt(e.currentTarget.value))} disabled={isInputDisabled} className={classnames.subInput} placeholder={!isInputDisabled? "0" : ""}/>
                     </div>
                     <div className='flex justify-between gap-2 items-center'>
-                        <label className={classnames.label}>ساعة</label>
+                        <label className={classnames.label}>{t('devices.hours')}</label>
                         <input type="number" onInput={e=> setHours(parseInt(e.currentTarget.value))} disabled={isInputDisabled} className={classnames.subInput} placeholder={!isInputDisabled? "0": ""} />
                     </div>
                 </div>
             </div>
-            <button onClick={startDeviceHandler} id={device.id} className=' bg-[#37474f] text-white p-3 text-md rounded-md hover:bg-[#4f6874]  duration-150 active:shadow-hardInner mt-auto '>بدء</button>
+            <button onClick={startDeviceHandler} id={device.id} className=' bg-[#37474f] text-white p-3 text-md rounded-md hover:bg-[#4f6874]  duration-150 active:shadow-hardInner mt-auto '>{t('devices.start')}</button>
         </form> :
         <div className='mt-5 flex flex-col items-center gap-3 h-full w-full'>
             <div className={'w-[90%] p-4 text-center text-3xl font-bold bg-[#212121] text-white bg-center bg-cover border-emerald-50 border rounded  ' + (device.session?.time_type === "open"? 'text-red-500' :  'text-green-500')}>{clock? clock : "00:00:00"}</div>
@@ -134,7 +139,7 @@ const Device = ({device}:{device: IDevice}) => {
                 setShowDetails(true)
                 searchParams.set('selected', device.id)
                 setSearchParams(searchParams)
-                }} id={device.id} className=' bg-[#00b4d8] p-3 text-md rounded-md text-white hover:bg-[#70d1e2] duration-200 active:shadow-hardInner mt-auto w-full text-center '>تفاصيل</button>
+                }} id={device.id} className=' bg-[#00b4d8] p-3 text-md rounded-md text-white hover:bg-[#70d1e2] duration-200 active:shadow-hardInner mt-auto w-full text-center '>{t('devices.details')}</button>
         </ div>
         }
 

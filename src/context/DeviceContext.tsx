@@ -35,16 +35,13 @@ export const DevicesProvider:React.FC<React.PropsWithChildren<{}>> = ({children}
     setDevices([]);
     setAvailableDevices([]);
     setUnavailableDevices([]);
-    // setSessions([]);
     setIsLoading(true);
     try {
         const { data:devData } = await fetchDevices();
-        // const { data:sessData } = await fetchSessions();
         setDevices(devData.devices);
         setAvailableDevices(devData.availableDevices);
         setUnavailableDevices(devData.unavailableDevices);
         setDeviceTypes(devData.deviceTypes);
-        // setSessions(sessData.sessions);
     } catch(error){
       console.log(error)
     }finally {
@@ -99,7 +96,11 @@ export const DevicesProvider:React.FC<React.PropsWithChildren<{}>> = ({children}
   const changePlayType = async (session_id: string, play_type: string) => {
     setIsLoading(true);
     await updatePlayType(session_id, play_type)
-    .then(({data})=> data.success? toast.success(data.message) : toast.error(data.message))
+    .then(({data})=> {
+      if(!data.success) return toast.error(data.message);
+      toast.success(data.message)
+      getAll()
+    })
   }
 
   const startSession = async ({device_id, play_type, time_type, end_time}:{device_id:string, play_type: string, time_type: string, end_time?: Date})=>{

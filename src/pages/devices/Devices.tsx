@@ -6,6 +6,8 @@ import { IDevice, IDeviceType } from '../../types'
 import Loader from '../../components/Loader'
 import toast from 'react-hot-toast'
 import { RiDeleteBin6Fill, RiEdit2Fill } from 'react-icons/ri'
+import { useTranslation } from 'react-i18next'
+import { getDirection } from '../../i18n'
 
 
 const Devices = () => {
@@ -15,6 +17,8 @@ const Devices = () => {
     const [deleteDevice, setDeleteDevice] = useState<IDevice|null>(null)
     const [isLoading, setIsLoading] = useState(true)
     const [deleteConfirm, setDeleteConfirm] = useState(false)
+    const {t, i18n} = useTranslation()
+    const currentDirection = getDirection(i18n.language);
 
     const refetchDevices = async ()=>{ 
         setIsLoading(true)
@@ -30,10 +34,10 @@ const Devices = () => {
     }, [])
 
     const tableHead = [
-        "الاسم",
-        "النوع",
-        "الحالة",
-        "الأوامر"
+        t('tables.name'),
+        t('tables.type'),
+        t('tables.status'),
+        t('tables.actions')
     ]
   
   return (
@@ -55,14 +59,14 @@ const Devices = () => {
             }}} />
         </>
     }
-    <div className='py-6 lg:px-36 px-10 bg-[#0d47a1] h-full flex flex-col' dir='rtl'>
-        <div className='w-full flex justify-between items-start'>
-            <h1 className='text-white text-3xl font-bold'>الأجهزة</h1>
+    <div className='py-6 lg:px-36 px-10 bg-[#0d47a1] h-full flex flex-col' dir={currentDirection}>
+        <div className='w-full flex justify-between items-center'>
+            <h1 className='text-white text-3xl font-bold'>{t('devices.devices')}</h1>
             <button onClick={()=>{ 
                 deviceTypes?.length>0? setShowPopup(true)
                 : toast.error('برجاء إضافة نوع جهاز أولًا');
             }} className='mt-4 px-4 p-2 shadow-sm shadow-black rounded text-md text-white bg-blue-700 hover:bg-blue-500 duration-100 flex gap-3 items-center'>
-                إضافة جهاز <span className='text-xl font-bold'>+</span> 
+                {t('devices.addDevice')} <span className='text-xl font-bold'>+</span> 
             </button>
         </div>
         {isLoading? 
@@ -70,16 +74,16 @@ const Devices = () => {
                 <Loader size={50} color='white' thickness={10}/>
             </div>
         :devices.length<1? 
-            <div dir='rtl' className='flex flex-col items-center mt-20'>
-                <h1 className='text-xl font-bold text-white'>لا توجد أجهزة</h1>
-                <p className='text-sm font-bold mt-4 text-gray-300'>برجاء إضافة أجهزة جديدة ...</p>
+            <div dir={currentDirection} className='flex flex-col items-center mt-20'>
+                <h1 className='text-xl font-bold text-white'>{t('devices.noDevices')}</h1>
+                <p className='text-sm font-bold mt-4 text-gray-300'>{t('devices.pleaseAddNewDevice')}</p>
             </div>
             :
         <div className='w-full flex flex-col grow min-h-0 text-black mt-6 text-center rounded-md overflow-hidden'>
             <div className='bg-gray-50 border-b-2 border-gray-200 flex'>
                 {tableHead.map((key, i)=> 
-                <div key={i} className='p-3 text-sm font-semibold text-center flex-1'>{key}</div>
-            )}
+                    <div key={i} className='p-3 text-sm font-semibold text-center flex-1'>{key}</div>
+                )}
             </div>
             <div className='relative grow min-h-0 overflow-y-auto'>
                 {devices.map((device, i)=> 
@@ -89,7 +93,7 @@ const Devices = () => {
                         {device.type.name}
                     </div>
                     <div className='flex-1 p-3 flex items-center justify-center'>
-                        <span className={'p-1.5 text-xs font-bold uppercase tracking-wider bg-opcaity-50 rounded-lg ' + (!device.status? "text-green-800 bg-green-200" : "text-red-800 bg-red-200")}>{!device.status? "متاح" : "مشغول"}</span>
+                        <span className={'p-1.5 text-xs font-bold uppercase tracking-wider bg-opcaity-50 rounded-lg ' + (!device.status? "text-green-800 bg-green-200" : "text-red-800 bg-red-200")}>{!device.status? t('devices.available') : t('devices.inUse')}</span>
                     </div>
                     <div className='flex-1 flex gap-4 items-center p-3 justify-center'>
                         <div className='bg-indigo-100 cursor-pointer hover:text-indigo-400 duration-100 rounded-md p-1 text-2xl'>

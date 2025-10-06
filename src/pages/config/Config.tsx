@@ -10,28 +10,27 @@ import { fetchDeviceTypes } from '../../api/devices';
 import DarkBackground from '../../components/DarkBackground';
 import Loader from '../../components/Loader';
 import LightBackground from '../../components/LightBackground';
+import { useTranslation } from 'react-i18next';
+import { getDirection } from '../../i18n';
 
 const Config = () => {
   const [configs, setConfigs] = useState<{name: string, phone: string}>();
-
   const [playstationName, setPlaystationName] = useState('')
   const [phone, setPhone] = useState('')
-
   const [currentUser, setCurrentUser] = useState<IUser|null>(null)
-  
   const [editPopup, setEditPopup] = useState(false)
   const [addPopup, setAddPopup] = useState(false)
   const [typePopup, setTypePopup] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
-  
   const [isLoading, setIsLoading] = useState(true)
-  
   const [deviceTypes, setDeviceTypes] = useState<IDeviceType[]>([])
   const [currentDeviceType, setCurrentDeviceType] = useState<string|null>(null)
   const [singlePrice, setSinglePrice] = useState<number>(0)
-  const [multiPrice, setMultiPrice] = useState<number>(0)
-  
+  const [multiPrice, setMultiPrice] = useState<number>(0)  
   const [users, setUsers] = useState<IUserFinances[]>([])
+
+  const {t, i18n} = useTranslation()
+  const currentDirection = getDirection(i18n.language);
 
   const getAll = async()=>{
     setIsLoading(true)
@@ -81,7 +80,7 @@ const Config = () => {
   },[])
   
   return (
-    <div dir='rtl' className="flex flex-col h-full overflow-hidden py-6 bg-[#0d47a1] lg:px-36 px-10 font-alexandria">
+    <div dir={currentDirection} className="flex flex-col h-full overflow-hidden py-6 bg-[#0d47a1] lg:px-36 px-10 font-alexandria">
       {typePopup&& <>
         <DevTypePopup {...{onAction: async()=>{
           setTypePopup(false)
@@ -119,55 +118,55 @@ const Config = () => {
         <LightBackground/>
       </>
       }
-        <h1 className="text-white text-3xl font-bold mb-4">الاعدادات</h1>
+        <h1 className="text-white text-3xl font-bold mb-4">{t('settings.settings')}</h1>
         <div className='p-10 grow flex flex-col lg:flex-row gap-16 bg-white rounded-lg shadow-large lg:overflow-y-hidden overflow-y-auto'>
           <div className='flex-1/2 shrink gap-10 flex flex-col lg:overflow-y-auto'>
             <form onSubmit={handleSaveInfo} className='flex flex-col gap-4'>
-              <h1 className='font-bold text-xl' >بيانات المحل</h1>
+              <h1 className='font-bold text-xl' >{t('settings.shopInfo')}</h1>
               <div className='flex flex-col'>
-                <label className="block font-semibold mb-1">اسم المحل:</label>
+                <label className="block font-semibold mb-1">{t('settings.shopName')}:</label>
                 <input onInput={(e)=> setPlaystationName(e.currentTarget.value)} type="text" placeholder={configs?.name} className=" border px-2 py-1" />
               </div>
               <div className='flex flex-col'>
-                <label className="block font-semibold mb-1">رقم التليفون:</label>
+                <label className="block font-semibold mb-1">{t('settings.phone')}:</label>
                 <input type="tel" placeholder={configs?.phone} onInput={(e)=> setPhone(e.currentTarget.value)}  onKeyDown={(e) => {
                     const key = e.key;
                     const isValidInput = /^[0-9]*$/.test(key);
                     if (!isValidInput && key != 'Backspace' && key != 'ArrowRight' && key != 'ArrowLeft' && key != 'Shift' && key != 'Home' && key != 'End' && key != 'Del' && key != 'Enter') {
                       e.preventDefault();
                     }
-                  }} className="border px-2 py-1 text-right" />
+                  }} className="border px-2 py-1" />
               </div>
-              <input type='submit' className="px-4 py-2 mt-auto bg-blue-500 text-white rounded" value='تعديل بيانات المحل'/>
+              <input type='submit' className="px-4 py-2 mt-auto bg-blue-500 text-white rounded" value={t('modals.save')}/>
             </form>
             <form className='gap-4 flex flex-col'>
               <div className='flex gap-4 items-start'>
-                <h1 className='font-bold text-xl' >الأسعار</h1>
+                <h1 className='font-bold text-xl' >{t('settings.prices')}</h1>
                 <select onSelect={e=> setCurrentDeviceType(e.currentTarget.value)} className='select-input p-2 border-2 border-indigo-500 text-indigo-500 outline-none cursor-pointer'>
                   {deviceTypes?.map((deviceType, i)=> <option key={i} value={deviceType.id}>{deviceType.name}</option> )}
                 </select>
-                <button type='button' onClick={(e)=>{e.preventDefault();  setTypePopup(true)}} className='bg-[#1f1f1f] hover:bg-[#4d4d4d] duration-150 text-white p-2 px-4 rounded'>اضافة نوع جهاز</button>
+                <button type='button' onClick={(e)=>{e.preventDefault();  setTypePopup(true)}} className='bg-[#1f1f1f] hover:bg-[#4d4d4d] duration-150 text-white p-2 px-4 rounded'>{t('deviceTypes.addDeviceType')}</button>
               </div>
               <div className='flex flex-col'>
-                <label className="block font-semibold mb-1">سعر الساعة (سنجل):</label>
+                <label className="block font-semibold mb-1">{t('deviceTypes.hourlyRateSingle')}:</label>
                 <input onInput={e=> setSinglePrice(parseInt(e.currentTarget.value))} type="number" placeholder={deviceTypes.find(d=>d.id===currentDeviceType)?.single_price.toString()||"0"} className="border px-2 py-1"
                 />
               </div>
               <div className='flex flex-col'>
-                <label className="block font-semibold mb-1">سعر الساعة (ملتي):</label>
+                <label className="block font-semibold mb-1">{t('deviceTypes.hourlyRateMulti')}:</label>
                 <input onInput={e=> setMultiPrice(parseInt(e.currentTarget.value))} type="number" placeholder={deviceTypes.find(d=>d.id===currentDeviceType)?.multi_price.toString()||"0"} className="border px-2 py-1"/>
               </div>
-              <button type='submit' onClick={handleSaveTypes} className="px-4 py-2 mt-auto bg-blue-500 text-white rounded">حفظ</button>
+              <button type='submit' onClick={handleSaveTypes} className="px-4 py-2 mt-auto bg-blue-500 text-white rounded">{t('modals.save')}</button>
             </form>
           </div>
           <form className='flex flex-1/2 flex-col'>
-            <h1 className='font-bold text-xl' >المستخدمين</h1>
+            <h1 className='font-bold text-xl' >{t('settings.users')}</h1>
             <div className='grow flex flex-col mb-2 mt-4'>
               <div className='text-white flex w-full gap-2 text-center bg-slate-700 py-2 rounded-t-sm'>
-                <div className='flex-1'>الاسم</div>
-                <div className='flex-1'>الايراد اليومي</div>
-                <div className='flex-1'>الايراد الشهري</div>
-                <div className='flex-1'>الدور</div>
+                <div className='flex-1'>{t('tables.name')}</div>
+                <div className='flex-1'>{t('tables.todayFinances')}</div>
+                <div className='flex-1'>{t('tables.monthFinances')}</div>
+                <div className='flex-1'>{t('tables.role')}</div>
               </div> 
               <ul className='flex flex-col grow shadow-inner overflow-y-auto bg-slate-200 rounded-b-sm border-b-[3px] border-slate-700'>
                 {users?.map((user, i)=>
@@ -187,10 +186,10 @@ const Config = () => {
               </ul>
             </div>
             <div className='flex gap-2'>
-              <button type='button' onClick={()=> setAddPopup(true)} className="px-4 py-2 mt-auto bg-green-500 hover:bg-green-400 duration-150 text-white rounded flex-1">اضافة </button>
+              <button type='button' onClick={()=> setAddPopup(true)} className="px-4 py-2 mt-auto bg-green-500 hover:bg-green-400 duration-150 text-white rounded flex-1">{t('modals.add')}</button>
               <button type='button' onClick={()=> currentUser? setEditPopup(true) : toast.error("برجاء تحديد مستخدم للتعديل")}
-                className={"px-4 py-2 mt-auto duration-150 text-white rounded flex-1 " + (currentUser? "bg-blue-500 hover:bg-blue-400" : "bg-gray-300")}>تعديل  </button>
-              <button type='button' onClick={()=> currentUser? setConfirmDelete(true) : toast.error("برجاء تحديد مستخدم للحذف")} className={"px-4 py-2 mt-auto duration-150 text-white rounded flex-1 " + (currentUser? "bg-red-600 hover:bg-red-500" : "bg-gray-300")}>حذف </button>
+                className={"px-4 py-2 mt-auto duration-150 text-white rounded flex-1 " + (currentUser? "bg-blue-500 hover:bg-blue-400" : "bg-gray-300")}>{t('modals.edit')}</button>
+              <button type='button' onClick={()=> currentUser? setConfirmDelete(true) : toast.error("برجاء تحديد مستخدم للحذف")} className={"px-4 py-2 mt-auto duration-150 text-white rounded flex-1 " + (currentUser? "bg-red-600 hover:bg-red-500" : "bg-gray-300")}>{t('modals.delete')}</button>
             </div>
         </form>
       </div>
