@@ -12,11 +12,10 @@ import Loader from '../../components/Loader';
 import LightBackground from '../../components/LightBackground';
 import { useTranslation } from 'react-i18next';
 import { getDirection } from '../../i18n';
+import { useConfigs } from '../../context/ConfigsContext';
+import currencies from '../../assets/currencies.json';
 
-const Config = () => {
-  const [configs, setConfigs] = useState<{name: string, phone: string}>();
-  const [playstationName, setPlaystationName] = useState('')
-  const [phone, setPhone] = useState('')
+const SettingsPage = () => {
   const [currentUser, setCurrentUser] = useState<IUser|null>(null)
   const [editPopup, setEditPopup] = useState(false)
   const [addPopup, setAddPopup] = useState(false)
@@ -28,6 +27,10 @@ const Config = () => {
   const [singlePrice, setSinglePrice] = useState<number>(0)
   const [multiPrice, setMultiPrice] = useState<number>(0)  
   const [users, setUsers] = useState<IUserFinances[]>([])
+  
+  const {configs, updateConfigs} = useConfigs()
+
+  const [form, setForm] = useState<{name: string, phone: string, currency: string}>({...configs, currency: configs.currency?.code||currencies[0].code})
 
   const {t, i18n} = useTranslation()
   const currentDirection = getDirection(i18n.language);
@@ -44,21 +47,13 @@ const Config = () => {
         setCurrentDeviceType(data.deviceTypes[0]?.id)
       }
     })
-    await axios.get('/config', {withCredentials:true})
-    .then(({data})=>{
-      setConfigs({name: data.nameConfig?.value, phone: data.phoneConfig?.value})
-    })
     setIsLoading(false)
   }
 
   const handleSaveInfo = (e: React.FormEvent<HTMLElement>) => {
     e.preventDefault();
-    axios.put('/config', {name: playstationName, phone}, {withCredentials:true})
-    .then(({data})=>{
-      if(data.message){
-        data.success? toast.success(data.message) : toast.error(data.message)
-      }
-    }).finally(()=> getAll())
+    setIsLoading(true)
+    updateConfigs(form).finally(()=>getAll())
   };
   
   const handleSaveTypes = (e: React.FormEvent<HTMLElement>) => {
@@ -67,6 +62,7 @@ const Config = () => {
       toast.error('برجاء تحديد نوع جهاز')
       return
     }
+    setIsLoading(true)
     axios.put(`/device-types/${currentDeviceType}`, {singlePrice, multiPrice}, {withCredentials: true})
     .then(({data})=>{
       if(data.message){
@@ -125,17 +121,28 @@ const Config = () => {
               <h1 className='font-bold text-xl' >{t('settings.shopInfo')}</h1>
               <div className='flex flex-col'>
                 <label className="block font-semibold mb-1">{t('settings.shopName')}:</label>
-                <input onInput={(e)=> setPlaystationName(e.currentTarget.value)} type="text" placeholder={configs?.name} className=" border px-2 py-1" />
+                <input onChange={(e)=> setForm(prev=> ({...prev, name: e.target.value}))} type="text" placeholder={configs?.name} className=" border px-2 py-1" />
               </div>
               <div className='flex flex-col'>
                 <label className="block font-semibold mb-1">{t('settings.phone')}:</label>
-                <input type="tel" placeholder={configs?.phone} onInput={(e)=> setPhone(e.currentTarget.value)}  onKeyDown={(e) => {
+                <input type="tel" placeholder={configs?.phone} onChange={(e)=> setForm(prev=>({...prev, phone: e.target.value}))}  onKeyDown={(e) => {
                     const key = e.key;
                     const isValidInput = /^[0-9]*$/.test(key);
                     if (!isValidInput && key != 'Backspace' && key != 'ArrowRight' && key != 'ArrowLeft' && key != 'Shift' && key != 'Home' && key != 'End' && key != 'Del' && key != 'Enter') {
                       e.preventDefault();
                     }
                   }} className="border px-2 py-1" />
+              </div>
+              <div className='flex flex-col'>
+                <label className="block font-semibold mb-1">{t('settings.currency')}:</label>
+                <select value={form.currency} onChange={(e)=> setForm(prev=>({...prev, currency: e.target.value}))} 
+                  className="border px-2 py-1">
+                    {currencies.map((currency, i)=>
+                      <option key={i} value={currency.code}>
+                        {currency.name} - {currency.symbol} ({currency.code})
+                      </option>  
+                    )}
+                </select>
               </div>
               <input type='submit' className="px-4 py-2 mt-auto bg-blue-500 text-white rounded" value={t('modals.save')}/>
             </form>
@@ -149,12 +156,12 @@ const Config = () => {
               </div>
               <div className='flex flex-col'>
                 <label className="block font-semibold mb-1">{t('deviceTypes.hourlyRateSingle')}:</label>
-                <input onInput={e=> setSinglePrice(parseInt(e.currentTarget.value))} type="number" placeholder={deviceTypes.find(d=>d.id===currentDeviceType)?.single_price.toString()||"0"} className="border px-2 py-1"
+                <input onChange={e=> setSinglePrice(parseInt(e.currentTarget.value))} type="number" placeholder={deviceTypes.find(d=>d.id===currentDeviceType)?.single_price.toString()||"0"} className="border px-2 py-1"
                 />
               </div>
               <div className='flex flex-col'>
                 <label className="block font-semibold mb-1">{t('deviceTypes.hourlyRateMulti')}:</label>
-                <input onInput={e=> setMultiPrice(parseInt(e.currentTarget.value))} type="number" placeholder={deviceTypes.find(d=>d.id===currentDeviceType)?.multi_price.toString()||"0"} className="border px-2 py-1"/>
+                <input onChange={e=> setMultiPrice(parseInt(e.currentTarget.value))} type="number" placeholder={deviceTypes.find(d=>d.id===currentDeviceType)?.multi_price.toString()||"0"} className="border px-2 py-1"/>
               </div>
               <button type='submit' onClick={handleSaveTypes} className="px-4 py-2 mt-auto bg-blue-500 text-white rounded">{t('modals.save')}</button>
             </form>
@@ -197,4 +204,4 @@ const Config = () => {
   );
 };
 
-export default Config;
+export default SettingsPage;

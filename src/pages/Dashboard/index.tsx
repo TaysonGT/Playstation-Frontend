@@ -8,6 +8,7 @@ import OuterReceipt from '../Receipts/partials/receipt/OuterReceipt';
 import SessionReceipt from '../Receipts/partials/receipt/SessionReceipt';
 import { useTranslation } from 'react-i18next';
 import { getDirection } from '../../i18n';
+import { useConfigs } from '../../context/ConfigsContext';
 
 const Dashboard = () => {
   const [finances, setFinances] = useState<IFinanceReport>({
@@ -50,6 +51,7 @@ const Dashboard = () => {
 
   const {t, i18n} = useTranslation()
   const currentDirection = getDirection(i18n.language);
+  const {configs} = useConfigs()
 
   const currentDateHandler = (e:React.InputEvent<HTMLInputElement>)=>{
     let currDate = e.currentTarget.value;
@@ -79,6 +81,14 @@ const Dashboard = () => {
       date&& fetchFinances(date)
     )
   },[date, currentUser])
+
+  const formatDate = (date: Date)=>{
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
 
   return isLoading? 
     <div className='flex justify-center items-center h-full'><Loader size={50} thickness={10}/></div>
@@ -118,7 +128,7 @@ const Dashboard = () => {
          <div className="bg-green-500 text-white rounded-lg shadow-md p-4">
             <div className='flex justify-between'>
               <h2 className="text-lg font-semibold mb-2">{t('dashboard.date')}</h2>
-              <input type="date"className='bg-white text-black px-1 py-1 rounded-lg shadow-lg hover:bg-green-200' onInput={currentDateHandler} />
+              <input value={formatDate(date)} type="date" className='bg-white text-black px-1 py-1 rounded-lg shadow-lg hover:bg-green-200' onInput={currentDateHandler} />
             </div>
             <div className='flex gap-4 items-end'>
               <p className="text-2xl font-bold">{day}</p>
@@ -129,7 +139,7 @@ const Dashboard = () => {
           <div className="bg-white rounded-lg shadow-md p-4">
             <h2 className="text-lg font-semibold mb-2">{t('dashboard.todayRevenue')}</h2>
             <div className='flex gap-4 items-end'>
-              <p className="text-2xl font-bold">{finances?.today}<span className='font-noto'>ج</span></p>
+              <p dir={currentDirection} className="text-2xl font-bold gap-1 flex items-center">{finances?.today}<span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></p>
               {finances?.todayGrowthLoss && finances?.todayGrowthLoss>0 &&
                 <p className={`text-lg font-bold ${isPositive(finances?.todayGrowthLoss) ? 'text-green-500' : 'text-red-500'}`}>{Math.abs(finances?.todayGrowthLoss)}% {(finances?.todayGrowthLoss)? "↑" : "↓"}</p>
               }
@@ -139,7 +149,7 @@ const Dashboard = () => {
           <div className="bg-white rounded-lg shadow-md p-4 ">
             <h2 className="text-lg font-semibold mb-2">{t('dashboard.weeklyRevenue')}</h2>
             <div className='flex gap-4 items-end'>
-              <p className="text-2xl font-bold">{finances?.currentWeek}<span className='font-noto'>ج</span></p>
+              <p dir={currentDirection} className="text-2xl font-bold gap-1 flex items-center">{finances?.currentWeek}<span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></p>
               {finances?.currentWeekGrowthLoss && finances?.currentWeek>0 &&
                 <p className={`text-lg font-bold ${isPositive(finances?.currentWeekGrowthLoss) ? 'text-green-500' : 'text-red-500'}`}>{Math.abs(finances?.currentWeekGrowthLoss)}% {isPositive(finances?.currentWeekGrowthLoss)? "↑" : "↓"}</p>
               }
@@ -150,7 +160,7 @@ const Dashboard = () => {
           <div className="bg-white rounded-lg shadow-md p-4">
             <h2 className="text-lg font-semibold mb-2">{t('dashboard.monthlyRevenue')}</h2>
             <div className='flex gap-4 items-end'>
-              <p className="text-2xl font-bold">{finances?.currentMonth}<span className='font-noto'>ج</span></p>
+              <p dir={currentDirection} className="text-2xl font-bold gap-1 flex items-center">{finances?.currentMonth}<span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></p>
               {finances?.currentMonthGrowthLoss && finances?.currentMonth>0 &&
                 <p className={`text-lg font-bold ${isPositive(finances?.currentMonthGrowthLoss)? 'text-green-500' : 'text-red-500'}`}>{Math.abs(finances?.currentMonthGrowthLoss)}% {isPositive(finances?.currentMonthGrowthLoss)? "↑" : "↓"}</p>
               }
@@ -160,13 +170,13 @@ const Dashboard = () => {
           <div className="bg-white lg:row-start-4 lg:row-end-6 rounded-lg shadow-md p-4 flex-col flex">
             <div className='flex justify-between items-center'>
               <h2 className="text-lg font-semibold">{t('dashboard.deductions')}</h2>
-              <button onClick={()=> setShowAddDeductionPopup(true)} className='p-2 bg-red-500 hover:bg-red-400 text-white rounded'>اضافة </button>
+              <button onClick={()=> setShowAddDeductionPopup(true)} className='p-2 bg-red-500 hover:bg-red-400 text-white rounded'>{t('modals.add')} </button>
             </div>
             <div className='grow justify-between flex flex-col'>
               <div>
                 <span className='text-sm'>({t('dashboard.today')})</span>
                 <div className='flex gap-4 items-end'>
-                  <p className="text-2xl font-bold">{Math.abs(finances?.todayDeduction)}<span className='font-noto'>ج</span></p>
+                  <p dir={currentDirection} className="text-2xl flex items-center gap-1 font-bold">{Math.abs(finances?.todayDeduction)}<span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></p>
                   {finances?.todayDeductionGrowthLoss && finances?.todayDeduction>0 &&
                     <p className={`text-lg font-bold ${isPositive(finances?.todayDeductionGrowthLoss)?  'text-green-500' : 'text-red-500'}`}>{Math.abs(finances?.todayDeductionGrowthLoss)}% {isPositive(finances?.todayDeductionGrowthLoss)? "↓" : "↑" }</p>
                   }
@@ -175,7 +185,7 @@ const Dashboard = () => {
               <div>
                 <span className='text-sm'>({t('dashboard.thisMonth')})</span>
                 <div className='flex gap-4 items-end'>
-                  <p className="text-2xl font-bold">{Math.abs(finances?.currentMonthDeduction)}<span className='font-noto'>ج</span></p>
+                  <p dir={currentDirection} className="text-2xl flex items-center gap-1 font-bold">{Math.abs(finances?.currentMonthDeduction)}<span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></p>
                   {finances?.currentMonthDeductionGrowthLoss && finances?.currentMonthDeduction>0 &&
                     <p className={`text-lg font-bold ${isPositive(finances?.currentMonthDeductionGrowthLoss)?  'text-red-500' : 'text-green-500'}`}>{Math.abs(finances?.currentMonthDeductionGrowthLoss)}% {isPositive(finances?.currentMonthDeductionGrowthLoss)? "↑" : "↓"}</p>
                   }
@@ -187,7 +197,7 @@ const Dashboard = () => {
           <div className="bg-white rounded-lg shadow-md p-4">
             <h2 className="text-lg font-semibold mb-2">{t('dashboard.productsRevenue')}</h2>
             <div className='flex gap-4 items-end'>
-              <p className="text-2xl font-bold">{finances?.productsRevenue}<span className='font-noto'>ج</span></p>
+              <p dir={currentDirection} className="text-2xl font-bold gap-1 flex items-center">{finances?.productsRevenue}<span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></p>
               {finances?.productsGrowthLoss&& finances?.productsRevenue>0 &&
                 <p className={`text-lg font-bold ${isPositive(finances?.productsGrowthLoss) ?    'text-green-500' : 'text-red-500'}`}>{Math.abs(finances?.productsGrowthLoss)}% {isPositive(finances?.productsGrowthLoss)? "↑" : "↓"}</p>
               }
@@ -196,7 +206,7 @@ const Dashboard = () => {
           <div className="bg-white rounded-lg shadow-md p-4">
             <h2 className="text-lg font-semibold mb-2">{t('dashboard.yearlyRevenue')}</h2>
             <div className='flex gap-4 items-end'>
-              <p className="text-2xl font-bold">{finances?.currentYear}<span className='font-noto'>ج</span></p>
+              <p dir={currentDirection} className="text-2xl font-bold gap-1 flex items-center">{finances?.currentYear}<span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></p>
               {finances?.currentYearGrowthLoss && finances?.currentYear>0 &&
                 <p className={`text-lg font-bold ${isPositive(finances?.currentYearGrowthLoss) ? 'text-green-500' : 'text-red-500'}`}>{Math.abs(finances?.currentYearGrowthLoss)}% {isPositive(finances?.currentYearGrowthLoss)? "↑" : "↓"}</p>
               }
@@ -222,8 +232,8 @@ const Dashboard = () => {
                   <div className="flex-1 p-3 flex gap-2 items-center justify-center">
                     <p>{new Date(finance.created_at).toLocaleString()}</p>
                   </div>
-                  <div className={"font-bold flex-[0.5] p-3 " + (finance.type === "deduction"? "text-red-600" : "text-green-500")}>
-                    {Math.abs(finance.total)}ج
+                  <div dir={currentDirection} className={"font-bold flex-[0.5] p-3 justify-center flex items-center gap-1 " + (finance.type === "deduction"? "text-red-600" : "text-green-500")}>
+                    {Math.abs(finance.total)}<span>{currentDirection==='rtl'? configs.currency.symbolNative: configs.currency.symbol}</span>
                   </div>
                   <div
                     onClick={()=>{

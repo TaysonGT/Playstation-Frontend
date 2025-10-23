@@ -20,7 +20,7 @@ const Home = () => {
             <h1 className='text-3xl font-bold text-indigo-700'>{t('devices.noDevices')}</h1>
             <p className='text-lg font-bold mt-4 text-indigo-900'>{t('home.pleaseAddNewDevices')}</p>
         </div>}
-        {availableDevices.length>0&&
+        {availableDevices?.length>0&&
         <div className='w-[85%] mx-auto flex flex-col items-center'>
             <h1 className='text-3xl font-bold text-[#37474f] inline-block'>{t('home.availableDevices')}</h1>
             <div className='flex w-full flex-wrap gap-6 mt-8'>
@@ -33,7 +33,7 @@ const Home = () => {
             </div>
         </div>
         }
-        {unavailableDevices.length>0&&
+        {unavailableDevices?.length>0&&
         <div className={'w-[85%] mx-auto  flex flex-col items-center'}>
             <h1 className='text-3xl font-bold text-[#37474f] inline-block'>{t('home.unavailableDevices')}</h1>
             <div className='flex w-full flex-wrap gap-6 mt-8'>

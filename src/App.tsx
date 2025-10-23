@@ -9,7 +9,6 @@ import Home from './pages/home/Home';
 import Devices from './pages/devices/Devices';
 import ReceiptsLayout from './pages/Receipts';
 import Stock from './pages/stock/Stock';
-import Config from './pages/config/Config';
 import { DevicesProvider } from './context/DeviceContext';
 import NotFoundPage from './pages/404';
 import { AuthProvider } from './context/AuthContext';
@@ -17,6 +16,9 @@ import TestPage from './pages/TestPage';
 import Dashboard from './pages/Dashboard';
 import OuterReceipts from './pages/Receipts/partials/OuterReceipts';
 import SessionReceipts from './pages/Receipts/partials/SessionReceipts';
+import SettingsPage from './pages/Settings';
+import { ConfigsProvider } from './context/ConfigsContext';
+import GraphPage from './pages/Dashboard/graphs';
 
 function App() {
 
@@ -27,6 +29,7 @@ function App() {
         { zIndex: 9999, marginTop: '80px', userSelect: "none"} 
       }/>
         <AuthProvider>
+        <ConfigsProvider>
         <Routes>
           <Route path='/login' element={<LoginRoute/>}>
             <Route index element={<Login/>}/>
@@ -44,11 +47,13 @@ function App() {
               <Route path='/receipts/sessions' element={<SessionReceipts/>}/>
             </Route>
             <Route element ={<Stock />} path='/stock'  />
-            <Route element={<Config />} path='/settings'  />
+            <Route element={<SettingsPage />} path='/settings'  />
             <Route element={<Dashboard />} path='/dashboard'  />
+            <Route element={<GraphPage />} path='/reports'  />
           </Route>
           <Route path='*' element={<NotFoundPage/>}/>
         </Routes>
+        </ConfigsProvider>
         </AuthProvider>
       </BrowserRouter>
     </> 

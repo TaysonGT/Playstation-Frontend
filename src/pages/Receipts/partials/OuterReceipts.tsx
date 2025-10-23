@@ -7,12 +7,14 @@ import Loader from '../../../components/Loader';
 import DarkBackground from '../../../components/DarkBackground';
 import { useTranslation } from 'react-i18next';
 import { getDirection } from '../../../i18n';
+import { useConfigs } from '../../../context/ConfigsContext';
 
 const OuterReceipts = () => {
   const [showPopup, setShowPopup] = useState(false)
   const [currentReceipt, setCurrentReceipt] = useState<IReceipt>()
   const [receipts, setReceipts] = useState<IReceipt[]>([]) 
   const [isLoading, setIsLoading] = useState(true)
+  const {configs} = useConfigs()
   const {t, i18n} = useTranslation()
   const currentDirection = getDirection(i18n.language);
 
@@ -65,13 +67,12 @@ const OuterReceipts = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-2">
       {receipts?.map((receipt, index) => (
           <div key={index} className="bg-white shadow-lg rounded-lg overflow-hidden p-4">
-            <h2 className="text-xl font-semibold mb-2">{receipt.cashier?.username}</h2>
+            <h2 className="text-xl font-semibold mb-2">{t('tables.cashier')}: {receipt.cashier?.username}</h2>
             <p className="text-gray-600">{t('tables.date')}: {new Date(receipt.created_at).toLocaleDateString()}</p>
             <p className="text-gray-600">{t('tables.time')}: {new Date(receipt.created_at).toLocaleTimeString()}</p>
-            <p className="text-gray-800 mt-2">{t('tables.total')}:  {receipt.total}ج</p>
+            <p className="text-gray-800 mt-2 flex gap-1">{t('tables.total')}:  {receipt.total}<span>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></p>
             <div className="mt-4 flex justify-between items-center">
-              <span className="text-sm text-gray-500">{receipt.total}</span>
-              <button onClick={()=>setCurrentReceipt(receipt)} className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 ">التفاصيل</button>
+              <button onClick={()=>setCurrentReceipt(receipt)} className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 ">{t('devices.details')}</button>
             </div>
           </div>
         ))}

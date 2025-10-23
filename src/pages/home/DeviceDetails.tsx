@@ -224,11 +224,16 @@ const DeviceDetails:React.FC<Props> = ({device, clock}) => {
           <h2 className="text-lg font-semibold mb-2 text-gray-800">{t('devices.orders')}</h2>
           {orders?.length>0?
           <ul className='mt-2 overflow-y-auto shadow-inner bg-gray-100'>
+            <li className='flex basis-0 text-xs justify-end pt-2 pb-1 border-b border-gray-200'>
+              <div className='flex-1 text-center font-semibold'>{t('tables.quantity')}</div>
+              <div className='flex-1 text-center font-semibold'>{t('stock.product')}</div>
+              <div className='flex-1 text-center font-semibold'>{t('receipts.cost')}</div>
+            </li>
             {orders?.map((order, index) => (
-              <li key={index} className='flex basis-0 justify-end px-4 py-1'>
-                <div className='flex-1 text-right'>{order.quantity}</div>
-                <div className='flex-1 font-semibold'>{order.product?.name}</div>
-                <div className='flex-1 mr-auto text-left'>{order.cost}ج</div>
+              <li key={index} className='flex basis-0 text-sm justify-end py-1'>
+                <div className='flex-1 text-center'>{order.quantity}</div>
+                <div className='flex-1 text-center'>{order.product?.name}</div>
+                <div className='flex-1 text-center'>{order.cost}ج</div>
               </li>
             ))}
             </ul> : 

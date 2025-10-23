@@ -1,8 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react'
 import { IOrder, IReceipt } from '../../../../types'
-import axios from 'axios'
 import { useTranslation } from 'react-i18next'
 import { getDirection } from '../../../../i18n'
+import { useConfigs } from '../../../../context/ConfigsContext'
 
 interface Props {
   receipt: IReceipt, 
@@ -12,22 +12,15 @@ interface Props {
 const SessionReceipt:React.FC<Props> = ({receipt, hide}) => {
     const [totalPlayed, setTotalPlayed] = useState<string>('')
     const invoiceRef = useRef<HTMLDivElement>(null)
-    const [configs, setConfigs] = useState<{name: string, phone: string}>();
     const {t, i18n} = useTranslation()
     const currentDirection = getDirection(i18n.language);
-
+    const {configs} = useConfigs()
+    
     // const handler = useReactToPrint({
     //     content: ()=> invoiceRef.current,
     //     documentTitle: "Invoice",
     //     onAfterPrint: ()=> toast.success("طباعة ناجحة")
     // })
-
-    useEffect(()=>{
-      axios.get('/config', {withCredentials:true})
-      .then(({data})=>{
-        setConfigs({name: data.nameConfig?.value, phone: data.phoneConfig?.value})
-      })
-    },[])
 
 
     const timeConv = ({start, end, secs}:{start?:string, end?:string, secs?: number})=>{
@@ -76,7 +69,7 @@ const SessionReceipt:React.FC<Props> = ({receipt, hide}) => {
         <div ref={invoiceRef} className="w-[300px] mx-auto p-4 border rounded-lg shadow-lg">
             <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h1 className="text-lg font-bold">{configs?.name}</h1>
+                  <h1 className="text-base font-bold">{configs?.name}</h1>
                   <p>{configs?.phone}</p>
                 </div>
                 <div>
@@ -92,24 +85,29 @@ const SessionReceipt:React.FC<Props> = ({receipt, hide}) => {
             </div>
             {(receipt.orders && receipt.orders?.length > 0)&&
             <div className="mb-4">
-                <h2 className="font-bold mb-2">{t('receipts.orders')}</h2>
+                <h2 className="font-bold text-sm mb-2">{t('receipts.orders')}</h2>
+                <div className="flex w-full mb-2 text-xs font-bold">
+                    <span className='flex-1 text-start'>{t('stock.product')}</span>
+                    <span className='flex-1 text-center px-2'>{t('tables.quantity')}</span>
+                    <span className='flex-1 text-center'>{t('receipts.cost')}</span>
+                </div>
                 {receipt.orders.map((order:IOrder, i) => (
-                <div key={i} className="flex justify-between mb-2">
-                    <span className='flex-[.45]'>{order.product.name}</span>
-                    <span className='flex-[.33]'>{order.quantity}</span>
-                    <span>{order.cost}<span className=''>ج</span></span>
+                <div key={i} className="flex mb-2">
+                    <span className='flex-1'>{order.product.name}</span>
+                    <span className='flex-1 text-center'>{order.quantity}</span>
+                    <span className='flex flex-1 gap-1 justify-end items-center'>{order.cost}<span>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></span>
                 </div>
                 ))}
             </div>
             }
             {(receipt.time_orders && receipt.time_orders?.length > 0)&&
             <div className="mb-4">
-                <h2 className="font-bold mb-2">{t('receipts.playTime')}</h2>
+                <h2 className="font-bold text-sm mb-2">{t('receipts.playTime')}</h2>
                 {receipt.time_orders.map((order, i) => (
                   <div key={i} className="flex mb-4">
                       <span className='ml-auto flex-1'>{timeConv({start: order.started_at, end: order.ended_at})}</span>
                       <span className='text-center flex-1'>{order.play_type.toUpperCase()}</span>
-                      <span className='mr-auto flex-1 text-end'>{order.cost}<span className=' text-left'>ج</span></span>
+                      <span className='flex justify-end gap-1 flex-1'>{order.cost}<span>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></span>
                   </div>
                 ))}
                 <div className="flex items-start flex-col mb-2">
@@ -118,9 +116,9 @@ const SessionReceipt:React.FC<Props> = ({receipt, hide}) => {
                 </div>
             </div>
             }
-            <div className="flex justify-between pt-2 border-t-2 border-gray-300">
-                <span className="font-bold">{t('tables.total')}:</span>
-                <span>{receipt?.total}<span className=''>ج</span></span>
+            <div className="flex font-bold justify-between pt-2 border-t-2 border-gray-300">
+                <span className="">{t('tables.total')}:</span>
+                <span className='flex items-center gap-1'>{receipt?.total}<span className=''>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></span>
             </div>
         </div>
         </div>

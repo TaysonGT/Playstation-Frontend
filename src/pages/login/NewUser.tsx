@@ -15,7 +15,7 @@ const NewUser:React.FC = () => {
     
   return (
     <div className="bg-white rounded-lg p-8 fixed top-1/2 left-1/2 -translate-1/2 z-102">
-      <h2 className="text-lg text-center font-bold mb-4">{t('login.addNewUser')}</h2>
+      <h2 className="text-lg text-center font-bold mb-4">{t('login.createFirstUser')}</h2>
       <form className='mt-6'>
         <div className="mb-4">
           <label className="block mb-1">{t('login.username')}:</label>

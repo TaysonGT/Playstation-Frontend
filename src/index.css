@@ -24,11 +24,14 @@
 }
 
 @font-face {
-    font-family: "Noto";
+    font-family: Noto;
     src: url('./assets/fonts/NotoNaskhArabic-VariableFont_wght.ttf');
 }
 
 *{
-    font-family: Alexandria;
     box-sizing: border-box;
+}
+
+body{
+    font-family: Alexandria;
 }
