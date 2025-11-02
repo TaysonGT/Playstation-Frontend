@@ -1,255 +1,310 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import AddDeducionPopup from './popups/AddDeductionPopup';
-import { IFinanceReport, IReceipt } from '../../types';
-import Loader from '../../components/Loader';
-import { RiEyeLine } from 'react-icons/ri';
-import OuterReceipt from '../Receipts/partials/receipt/OuterReceipt';
-import SessionReceipt from '../Receipts/partials/receipt/SessionReceipt';
 import { useTranslation } from 'react-i18next';
 import { getDirection } from '../../i18n';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import ReceiptsTable from './ReceiptsTable';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 import { useConfigs } from '../../context/ConfigsContext';
+import ListDialogue from './components/ListDialogue';
+import { ICollection } from '../../types';
+import { Link } from 'react-router';
 
-const Dashboard = () => {
-  const [finances, setFinances] = useState<IFinanceReport>({
-    // Day Report
-    today: 0,
-    todayGrowthLoss: 0,
-    todayDeduction: 0,
-    todayDeductionGrowthLoss: 0,
-    // Week Report
-    currentWeek: 0,
-    currentWeekGrowthLoss: 0,
-    currentWeekDeduction: 0,
-    currentWeekDeductionGrowthLoss: 0,
-    // Month Report 
-    currentMonth: 0,
-    currentMonthGrowthLoss: 0,
-    currentMonthDeduction: 0,
-    currentMonthDeductionGrowthLoss: 0,
-    // Year Report
-    currentYear: 0,
-    currentYearGrowthLoss: 0,
-    currentYearDeduction: 0,
-    currentYearDeductionGrowthLoss: 0,
-    // Products Report
-    productsRevenue: 0,
-    productsGrowthLoss: 0,
-  })
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#99a1af', '#ff6b6b', '#6bcf63', '#a66cff', '#ff6fcf', '#42aaff', '#ffb142'];
 
-  const [currentFinances, setCurrentFinances] = useState<IReceipt[]>([])
-  const [date, setDate] = useState<Date>(new Date(new Date().setHours(0,0,0,0)))
-  const [day, setDay] = useState('')
-  const [currentUser, setCurrentUser] = useState('')
-  const [showAddDeductionPopup, setShowAddDeductionPopup] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
-  const [showFinanceModal, setShowFinanceModal] = useState(false)
-  const [selectedFinance, setSelectedFinance] = useState<IReceipt|null>(null)
-  const [users, setUsers] = useState<{id:string, username:string}[]>()
-  const arabicWeekNames = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
-  const englishWeekNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+type Data = {date: string, sales: number}
 
+type RevenueType = {total: number, data: Data[], growthLoss: number}
+
+interface TotalRevenueType {
+  total: number, 
+  totalProducts: number, 
+  totalPlaying: number, 
+  totalOuter: number, 
+  totalSession: number, 
+  hours: number, 
+  totalGrowthLoss: number, 
+  outerGrowthLoss: number, 
+  sessionsGrowthLoss: number, 
+  productsGrowthLoss: number, 
+  playingGrowthLoss: number, 
+  data: {date: string, Playing: number, Products: number, Total: number}[],
+  growthLossOuter: number, 
+  growthLossSession: number
+}
+
+export interface ProductsRevenueType extends RevenueType {
+  productsList:{product:string, percent:number, sales:number}[]
+}
+
+export interface EmployeesRevenueType {
+  usersRevenue:{
+    cashier: string;
+    revenue: number;
+    growthLoss: number;
+    percent: number;
+  }[],
+  employeesList:{
+    cashier: string;
+    revenue: number;
+    growthLoss: number;
+    percent: number;
+  }[]
+}
+
+const DashboardPage = () => {
+  // const [isLoading, setIsLoading] = useState(true)
+  const [showList, setShowList] = useState<'employees'|'products'|null>(null)
   const {t, i18n} = useTranslation()
   const currentDirection = getDirection(i18n.language);
+  const [totalRevenue, setTotalRevenue] = useState<TotalRevenueType>()
+  const [productsRevenue, setProductsRevenue] = useState<ProductsRevenueType>()
+  const [employeesRevenue, setEmployeesRevenue] = useState<EmployeesRevenueType>()
+  const [balance, setBalance] = useState<{total: number, lastCollection: ICollection}>()
+  const [period, setPeriod] = useState<'monthly'|'yearly'>('monthly')
+  const [date, setDate] = useState(new Date())
   const {configs} = useConfigs()
-
+  
   const currentDateHandler = (e:React.InputEvent<HTMLInputElement>)=>{
     let currDate = e.currentTarget.value;
     setDate(new Date(new Date(currDate).setHours(0,0,0,0)))
   }
 
-  function isPositive(number:number) {
-    return number > 0;
-  }
-
-  const fetchFinances = async(date: Date)=>{
-    setIsLoading(true)
-    setDay(i18n.language==='ar'? arabicWeekNames[new Date(date).getDay()]:englishWeekNames[new Date(date).getDay()])
-    await axios.get(`/finances/${currentUser||'all'}?date=${date.toISOString()}`,{withCredentials: true})
-    .then(({data})=>{
-      setFinances(data)
-      setCurrentFinances(data.finances)
-    }).finally(()=>
-      setIsLoading(false)
-    )
-  }
-
-  useEffect(()=>{
-    axios.get('/users', {withCredentials:true})
-    .then(({data})=>setUsers(data.users))
-    .finally(()=>
-      date&& fetchFinances(date)
-    )
-  },[date, currentUser])
-
   const formatDate = (date: Date)=>{
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+    const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
 
     return `${year}-${month}-${day}`;
   }
 
-  return isLoading? 
-    <div className='flex justify-center items-center h-full'><Loader size={50} thickness={10}/></div>
-  :(
-    <div dir={currentDirection} className="lg:px-36 px-10 bg-[navy] py-6 flex flex-col gap-6 h-full min-h-0 overflow-y-auto ">
-    
-      {showAddDeductionPopup&& 
-      <>
-        <div onClick={()=>setShowAddDeductionPopup(false)} className='fixed left-0 top-0 w-screen h-screen bg-black/70 animate-appear duration-500 z-[50]'/>
-        <AddDeducionPopup {...{onAction: ()=>{
-          setShowAddDeductionPopup(false)
-          date&& fetchFinances(date)
-        }}} />
-      </>
-      }
+  const fetchProductsRevenue = async()=>{
+    await axios.get('/finances/products', {params: {period, date}})
+    .then(({data})=>{
+      if(!data.success) return toast.error('Failed to load Total played hours')
+      setProductsRevenue({
+        ...data,
+        data: data.data.map((d: {date: string, sales: number})=>({
+          ...d, 
+          date: period==='monthly'? new Date(d.date).toLocaleDateString(undefined, {month: 'short', day: '2-digit'})
+            :new Date(d.date).toLocaleDateString(undefined, {year: 'numeric', month:'short'})
+        }))
+      })
+    })
+  }
 
-      {showFinanceModal&&selectedFinance&& 
-      <>
-        <div onClick={()=>setShowFinanceModal(false)} className='fixed left-0 top-0 w-screen h-screen bg-black/70 animate-appear duration-500 z-[50]'/>
-        {selectedFinance.type==='session'?
-          <SessionReceipt {...{receipt:selectedFinance, hide: ()=>setShowFinanceModal(false)}} />
-          : <OuterReceipt {...{receipt:selectedFinance, hide: ()=>setShowFinanceModal(false)}} />
-        }
-      </>
-      }
-    
-      <div className='flex justify-between items-center'>
-        <h1 className="text-3xl align-middle lg font-semibold text-white">{t('dashboard.dashboard')}</h1>
-        <select onChange={e=> setCurrentUser(e.currentTarget.value)} className='px-3 py-2 rounded bg-white '>
-          <option value='all'>{t('dashboard.all')}</option>
-          {users?.map((user, i)=>
-          <option key={i} value={user.id}>{user.username}</option>)}
-        </select>
+  const fetchTotalRevenue = async()=>{
+    await axios.get('/finances/collective', {params: {period, date}})
+    .then(({data})=>{
+      if(!data.success) return toast.error('Failed to load Total played hours')
+      setTotalRevenue({
+        ...data,
+        data: data.data.map((d: {date: string, sales: number})=>({
+          ...d, 
+          date: period==='monthly'? new Date(d.date).toLocaleDateString(undefined, {month: 'short', day: '2-digit'})
+            :new Date(d.date).toLocaleDateString(undefined, {year: 'numeric', month:'short'})
+        }))
+      })
+    })
+  }
+
+  const fetchEmployeesRevenue = async()=>{
+    await axios.get('/finances/employees', {params: {period, date, top5: true}})
+    .then(({data})=>{
+      if(!data.success) return toast.error('Failed to load Total played hours')
+      setEmployeesRevenue(data)
+    })
+  }
+
+  const fetchBalance = async()=>{
+    await axios.get('/cash/balance')
+    .then(({data})=>{
+      if(!data.success) return toast.error('Failed to load Total played hours')
+      setBalance(data)
+    })
+  }
+
+  useEffect(()=>{
+    fetchProductsRevenue()
+    fetchTotalRevenue()
+    fetchBalance()
+    fetchEmployeesRevenue()
+  },[period, date])
+ 
+  
+
+  return (
+  // isLoading? 
+  //   <div className='flex justify-center items-center h-full'><Loader size={50} thickness={10}/></div>
+  // :(
+    <div dir={currentDirection} className='h-full flex flex-col'>
+      
+      <ListDialogue {...{cancel:()=>setShowList(null), productsRevenue, employeesRevenue, showList}}/>
+      {/* <NewCollectionDialogue {...{cancel: ()=>setShowNewCollection(false), show: showNewCollection}} /> */}
+
+      <div className='w-full flex gap-10 px-10 py-4 grow items-center border-b border-gray-200'>
+        <h1 className="text-4xl font-semibold text-black">{t('dashboard.dashboard')}</h1>
+        <div className='flex gap-20 items-center'>
+          <div className='flex items-center'>
+            <p className='font-bold'>{t('dashboard.reportingCycle')}:</p>
+            <input onChange={(e)=>e.target.checked&&setPeriod('monthly')} className='mx-2' type="radio" name="period" checked={period==='monthly'}/>
+            <label>{t('dashboard.monthly')}</label>
+            <input onChange={(e)=>e.target.checked&&setPeriod('yearly')} className='mx-2' type="radio" name="period" checked={period==='yearly'} />
+            <label>{t('dashboard.yearly')}</label>
+          </div>
+          <div className='flex items-center'>
+            <p className='font-bold mr-4'>{t('tables.date')}:</p>
+            <input value={formatDate(date)} type="date" className='bg-white text-black px-3 py-1 rounded-lg shadow-sm hover:bg-green-200' onInput={currentDateHandler} />
+          </div>
+        </div>
       </div>
-
-      <div className='grid lg:grid-cols-4 grid-cols-3 gap-4 lg:grid-rows-5 overflow-hidden grow'>
-         <div className="bg-green-500 text-white rounded-lg shadow-md p-4">
-            <div className='flex justify-between'>
-              <h2 className="text-lg font-semibold mb-2">{t('dashboard.date')}</h2>
-              <input value={formatDate(date)} type="date" className='bg-white text-black px-1 py-1 rounded-lg shadow-lg hover:bg-green-200' onInput={currentDateHandler} />
-            </div>
-            <div className='flex gap-4 items-end'>
-              <p className="text-2xl font-bold">{day}</p>
-              <p className={`text-lg font-bold`}>{date&& new Date(date).toLocaleDateString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'})}</p>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-md p-4">
-            <h2 className="text-lg font-semibold mb-2">{t('dashboard.todayRevenue')}</h2>
-            <div className='flex gap-4 items-end'>
-              <p dir={currentDirection} className="text-2xl font-bold gap-1 flex items-center">{finances?.today}<span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></p>
-              {finances?.todayGrowthLoss && finances?.todayGrowthLoss>0 &&
-                <p className={`text-lg font-bold ${isPositive(finances?.todayGrowthLoss) ? 'text-green-500' : 'text-red-500'}`}>{Math.abs(finances?.todayGrowthLoss)}% {(finances?.todayGrowthLoss)? "↑" : "↓"}</p>
-              }
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-md p-4 ">
-            <h2 className="text-lg font-semibold mb-2">{t('dashboard.weeklyRevenue')}</h2>
-            <div className='flex gap-4 items-end'>
-              <p dir={currentDirection} className="text-2xl font-bold gap-1 flex items-center">{finances?.currentWeek}<span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></p>
-              {finances?.currentWeekGrowthLoss && finances?.currentWeek>0 &&
-                <p className={`text-lg font-bold ${isPositive(finances?.currentWeekGrowthLoss) ? 'text-green-500' : 'text-red-500'}`}>{Math.abs(finances?.currentWeekGrowthLoss)}% {isPositive(finances?.currentWeekGrowthLoss)? "↑" : "↓"}</p>
-              }
-            </div>
-          </div>
-
-          {/* currentMonth Revenue */}
-          <div className="bg-white rounded-lg shadow-md p-4">
-            <h2 className="text-lg font-semibold mb-2">{t('dashboard.monthlyRevenue')}</h2>
-            <div className='flex gap-4 items-end'>
-              <p dir={currentDirection} className="text-2xl font-bold gap-1 flex items-center">{finances?.currentMonth}<span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></p>
-              {finances?.currentMonthGrowthLoss && finances?.currentMonth>0 &&
-                <p className={`text-lg font-bold ${isPositive(finances?.currentMonthGrowthLoss)? 'text-green-500' : 'text-red-500'}`}>{Math.abs(finances?.currentMonthGrowthLoss)}% {isPositive(finances?.currentMonthGrowthLoss)? "↑" : "↓"}</p>
-              }
-            </div>
-          </div>
-
-          <div className="bg-white lg:row-start-4 lg:row-end-6 rounded-lg shadow-md p-4 flex-col flex">
-            <div className='flex justify-between items-center'>
-              <h2 className="text-lg font-semibold">{t('dashboard.deductions')}</h2>
-              <button onClick={()=> setShowAddDeductionPopup(true)} className='p-2 bg-red-500 hover:bg-red-400 text-white rounded'>{t('modals.add')} </button>
-            </div>
-            <div className='grow justify-between flex flex-col'>
-              <div>
-                <span className='text-sm'>({t('dashboard.today')})</span>
-                <div className='flex gap-4 items-end'>
-                  <p dir={currentDirection} className="text-2xl flex items-center gap-1 font-bold">{Math.abs(finances?.todayDeduction)}<span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></p>
-                  {finances?.todayDeductionGrowthLoss && finances?.todayDeduction>0 &&
-                    <p className={`text-lg font-bold ${isPositive(finances?.todayDeductionGrowthLoss)?  'text-green-500' : 'text-red-500'}`}>{Math.abs(finances?.todayDeductionGrowthLoss)}% {isPositive(finances?.todayDeductionGrowthLoss)? "↓" : "↑" }</p>
-                  }
+      <div className="h-full px-6 overflow-y-auto grid grid-cols-2 min-h-0">
+        <div className={`bg-white flex flex-col ${currentDirection==='ltr'? 'border-r': 'border-l'} border-gray-200`}>
+          <h1 className='px-5 pt-5 mb-2 text-2xl font-bold'>{t('dashboard.revenue')}</h1>
+          <div className='h-80 flex flex-col p-5 border-b border-gray-200'>
+            <div className='flex w-full'>
+              <div className='flex-1'>
+                <h1 className='text-gray-600'>{t('dashboard.totalRevenue')}</h1>
+                <div className='flex gap-2 items-center'>
+                  <h1 className='text-xl font-bold mb-2'>{totalRevenue?.total.toLocaleString('en-US')} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></h1>
+                  {!(!totalRevenue?.totalGrowthLoss || totalRevenue?.totalGrowthLoss===0) &&
+                      <p className={`text-base font-bold flex gap-1 ${totalRevenue?.totalGrowthLoss>0 ? 'text-green-500' : 'text-red-500'}`}>{totalRevenue?.totalGrowthLoss>0? "↑" : "↓"}<span>{Math.abs(totalRevenue?.totalGrowthLoss)}%</span></p>
+                    }
                 </div>
               </div>
-              <div>
-                <span className='text-sm'>({t('dashboard.thisMonth')})</span>
-                <div className='flex gap-4 items-end'>
-                  <p dir={currentDirection} className="text-2xl flex items-center gap-1 font-bold">{Math.abs(finances?.currentMonthDeduction)}<span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></p>
-                  {finances?.currentMonthDeductionGrowthLoss && finances?.currentMonthDeduction>0 &&
-                    <p className={`text-lg font-bold ${isPositive(finances?.currentMonthDeductionGrowthLoss)?  'text-red-500' : 'text-green-500'}`}>{Math.abs(finances?.currentMonthDeductionGrowthLoss)}% {isPositive(finances?.currentMonthDeductionGrowthLoss)? "↑" : "↓"}</p>
-                  }
+              <div className='flex-1'>
+                <h1 className='text-gray-600'>{t('dashboard.playingRevenue')}</h1>
+                <div className='flex gap-2 items-center'>
+                  <h1 className='text-xl font-bold mb-2'>{totalRevenue?.totalPlaying.toLocaleString('en-US')} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></h1>
+                  {!(!totalRevenue?.playingGrowthLoss || totalRevenue?.playingGrowthLoss===0) &&
+                      <p className={`text-base font-bold flex gap-1 ${totalRevenue?.playingGrowthLoss>0 ? 'text-green-500' : 'text-red-500'}`}>{totalRevenue?.playingGrowthLoss>0? "↑" : "↓"}<span>{Math.abs(totalRevenue?.playingGrowthLoss)}%</span></p>
+                    }
                 </div>
               </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-md p-4">
-            <h2 className="text-lg font-semibold mb-2">{t('dashboard.productsRevenue')}</h2>
-            <div className='flex gap-4 items-end'>
-              <p dir={currentDirection} className="text-2xl font-bold gap-1 flex items-center">{finances?.productsRevenue}<span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></p>
-              {finances?.productsGrowthLoss&& finances?.productsRevenue>0 &&
-                <p className={`text-lg font-bold ${isPositive(finances?.productsGrowthLoss) ?    'text-green-500' : 'text-red-500'}`}>{Math.abs(finances?.productsGrowthLoss)}% {isPositive(finances?.productsGrowthLoss)? "↑" : "↓"}</p>
-              }
-            </div>
-          </div>
-          <div className="bg-white rounded-lg shadow-md p-4">
-            <h2 className="text-lg font-semibold mb-2">{t('dashboard.yearlyRevenue')}</h2>
-            <div className='flex gap-4 items-end'>
-              <p dir={currentDirection} className="text-2xl font-bold gap-1 flex items-center">{finances?.currentYear}<span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></p>
-              {finances?.currentYearGrowthLoss && finances?.currentYear>0 &&
-                <p className={`text-lg font-bold ${isPositive(finances?.currentYearGrowthLoss) ? 'text-green-500' : 'text-red-500'}`}>{Math.abs(finances?.currentYearGrowthLoss)}% {isPositive(finances?.currentYearGrowthLoss)? "↑" : "↓"}</p>
-              }
-            </div>
-          </div>
-          <div className="flex flex-col rounded-lg shadow-md text-black col-start-2 row-start-2 col-end-4 lg:col-end-5 lg:row-end-6 row-end-5 overflow-hidden">
-            <div className='flex text-center items-stretch border-b border-gray-400 text-white bg-gray-600'>
-              <div className='flex-1 p-3 flex items-center justify-center'>{t('tables.type')}</div>
-              <div className='flex-1 p-3 flex items-center justify-center'>{t('tables.employee')}</div>
-              <div className='flex-1 p-3 flex items-center justify-center'>{t('tables.time')}</div>
-              <div className='flex-[0.5] p-3 flex items-center justify-center'>{t('tables.total')}</div>
-              <div className='flex-[0.5] p-3 flex items-center justify-center'>{t('tables.actions')}</div>
-            </div>
-            <div className='py-2 flex flex-col gap-1 overflow-y-auto bg-gray-200 grow'>
-              {currentFinances?.map((finance, i ) =>
-                <div key={i} className="bg-white text-center flex items-stretch">
-                  <div className="flex-1 p-3">
-                    {finance.type==="session" ? t('receipts.session') : finance.type === "outer" ? t('receipts.outer') : t('receipts.deduction')}
-                  </div>
-                  <div className="flex-1 p-3">
-                    {finance.cashier.username}
-                  </div>
-                  <div className="flex-1 p-3 flex gap-2 items-center justify-center">
-                    <p>{new Date(finance.created_at).toLocaleString()}</p>
-                  </div>
-                  <div dir={currentDirection} className={"font-bold flex-[0.5] p-3 justify-center flex items-center gap-1 " + (finance.type === "deduction"? "text-red-600" : "text-green-500")}>
-                    {Math.abs(finance.total)}<span>{currentDirection==='rtl'? configs.currency.symbolNative: configs.currency.symbol}</span>
-                  </div>
-                  <div
-                    onClick={()=>{
-                      setSelectedFinance(finance)
-                      setShowFinanceModal(true)
-                    }}
-                   className="text-2xl flex items-center justify-center hover:text-cyan-700 cursor-pointer flex-[0.5] p-3 ">
-                    <RiEyeLine />
-                  </div>
+              <div className='flex-1'>
+                <h1 className='text-gray-600'>{t('dashboard.productsRevenue')}</h1>
+                <div className='flex gap-2 items-center'>
+                  <h1 className='text-xl font-bold mb-2'>{totalRevenue?.totalProducts.toLocaleString('en-US')} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></h1>
+                  {!(!totalRevenue?.productsGrowthLoss || totalRevenue?.productsGrowthLoss===0) &&
+                      <p className={`text-base font-bold flex gap-1 ${totalRevenue?.productsGrowthLoss>0 ? 'text-green-500' : 'text-red-500'}`}>{totalRevenue?.productsGrowthLoss>0? "↑" : "↓"}<span>{Math.abs(totalRevenue?.productsGrowthLoss)}%</span></p>
+                    }
                 </div>
-              )}
+              </div>
+              <div className='flex-1'>
+                <h1 className='text-gray-600'>{t('dashboard.totalHours')}</h1>
+                <h1 className='text-xl font-bold mb-2'>{totalRevenue?.hours.toLocaleString('en-US')} {t('dashboard.hours')}</h1>
+              </div>
+            </div>
+            <div className='grow' dir='ltr'>
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart
+                  width={500}
+                  height={400}
+                  data={totalRevenue?.data}
+                  margin={{
+                    top: 10,
+                    bottom: 0,
+                  }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="date" reversed={currentDirection==='rtl'} />
+                  <YAxis orientation={currentDirection==='rtl'? 'right': 'left'} />
+                  <Tooltip />
+                  <Area type="monotone" dataKey="playing" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
+                  <Area type="monotone" dataKey="products"  stroke="#ffc658" fill="#ffc658" fillOpacity={0.6} />
+                  <Area type="monotone" dataKey="total"  stroke="#ff6b6b" 
+                    fill="none" 
+                    strokeWidth={3}
+                    dot={{ fill: '#ff6b6b', strokeWidth: 2 }}
+                    />
+                </AreaChart>
+              </ResponsiveContainer>
             </div>
           </div>
-      </div>
-    </div>      
+          <div className='border-b grid grid-cols-2 border-gray-200'>
+            <div className={`${currentDirection==='ltr'? 'border-r' : 'border-l'} border-gray-200 p-5 flex flex-col`}>
+              <h1 className='text-gray-600 mb-2'>{t('dashboard.employees')}</h1>
+              <div className='flex w-full h-2 gap-1 mb-3'>
+                {
+                  employeesRevenue?.employeesList.map((employee,i)=>(
+                    <div key={i} style={{backgroundColor: COLORS[i], flex: employee.percent}} className={`rounded-xs`}></div>
+                  ))
+                }
+              </div>
+              <ul className='grow'>
+                {employeesRevenue?.employeesList.slice(0,5).map((employee,i)=>
+                  <li key={i} className='flex items-center w-full gap-2 p-1'>
+                    <span style={{backgroundColor: COLORS[i]}} className='w-2 h-2 rounded-full'/>
+                    <p className='grow'>{employee.cashier}</p>
+                    <p className='w-1/4 text-end'>{employee.revenue.toLocaleString('en-US')} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></p>
+                    <p className='w-1/4 text-center'>{employee.percent}%</p>
+                  </li>
+                )}
+                {employeesRevenue&& employeesRevenue.employeesList.length>5&&<li onClick={()=>setShowList('employees')} className='p-1 inline-block underline text-gray-700 cursor-pointer hover:text-gray-900 text-start'>{t('tables.showMore')}</li>}
+              </ul>
+            </div>
+            <div className='flex flex-col p-5'>
+              <h1 className='text-gray-600 mb-2'>{t('dashboard.topProducts')}</h1>
+              <div className='flex w-full h-2 gap-1 mb-3'>
+                {
+                  productsRevenue?.productsList.map((percent,i)=>(
+                    <div key={i} style={{backgroundColor: COLORS[i], flex: percent.percent}} className={`rounded-xs duration-500 ease-in-out`}/>
+                  ))
+                }
+              </div>
+              <ul className='grow'>
+                {productsRevenue?.productsList.slice(0,5).map((p,i)=>
+                  <li key={i} className='flex items-center w-full gap-2 p-1'>
+                    <span style={{backgroundColor: COLORS[i]}} className='w-2 h-2 rounded-full'/>
+                    <p className='grow'>{p.product}</p>
+                    <p className='w-1/4 text-end'>{p.sales.toLocaleString('en-US')} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></p>
+                    <p className='w-1/4 text-center'>{p.percent}%</p>
+                  </li>
+                )}
+                {productsRevenue&& productsRevenue.productsList.length>5&&<li onClick={()=>setShowList('products')}  className='p-1 inline-block underline text-gray-700 cursor-pointer hover:text-gray-900 text-start'>{t('tables.showMore')}</li>}
+              </ul>
+            </div>
+          </div>
+          <div className='grid grid-cols-2 grow'>
+            <div className={`${currentDirection==='ltr'? 'border-r' : 'border-l'} border-gray-200 p-5 flex flex-col`}>
+              <div className='flex justify-between items-start mb-2'>
+                <h1 className='text-gray-600'>{t('dashboard.balance')}</h1>
+                <Link to='/reports/cash-review' className='rounded-sm px-3 py-2 text-white bg-blue-600 hover:bg-blue-500'>{t('dashboard.reviewCash')}</Link>
+              </div>              
+                <h1 className='text-xl font-bold'>{balance?.total.toLocaleString('en-US')} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></h1>
+              {
+                balance?.lastCollection?<p className='mt-2'><span className='font-bold'>{t('dashboard.lastCollection')}:</span> {new Date(balance.lastCollection.timestamp).toLocaleDateString()}, {new Date(balance.lastCollection.timestamp).toLocaleTimeString()}</p>
+                :<p className='text-gray-600 mt-2'>{t('dashboard.noCollections')}...</p>
+              }
+            </div>
+            
+          </div>
+        </div>
+        <div className='flex flex-col bg-white'>
+          <h1 className='px-5 pt-5 mb-2 text-2xl font-bold'>{t('receipts.receipts')}</h1>
+          <div className='h-40 border-b border-gray-200 p-5 flex flex-col'>
+            {totalRevenue&&
+              <div className='flex grow gap-2'>
+                  <div style={{flex: Math.min(Math.max(totalRevenue?.totalSession/totalRevenue?.total, 0.2),0.8)||1}} className='flex px-4 pb-2 flex-col border-x border-gray-200 border-b-6 border-b-purple-400'>
+                    <h1 className='text-gray-600'>{t('receipts.sessionReceipts')}</h1>
+                    <h1 className='text-xl font-bold'>{totalRevenue.totalSession.toLocaleString('en-US')} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></h1>
+                    <p className='mt-auto'>{(totalRevenue?.totalSession*100/(totalRevenue.totalSession+totalRevenue.totalOuter)||0).toFixed(1)}%</p>
+                  </div>
+                  <div style={{flex: Math.min(Math.max(totalRevenue?.totalOuter/totalRevenue?.total, 0.2),0.8)||1}} className='flex px-4 pb-2 flex-col border-x border-gray-200 border-b-6 border-b-green-400'>
+                    <h1 className='text-gray-600'>{t('receipts.outerReceipts')}</h1>
+                    <h1 className='text-xl font-bold'>{totalRevenue.totalOuter.toLocaleString('en-US')} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></h1>
+                    <p className='mt-auto'>{(totalRevenue?.totalOuter*100/(totalRevenue.totalSession+totalRevenue.totalOuter)||0).toFixed(1)}%</p>
+                  </div>
+              </div>
+            }
+          </div>
+          <div className='grow min-h-0 p-4'>
+            <ReceiptsTable/>
+          </div>
+        </div>
+      </div>      
+    </div>
   );
 };
 
-export default Dashboard;
+export default DashboardPage;

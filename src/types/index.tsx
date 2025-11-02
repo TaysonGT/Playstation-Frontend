@@ -46,6 +46,23 @@ export interface IDevice {
     status: boolean
 }
 
+export interface ICollection {
+    timestamp: string,
+    cash_over_short: number,
+    amount_collected: number,
+    cash_counted: number,
+    expected_cash: number,
+    float_remaining: number,
+    collected_by: IUser
+}
+
+export interface IEmployeeReport{
+    id: string,
+    username: string,
+    firstReceipt: string,
+    total: number
+}
+
 export interface IReceipt {
     id: string,
     cashier: IUser,

@@ -19,6 +19,7 @@ import SessionReceipts from './pages/Receipts/partials/SessionReceipts';
 import SettingsPage from './pages/Settings';
 import { ConfigsProvider } from './context/ConfigsContext';
 import GraphPage from './pages/Dashboard/graphs';
+import CashReviewPage from './pages/CashReview';
 
 function App() {
 
@@ -47,9 +48,12 @@ function App() {
               <Route path='/receipts/sessions' element={<SessionReceipts/>}/>
             </Route>
             <Route element ={<Stock />} path='/stock'  />
-            <Route element={<SettingsPage />} path='/settings'  />
             <Route element={<Dashboard />} path='/dashboard'  />
-            <Route element={<GraphPage />} path='/reports'  />
+            <Route element={<SettingsPage />} path='/settings'  />
+            <Route path='/reports'>
+              <Route index element={<GraphPage />}/>
+              <Route element ={<CashReviewPage />} path='/reports/cash-review'  />
+            </Route>
           </Route>
           <Route path='*' element={<NotFoundPage/>}/>
         </Routes>

@@ -26,8 +26,8 @@ const ReceiptsTable = () => {
     const {configs} = useConfigs()
 
     const changePage = (action: pageAction)=>{
-    const page = JSON.stringify(actionNav(action, pageCount, maxPages))
-    setPageCount(parseInt(page))
+        const page = JSON.stringify(actionNav(action, pageCount, maxPages))
+        setPageCount(parseInt(page))
     }
     
     const actionNav = (action: pageAction, count: number, endPage: number)=>{
@@ -107,11 +107,19 @@ const ReceiptsTable = () => {
         }
         </div>
         <div className='flex gap-2 py-2 text-xl justify-center mt-auto'>
-            <div onClick={()=>changePage('start')} className={`w-8 hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400] cursor-pointer  duration-150 aspect-square flex justify-center items-center border border-${pageCount>1? 'black cursor-pointer': 'gray-200 text-gray-500 cursor-not-allowed'}`}><MdKeyboardDoubleArrowLeft/></div>
-            <div onClick={()=>changePage('previous')} className={`w-8 hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400] cursor-pointer  duration-150 aspect-square flex justify-center items-center border border-${pageCount>1? 'black cursor-pointer': 'gray-200 text-gray-500 cursor-not-allowed'}`}><MdKeyboardArrowLeft/></div>
+            <div onClick={()=>changePage('start')} className={`w-8 hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400] cursor-pointer  duration-150 aspect-square flex justify-center items-center border border-${pageCount>1? 'black cursor-pointer': 'gray-200 text-gray-500 cursor-not-allowed'}`}>
+                {currentDirection==='ltr'? <MdKeyboardDoubleArrowLeft/> : <MdKeyboardDoubleArrowRight/>}
+            </div>
+            <div onClick={()=>changePage('previous')} className={`w-8 hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400] cursor-pointer  duration-150 aspect-square flex justify-center items-center border border-${pageCount>1? 'black cursor-pointer': 'gray-200 text-gray-500 cursor-not-allowed'}`}>
+                {currentDirection==='ltr'? <MdKeyboardArrowLeft/> : <MdKeyboardArrowRight/>}
+            </div>
             <div className='w-8 hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400] cursor-pointer  duration-150 aspect-square flex justify-center items-center border border-black text-sm font-bold py-1'>{pageCount}</div>
-            <div onClick={()=>changePage('next')} className={`w-8 hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400] cursor-pointer  duration-150 aspect-square flex justify-center items-center border border-${pageCount<maxPages? 'black cursor-pointer': 'gray-200 text-gray-500 cursor-not-allowed'}`}><MdKeyboardArrowRight/></div>
-            <div onClick={()=>changePage('end')} className={`w-8 hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400] cursor-pointer  duration-150 aspect-square flex justify-center items-center border border-${pageCount<maxPages? 'black  cursor-pointer': 'gray-200 text-gray-500 cursor-not-allowed'}`}><MdKeyboardDoubleArrowRight/></div>
+            <div onClick={()=>changePage('next')} className={`w-8 hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400] cursor-pointer  duration-150 aspect-square flex justify-center items-center border border-${pageCount<maxPages? 'black cursor-pointer': 'gray-200 text-gray-500 cursor-not-allowed'}`}>
+                {currentDirection==='ltr'? <MdKeyboardArrowRight/> : <MdKeyboardArrowLeft/>}
+            </div>
+            <div onClick={()=>changePage('end')} className={`w-8 hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400] cursor-pointer  duration-150 aspect-square flex justify-center items-center border border-${pageCount<maxPages? 'black  cursor-pointer': 'gray-200 text-gray-500 cursor-not-allowed'}`}>
+                {currentDirection==='ltr'? <MdKeyboardDoubleArrowRight/> : <MdKeyboardDoubleArrowLeft/>}
+            </div>
         </div>
     </div>
   )

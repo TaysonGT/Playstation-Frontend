@@ -6,6 +6,7 @@ import toast from 'react-hot-toast'
 import { useSearchParams } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { getDirection } from '../../i18n'
+import Loader from '../../components/Loader'
 
 
 const Device = ({device}:{device: IDevice}) => {
@@ -130,7 +131,7 @@ const Device = ({device}:{device: IDevice}) => {
             <button onClick={startDeviceHandler} id={device.id} className=' bg-[#37474f] text-white p-3 text-md rounded-md hover:bg-[#4f6874]  duration-150 active:shadow-hardInner mt-auto '>{t('devices.start')}</button>
         </form> :
         <div className='mt-5 flex flex-col items-center gap-3 h-full w-full'>
-            <div className={'w-[90%] p-4 text-center text-3xl font-bold bg-[#212121] text-white bg-center bg-cover border-emerald-50 border rounded  ' + (device.session?.time_type === "open"? 'text-red-500' :  'text-green-500')}>{clock? clock : "00:00:00"}</div>
+            <div className={'w-[90%] p-4 text-center text-3xl font-bold bg-[#212121] text-white bg-center bg-cover border-emerald-50 border rounded  ' + (device.session?.time_type === "open"? 'text-red-500' :  'text-green-500')}>{clock? clock : <div className='w-full flex justify-center'><Loader size={30} color='white' thickness={5}/></div>}</div>
             <div className='flex justify-between gap-4 p-2 '>
                 <p className={'text-sm font-medium p-3 py-2 rounded-sm w-full text-white ' + (device.session?.time_type==="open" ?  'bg-red-700': 'bg-teal-600')} >{device.session?.time_type.toUpperCase()}</p>
                 <p className='text-sm font-medium p-3 py-2 bg-slate-700 rounded-sm w-full text-white'>{device.session?.play_type.toUpperCase()}</p>
@@ -139,8 +140,8 @@ const Device = ({device}:{device: IDevice}) => {
                 setShowDetails(true)
                 searchParams.set('selected', device.id)
                 setSearchParams(searchParams)
-                }} id={device.id} className=' bg-[#00b4d8] p-3 text-md rounded-md text-white hover:bg-[#70d1e2] duration-200 active:shadow-hardInner mt-auto w-full text-center '>{t('devices.details')}</button>
-        </ div>
+            }} id={device.id} className=' bg-[#00b4d8] p-3 text-md rounded-md text-white hover:bg-[#70d1e2] duration-200 active:shadow-hardInner mt-auto w-full text-center '>{t('devices.details')}</button>
+        </div>
         }
 
     </div>
