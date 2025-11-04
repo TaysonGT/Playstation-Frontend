@@ -8,10 +8,14 @@ import { useSearchParams } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { getDirection } from '../../i18n';
 import { useConfigs } from '../../context/ConfigsContext';
+import { IoClose } from 'react-icons/io5';
+import Loader from '../../components/Loader';
+import { MdClose } from 'react-icons/md';
 
 interface Props {
   device: IDevice,
   clock: string,
+  hide: ()=>void
 }
 
 interface ITotalCost {
@@ -21,7 +25,8 @@ interface ITotalCost {
   currentTimeCost: number
 }
 
-const DeviceDetails:React.FC<Props> = ({device, clock}) => {
+const SessionDetails:React.FC<Props> = ({device, clock, hide}) => {
+    const [isLoading, setIsLoading] = useState(true)
     const [orders, setOrders] = useState<IOrder[]>([])
     const [timeOrders, setTimeOrders] = useState<ITimeOrder[]>([])
     const [searchParams, setSearchParams] = useSearchParams()
@@ -68,13 +73,14 @@ const DeviceDetails:React.FC<Props> = ({device, clock}) => {
       await changePlayType(device.session.id, selectedPlayType)
     }
 
-    const refetchOrders = ()=>{
-      fetchOrders(device.session.id)
+    const refetchOrders = async()=>{
+      setIsLoading(true)
+      await fetchOrders(device.session.id)
       .then(({data})=> {
         setOrders(data.orders)
         setTimeOrders(data.time_orders)
         setTotal(getTotal(data.orders, data.time_orders))
-      })
+      }).finally(()=>setIsLoading(false))
     }
 
     const getTotal = (orders: IOrder[], timeOrders: ITimeOrder[]):ITotalCost=>{
@@ -122,13 +128,56 @@ const DeviceDetails:React.FC<Props> = ({device, clock}) => {
     },[devices])
 
   return (
-    <div dir={currentDirection} className="text-center grid grid-cols-3 p-8 gap-8 fixed z-[102] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border border-gray-300 shadow-md rounded-lg lg:w-auto w-[90vw]" style={{gridAutoRows: '180px 290px'}}>
+    <div dir={currentDirection} className="text-center fixed flex flex-col z-[102] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border border-gray-300 shadow-md rounded-lg lg:w-auto w-[90vw]" style={{gridAutoRows: '180px 290px'}}>
+      <div className='flex border-b border-gray-500 p-6 pb-4'>
+        <div className='flex-1 flex gap-4 items-center self-start'>
+          <div className='rounded-md shadow-hard bg-indigo-700 text-white px-4 py-2 text-nowrap'>
+            <p>{t('tables.device')}: <span className='font-bold'>{device.name}</span></p>
+          </div>
+          <div className='rounded-md shadow-hard bg-fuchsia-700 text-white px-4 py-2 text-nowrap'>
+            <p>{t('tables.type')}: <span className='font-bold'>{device.type.name}</span></p>
+          </div>
+        </div>
+        <h1 className='flex-1 font-bold text-2xl text-nowrap px-6 self-center'>{t('devices.sessionDetails')}</h1>
+        <div className='flex-1 flex justify-end self-start'>
+          <MdClose onClick={hide} className='text-2xl cursor-pointer text-red-500 hover:text-red-600 duration-75'/>
+        </div>
+      </div>
+      {
+        isLoading?
+        <div className='grow flex justify-center items-center p-20 min-w-100'>
+          <Loader size={50} thickness={10}/>
+        </div>
+        :
+      <div className='grid grid-cols-3 gap-8 grow p-8 pt-4'>
+        <div className='flex flex-col h-auto'>
+          <h2 className="text-lg font-semibold text-gray-800">{t('devices.orders')}</h2>
+          {orders?.length>0?
+          <ul className='mt-4 grow overflow-y-auto shadow-inner bg-gray-100'>
+            <li className='flex basis-0 text-xs justify-end pt-2 pb-1 border-b border-gray-200'>
+              <div className='flex-1 text-center font-semibold'>{t('tables.quantity')}</div>
+              <div className='flex-1 text-center font-semibold'>{t('stock.product')}</div>
+              <div className='flex-1 text-center font-semibold'>{t('receipts.cost')}</div>
+            </li>
+            {orders?.map((order, index) => (
+              <li key={index} className='flex basis-0 text-sm justify-end py-1'>
+                <div className='flex-1 text-center'>{order.quantity}</div>
+                <div className='flex-1 text-center'>{order.product?.name}</div>
+                <div className='flex-1 text-center'>{order.cost} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></div>
+              </li>
+            ))}
+            </ul> : 
+            <div className='flex flex-col justify-center items-center grow'>
+              <p className='text-gray-500 mt-6'>{t('devices.noOrders')}...</p>
+            </div>
+            }
+        </div>
         <div className="flex flex-col">
           <h2 className="text-lg font-semibold text-gray-800">{t('devices.time')}</h2>
           <div className="flex flex-col justify-end flex-grow ">
             <div className="text-3xl font-bold text-black">{clock}</div>
             <p className="text-xl font-bold mt-4 text-red-600">{total?.currentTimeCost} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></p>
-            <div className='flex justify-center gap-6 mt-2'>
+            <div className='flex justify-center gap-6 mt-4'>
               <div className='text-md font-medium border-b-4 pb-1 border-gray-600'>{device.session.play_type === "multi"? t('devices.multi') : t('devices.single') }</div>
               <div className='text-md font-medium border-b-4 pb-1 border-gray-600'>{device.session.time_type === "open"? t('devices.open') : t('devices.time')}</div>
             </div>
@@ -161,6 +210,31 @@ const DeviceDetails:React.FC<Props> = ({device, clock}) => {
             </button>
           </form>
         </div>
+
+        <div className='flex flex-col h-auto'>
+          <h2 className="text-lg font-semibold text-gray-800">{t('devices.sessions')}</h2>
+          {timeOrders?.length>0?
+          <ul className='mt-4 overflow-y-auto grow shadow-inner bg-gray-100'>
+            <li className='flex basis-0 text-xs justify-end pt-2 pb-1 border-b border-gray-200'>
+              <div className='flex-1 text-center font-semibold'>{t('tables.device')}</div> 
+              <div className='flex-1 text-center font-semibold'>{t('tables.time')}</div>
+              <div className='flex-1 text-center font-semibold'>{t('receipts.cost')}</div>
+            </li>
+            {timeOrders?.map((order, index) => (
+              <li key={index} className='flex basis-0 text-sm justify-end py-1'>
+                <span className="flex-1 text-center">{order.device?.name}</span> 
+                <span className="flex-1 text-center font-semibold">{order.time}</span>
+                <span className="flex-1 text-center">{order.cost} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></span>
+              </li>
+            ))}
+            </ul>
+            :
+            <div className='flex flex-col justify-center items-center grow'>
+              <p className='text-gray-500 mt-6'>{t('devices.noTimeOrders')}...</p>
+            </div>
+            }
+        </div>
+
         <div className="flex flex-col justify-between">
           <h2 className="text-lg font-semibold text-gray-800">{t('devices.checkout')}</h2>
           <div className='flex flex-col grow items-center justify-center'>
@@ -186,7 +260,6 @@ const DeviceDetails:React.FC<Props> = ({device, clock}) => {
           }} className='p-2 mt-auto bg-red-700 text-white rounded hover:bg-red-600 duration-150'>{t('devices.endSession')}</button>
         </div>
         
-
         <div className="flex flex-col justify-between">
           <h2 className="text-lg font-semibold mb-2 text-gray-800">{t('devices.sessionSettings')}</h2>
           <p className='mb-2'>{t('devices.changePlayType')}</p>
@@ -222,55 +295,10 @@ const DeviceDetails:React.FC<Props> = ({device, clock}) => {
           </button>
         </div>
 
-        <div className='flex flex-col col-start-1 row-start-1 row-end-2 h-auto'>
-          <h2 className="text-lg font-semibold text-gray-800">{t('devices.orders')}</h2>
-          {orders?.length>0?
-          <ul className='mt-4 grow overflow-y-auto shadow-inner bg-gray-100'>
-            <li className='flex basis-0 text-xs justify-end pt-2 pb-1 border-b border-gray-200'>
-              <div className='flex-1 text-center font-semibold'>{t('tables.quantity')}</div>
-              <div className='flex-1 text-center font-semibold'>{t('stock.product')}</div>
-              <div className='flex-1 text-center font-semibold'>{t('receipts.cost')}</div>
-            </li>
-            {orders?.map((order, index) => (
-              <li key={index} className='flex basis-0 text-sm justify-end py-1'>
-                <div className='flex-1 text-center'>{order.quantity}</div>
-                <div className='flex-1 text-center'>{order.product?.name}</div>
-                <div className='flex-1 text-center'>{order.cost} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></div>
-              </li>
-            ))}
-            </ul> : 
-            <div className='flex flex-col justify-center items-center grow'>
-              <p className='text-gray-500 mt-6'>{t('devices.noOrders')}...</p>
-            </div>
-            }
-        </div>
-        <div className='flex flex-col col-start-1 row-start-2 row-end-3 h-auto'>
-          <h2 className="text-lg font-semibold text-gray-800">{t('devices.totalTime')}</h2>
-          {timeOrders?.length>0?
-          <ul className='mt-4 overflow-y-auto grow shadow-inner bg-gray-100'>
-            <li className='flex basis-0 text-xs justify-end pt-2 pb-1 border-b border-gray-200'>
-              <div className='flex-1 text-center font-semibold'>{t('tables.device')}</div> 
-              <div className='flex-1 text-center font-semibold'>{t('tables.time')}</div>
-              <div className='flex-1 text-center font-semibold'>{t('receipts.cost')}</div>
-            </li>
-            {timeOrders?.map((order, index) => (
-              <li key={index} className='flex basis-0 text-sm justify-end py-1'>
-                <span className="flex-1 text-center">{order.device?.name}</span> 
-                <span className="flex-1 text-center font-semibold">{order.time}</span>
-                <span className="flex-1 text-center">{order.cost} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></span>
-              </li>
-            ))}
-            </ul>
-            :
-            <div className='flex flex-col justify-center items-center grow'>
-              <p className='text-gray-500 mt-6'>{t('devices.noTimeOrders')}...</p>
-            </div>
-
-            }
-        </div>
-
+      </div>
+      }
     </div>
   );
 };
 
-export default DeviceDetails;
+export default SessionDetails;

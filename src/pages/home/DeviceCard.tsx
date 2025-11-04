@@ -1,5 +1,5 @@
 import React, {useEffect, useState } from 'react'
-import DeviceDetails from './DeviceDetails'
+import SessionDetails from './SessionDetails'
 import { IDevice } from '../../types'
 import { useDevices } from '../../context/DeviceContext'
 import toast from 'react-hot-toast'
@@ -9,7 +9,7 @@ import { getDirection } from '../../i18n'
 import Loader from '../../components/Loader'
 
 
-const Device = ({device}:{device: IDevice}) => {
+const DeviceCard = ({device}:{device: IDevice}) => {
   const {startSession} = useDevices()
   const [clock, setClock] = useState<string>('')
   const [isInputDisabled, setIsInputDisabled] = useState(true)
@@ -77,7 +77,7 @@ const Device = ({device}:{device: IDevice}) => {
   }
   
   useEffect(()=>{
-    const isSelected = searchParams.get('selected') === device.id
+    const isSelected = searchParams.get('session') === device.id
 
     isSelected&& setShowDetails(true)
     if(!device.session) return;
@@ -90,8 +90,16 @@ const Device = ({device}:{device: IDevice}) => {
   return (
     <>
     {(showDetails&&device.session)&&<>
-        <div onClick={()=>{setShowDetails(false); searchParams.delete('selected'); setSearchParams(searchParams)}} className='fixed left-0 top-0 w-screen h-screen bg-black/70 animate-appear duration-500 z-[50]'/>
-        <DeviceDetails {...{device, clock}} />
+        <div onClick={()=>{
+            setShowDetails(false)
+            searchParams.delete('session')
+            setSearchParams(searchParams)
+        }} className='fixed left-0 top-0 w-screen h-screen bg-black/70 animate-appear duration-500 z-[50]'/>
+        <SessionDetails {...{device, clock, hide: ()=>{
+            setShowDetails(false)
+            searchParams.delete('session')
+            setSearchParams(searchParams)
+        }}} />
     </>
     }
     <div className='bg-[#ffffff] w-60 border-2 border-[#e0e0e0] flex flex-col items-center rounded p-5 text-[#333] shadow-lg duration-[.3s]'>
@@ -138,7 +146,7 @@ const Device = ({device}:{device: IDevice}) => {
             </div>
             <button onClick={()=> {
                 setShowDetails(true)
-                searchParams.set('selected', device.id)
+                searchParams.set('session', device.id)
                 setSearchParams(searchParams)
             }} id={device.id} className=' bg-[#00b4d8] p-3 text-md rounded-md text-white hover:bg-[#70d1e2] duration-200 active:shadow-hardInner mt-auto w-full text-center '>{t('devices.details')}</button>
         </div>
@@ -149,4 +157,4 @@ const Device = ({device}:{device: IDevice}) => {
   )
 }
 
-export default Device
+export default DeviceCard
