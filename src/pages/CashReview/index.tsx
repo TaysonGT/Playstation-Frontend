@@ -42,7 +42,7 @@ const CashReviewPage = () => {
 
   return (
         <div dir={currentDirection} className='h-full flex flex-col'>
-            <div className='border-b text-black border-gray-200 px-10 py-6'>
+            <div className='border-b bg-[#5D866C] text-white border-gray-200 shadow-hard px-10 py-6'>
                 <h1 className='text-2xl font-bold flex items-center gap-2'><Link to='/dashboard'>{t('dashboard.dashboard')}</Link> {currentDirection==='rtl'? <MdKeyboardArrowLeft className='text-4xl'/> : <MdKeyboardArrowRight className='text-4xl'/>} {t('dashboard.cashReview')}</h1>
             </div>
             <div className='flex-1 grid grid-cols-2 bg-[#ECFAE5] overflow-y-auto'>

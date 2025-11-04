@@ -84,7 +84,7 @@ const CollectionsTable:React.FC<Props> = ({refresh, setCollection, selectedColle
                     <tr className='border-b border-gray-200'>
                         <th className='p-2 border-x border-gray-200 text-center'>{t('tables.no')}</th>
                         <th className='p-2 text-center'>{t('tables.employee')}</th>
-                        <th className='p-2 text-center'>{t('tables.total')}</th>
+                        <th className='p-2 text-center'>{t('dashboard.collectedCash')}</th>
                         <th className='p-2 text-center'>{t('dashboard.remaining')}</th>
                         <th className='p-2 text-center'>{t('tables.date')}/{t('tables.time')}</th>
                         {setCollection&&

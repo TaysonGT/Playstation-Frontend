@@ -65,7 +65,7 @@ const Devices = () => {
             <button onClick={()=>{ 
                 deviceTypes?.length>0? setShowPopup(true)
                 : toast.error('برجاء إضافة نوع جهاز أولًا');
-            }} className='mt-4 px-4 p-2 shadow-sm shadow-black rounded text-md text-white bg-blue-700 hover:bg-blue-500 duration-100 flex gap-3 items-center'>
+            }} className='mt-4 px-4 p-2 shadow-hard rounded text-md text-white bg-blue-700 hover:bg-blue-500 duration-100 flex gap-3 items-center'>
                 {t('devices.addDevice')} <span className='text-xl font-bold'>+</span> 
             </button>
         </div>

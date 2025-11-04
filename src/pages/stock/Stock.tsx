@@ -74,7 +74,7 @@ const Stock = () => {
     
         <div className='w-full flex justify-between items-start '>
             <h1 className='text-white text-3xl font-bold'>{t('stock.inventory')}</h1>
-            <button onClick={()=> setShowCreate(true)} className='mt-4 px-4 p-2 shadow-sm cursor-pointer rounded text-md text-white bg-blue-700 hover:bg-blue-500 duration-100 flex gap-3 items-center'>
+            <button onClick={()=> setShowCreate(true)} className='mt-4 px-4 p-2 shadow-hard cursor-pointer rounded text-md text-white bg-blue-700 hover:bg-blue-500 duration-100 flex gap-3 items-center'>
                 {t('stock.addProduct')} <span className='text-xl font-bold'>+</span> 
             </button>
         </div>

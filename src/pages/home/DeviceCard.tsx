@@ -94,7 +94,7 @@ const DeviceCard = ({device}:{device: IDevice}) => {
             setShowDetails(false)
             searchParams.delete('session')
             setSearchParams(searchParams)
-        }} className='fixed left-0 top-0 w-screen h-screen bg-black/70 animate-appear duration-500 z-[50]'/>
+        }} className='fixed left-0 top-0 w-screen h-screen bg-black/70 animate-appear duration-500 z-101'/>
         <SessionDetails {...{device, clock, hide: ()=>{
             setShowDetails(false)
             searchParams.delete('session')
