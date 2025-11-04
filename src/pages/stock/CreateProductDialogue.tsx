@@ -3,16 +3,19 @@ import { ProductPayload } from '../../types'
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
 import { getDirection } from '../../i18n'
+import { useProducts } from './hooks/useProducts'
 
 interface Props{
-  onCancel: ()=> void,
-  onCreate: (payload: ProductPayload)=> void
+  cancel: ()=> void,
+  onAction: ()=>void
 }
 
-const CreateProductDialogue: React.FC<Props> = ({onCancel, onCreate}) => {
+const CreateProductDialogue: React.FC<Props> = ({cancel, onAction}) => {
     const [form, setForm] = useState<ProductPayload>()
     const {t, i18n} = useTranslation()
     const currentDirection = getDirection(i18n.language);
+    const {create} = useProducts()
+    const [isLoading, setIsLoading] = useState(false)
 
     const inputHandler = (e: React.ChangeEvent<HTMLInputElement>)=>{
       setForm((prev)=> ({...prev, [e.target.name]: 
@@ -56,12 +59,21 @@ const CreateProductDialogue: React.FC<Props> = ({onCancel, onCreate}) => {
           />
         </div>
         <div className='flex gap-2 font-slim text-sm items-stretch mt-6'>
-          <button type='button' onClick={()=>onCancel()} className='bg-white flex-1/2 border border-black hover:bg-black hover:text-white duration-200 rounded p-3'>{t('modals.cancel')}</button>
-          <button type="submit" onClick={(e)=> {
+          <button disabled={isLoading} type='button' onClick={cancel} className='bg-white flex-1/2 border border-gray-400 hover:bg-gray-200 duration-200 rounded p-3'>{t('modals.cancel')}</button>
+          <button disabled={isLoading} type="submit" onClick={(e)=> {
               e.preventDefault()
-              form? onCreate(form) 
-              : toast.error('برجاء ملء كل البيانات')
-          }} className='text-white flex-1/2 bg-indigo-500 hover:bg-indigo-300 duration-200 rounded p-3'>{t('modals.add')}</button>
+              if(!form) return toast.error('برجاء ملء كل البيانات')
+              setIsLoading(true)
+              create(form)
+              .then(({data})=>{
+                if(data.success){
+                    toast.success(data.message)
+                    onAction()
+                    return
+                }
+                toast.success(data.message)
+              }).finally(()=>setIsLoading(false))
+          }} className='text-white flex-1/2 bg-indigo-600 hover:bg-indigo-400 duration-200 rounded p-3 disabled:bg-indigo-300'>{isLoading?t('modals.adding'):t('modals.add')}</button>
         </div>
       </form>
     </div>

@@ -1,10 +1,13 @@
-export const formatDateWithRegion = (dateString: string, region?:string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString(region||'en-US', {
+export const formatDateWithRegion = (date: string, region?:string, withWeek=false) => {
+    const dateString = new Date(date).toLocaleDateString(region||'en-US', {
         year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
+        month: 'numeric',
+        day: 'numeric',
+        ...withWeek&&{weekday: 'short'}
     })
+    const timeString = new Date(date).toLocaleTimeString(region||'en-US', {
+        hour: '2-digit',
+        minute: '2-digit'
+    })
+    return `${dateString} - ${timeString}`; 
 }

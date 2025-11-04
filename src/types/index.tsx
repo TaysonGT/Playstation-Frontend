@@ -47,6 +47,7 @@ export interface IDevice {
 }
 
 export interface ICollection {
+    id: string,
     timestamp: string,
     cash_over_short: number,
     amount_collected: number,
@@ -105,7 +106,8 @@ export interface ITimeOrder {
     play_type: string;
     started_at: string;
     ended_at: string;
-    timeString: string;
+    time: string;
+    device: IDevice
 }
 
 export interface IFinanceReport{

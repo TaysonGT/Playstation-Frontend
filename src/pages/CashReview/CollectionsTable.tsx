@@ -12,7 +12,13 @@ import NewCollectionDialogue from '../Dashboard/components/NewCollectionDialogue
 
 type pageAction = "next" | "previous" | "start" | "end"
 
-const CollectionsTable = ({refresh}:{refresh:()=>void}) => {
+interface Props {
+    refresh:()=>void;
+    setCollection?: React.Dispatch<React.SetStateAction<ICollection|null>>;
+    selectedCollection?: ICollection | null;
+}
+
+const CollectionsTable:React.FC<Props> = ({refresh, setCollection, selectedCollection}) => {
     const [isLoading, setIsLoading] = useState(true)
     const {t, i18n} = useTranslation()
     const currentDirection = getDirection(i18n.language);
@@ -81,6 +87,9 @@ const CollectionsTable = ({refresh}:{refresh:()=>void}) => {
                         <th className='p-2 text-center'>{t('tables.total')}</th>
                         <th className='p-2 text-center'>{t('dashboard.remaining')}</th>
                         <th className='p-2 text-center'>{t('tables.date')}/{t('tables.time')}</th>
+                        {setCollection&&
+                            <th className='p-2 text-center'>{t('tables.actions')}</th>
+                        }
                     </tr>
                 </thead>
                 <tbody>
@@ -90,23 +99,28 @@ const CollectionsTable = ({refresh}:{refresh:()=>void}) => {
                         <td className='p-2'>{collection.collected_by.username}</td>
                         <td className='p-2'>{collection.amount_collected.toLocaleString('en-US')} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></td>
                         <td className='p-2'>{collection.float_remaining.toLocaleString('en-US')} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></td>
-                        <td className='p-2 text-sm font-bold'>{formatDateWithRegion(collection.timestamp, i18n.language === 'ar'? 'ar-US': 'en-US')}</td>
+                        <td className='p-2 text-sm font-bold'>{formatDateWithRegion(collection.timestamp, i18n.language === 'ar'? 'ar-US': 'en-US', true)}</td>
+                        {setCollection&&
+                            <td className='p-2 flex items-center justify-center text-sm font-bold'>
+                                <button onClick={()=>setCollection(prev=>prev?.id===collection.id?null:collection)} className={`p-2 rounded-sm text-white ${selectedCollection?.id===collection.id?'bg-gray-400':'bg-green-500'} `}>{selectedCollection?.id===collection.id?t('tables.unselect'):t('tables.select')}</button>
+                            </td>
+                        }
                     </tr>
                     ))}
                 </tbody>
             </table>
             <div className='flex gap-2 py-2 text-xl justify-center mt-auto'>
-                <div onClick={()=>changePage('start')} className={`w-8 hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400] cursor-pointer  duration-150 aspect-square flex justify-center items-center border border-${pageCount>1? 'black cursor-pointer': 'gray-200 text-gray-500 cursor-not-allowed'}`}>
+                <div onClick={()=>changePage('previous')} className={`w-8 duration-150 aspect-square flex justify-center items-center border border-${pageCount>1? 'black cursor-pointer  hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400]': 'gray-200 text-gray-500 cursor-not-allowed'}`}>
                     {currentDirection==='ltr'? <MdKeyboardDoubleArrowLeft/> : <MdKeyboardDoubleArrowRight/>}
                 </div>
-                <div onClick={()=>changePage('previous')} className={`w-8 hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400] cursor-pointer  duration-150 aspect-square flex justify-center items-center border border-${pageCount>1? 'black cursor-pointer': 'gray-200 text-gray-500 cursor-not-allowed'}`}>
+                <div onClick={()=>changePage('previous')} className={`w-8 duration-150 aspect-square flex justify-center items-center border border-${pageCount>1? 'black cursor-pointer  hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400]': 'gray-200 text-gray-500 cursor-not-allowed'}`}>
                     {currentDirection==='ltr'? <MdKeyboardArrowLeft/> : <MdKeyboardArrowRight/>}
                 </div>
-                <div className='w-8 hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400] cursor-pointer  duration-150 aspect-square flex justify-center items-center border border-black text-sm font-bold py-1'>{pageCount}</div>
-                <div onClick={()=>changePage('next')} className={`w-8 hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400] cursor-pointer  duration-150 aspect-square flex justify-center items-center border border-${pageCount<maxPages? 'black cursor-pointer': 'gray-200 text-gray-500 cursor-not-allowed'}`}>
+                <div className='w-8 hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400] cursor-pointer duration-150 aspect-square flex justify-center items-center border border-black text-sm font-bold py-1'>{pageCount}</div>
+                <div onClick={()=>changePage('next')} className={`w-8 duration-150 aspect-square flex justify-center items-center border border-${pageCount<maxPages? 'black cursor-pointer hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400]': 'gray-200 text-gray-500 cursor-not-allowed'}`}>
                     {currentDirection==='ltr'? <MdKeyboardArrowRight/> : <MdKeyboardArrowLeft/>}
                 </div>
-                <div onClick={()=>changePage('end')} className={`w-8 hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400] cursor-pointer  duration-150 aspect-square flex justify-center items-center border border-${pageCount<maxPages? 'black  cursor-pointer': 'gray-200 text-gray-500 cursor-not-allowed'}`}>
+                <div onClick={()=>changePage('end')} className={`w-8 duration-150 aspect-square flex justify-center items-center border border-${pageCount<maxPages? 'black cursor-pointer hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400]': 'gray-200 text-gray-500 cursor-not-allowed'}`}>
                     {currentDirection==='ltr'? <MdKeyboardDoubleArrowRight/> : <MdKeyboardDoubleArrowLeft/>}
                 </div>
             </div>

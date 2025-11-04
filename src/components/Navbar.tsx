@@ -2,13 +2,11 @@ import UserIcon from '../assets/user.png'
 import './Navbar.css'
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { IoBarChart, IoGameController, IoHome, IoReceipt, IoSettings } from 'react-icons/io5'
+import { IoBarChart, IoGameController, IoHome, IoSettings } from 'react-icons/io5'
+// import { IoReceipt } from 'react-icons/io5'
 import { MdStorage } from 'react-icons/md'
 import { useTranslation } from 'react-i18next'
 import { getDirection } from '../i18n'
-import { PiChartLineBold } from 'react-icons/pi'
-// import ArLogo from '../assets/ar.png'
-// import EnLogo from '../assets/en.png'
 
 const Navbar = () => {
   let location = useLocation()
@@ -18,9 +16,8 @@ const Navbar = () => {
   const links = [
     {name: t('navigation.home'), path: "/", icon: <IoHome/>},
     {name: t('navigation.devices'), path: "/devices", icon: <IoGameController/>},
-    {name: t('navigation.receipts'), path: "/receipts", icon: <IoReceipt/>},
+    // {name: t('navigation.receipts'), path: "/receipts", icon: <IoReceipt/>},
     {name: t('navigation.stock'), path: '/stock', icon: <MdStorage/>},
-    {name: t('navigation.reports'), path: "/reports", icon: <PiChartLineBold/>},
     {name: t('navigation.dashboard'), path: "/dashboard", icon: <IoBarChart/>},
     {name: t('navigation.settings'), path: "/settings", icon: <IoSettings/>},
   ]

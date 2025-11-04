@@ -39,7 +39,7 @@ const AddDevicePopup = ({onAction, deviceTypes}:{onAction:()=>void, deviceTypes:
             {deviceTypes?.map((type, i)=><option key={i} value={type.id}>{type.name}</option>)}
           </select>  
         </div>
-        <button onClick={addDeviceHandler} className='px-4 py-2 bg-blue-500 hover:bg-indigo-400 duration-150 text-white rounded'>{t('devices.add')}</button>
+        <button onClick={addDeviceHandler} className='px-4 py-2 bg-blue-500 hover:bg-indigo-400 duration-150 text-white rounded'>{t('modals.add')}</button>
       </form>
     </div>
   )

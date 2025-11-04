@@ -90,7 +90,7 @@ const ReceiptsTable = () => {
                     <p>{new Date(receipt.created_at).toLocaleString()}</p>
                 </div>
                 <div dir={currentDirection} className={"font-bold flex-[0.5] p-3 flex items-center gap-1 " + (receipt.type === "deduction"? "text-red-600" : "text-green-500")}>
-                    {Math.abs(receipt.total)}<span>{currentDirection==='rtl'? configs.currency.symbolNative: configs.currency.symbol}</span>
+                    {Math.abs(receipt.total).toLocaleString('en-US')}<span>{currentDirection==='rtl'? configs.currency.symbolNative: configs.currency.symbol}</span>
                 </div>
                 <div
                     onClick={()=>{
@@ -107,17 +107,17 @@ const ReceiptsTable = () => {
         }
         </div>
         <div className='flex gap-2 py-2 text-xl justify-center mt-auto'>
-            <div onClick={()=>changePage('start')} className={`w-8 hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400] cursor-pointer  duration-150 aspect-square flex justify-center items-center border border-${pageCount>1? 'black cursor-pointer': 'gray-200 text-gray-500 cursor-not-allowed'}`}>
+            <div onClick={()=>changePage('start')} className={`w-8 duration-150 aspect-square flex justify-center items-center border border-${pageCount>1? 'black cursor-pointer  hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400]': 'gray-200 text-gray-500 cursor-not-allowed'}`}>
                 {currentDirection==='ltr'? <MdKeyboardDoubleArrowLeft/> : <MdKeyboardDoubleArrowRight/>}
             </div>
-            <div onClick={()=>changePage('previous')} className={`w-8 hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400] cursor-pointer  duration-150 aspect-square flex justify-center items-center border border-${pageCount>1? 'black cursor-pointer': 'gray-200 text-gray-500 cursor-not-allowed'}`}>
+            <div onClick={()=>changePage('previous')} className={`w-8 duration-150 aspect-square flex justify-center items-center border border-${pageCount>1? 'black cursor-pointer  hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400]': 'gray-200 text-gray-500 cursor-not-allowed'}`}>
                 {currentDirection==='ltr'? <MdKeyboardArrowLeft/> : <MdKeyboardArrowRight/>}
             </div>
             <div className='w-8 hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400] cursor-pointer  duration-150 aspect-square flex justify-center items-center border border-black text-sm font-bold py-1'>{pageCount}</div>
-            <div onClick={()=>changePage('next')} className={`w-8 hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400] cursor-pointer  duration-150 aspect-square flex justify-center items-center border border-${pageCount<maxPages? 'black cursor-pointer': 'gray-200 text-gray-500 cursor-not-allowed'}`}>
+            <div onClick={()=>changePage('next')} className={`w-8 duration-150 aspect-square flex justify-center items-center border border-${pageCount<maxPages? 'black cursor-pointer  hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400]': 'gray-200 text-gray-500 cursor-not-allowed'}`}>
                 {currentDirection==='ltr'? <MdKeyboardArrowRight/> : <MdKeyboardArrowLeft/>}
             </div>
-            <div onClick={()=>changePage('end')} className={`w-8 hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400] cursor-pointer  duration-150 aspect-square flex justify-center items-center border border-${pageCount<maxPages? 'black  cursor-pointer': 'gray-200 text-gray-500 cursor-not-allowed'}`}>
+            <div onClick={()=>changePage('end')} className={`w-8 duration-150 aspect-square flex justify-center items-center border border-${pageCount<maxPages? 'black  cursor-pointer  hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400]': 'gray-200 text-gray-500 cursor-not-allowed'}`}>
                 {currentDirection==='ltr'? <MdKeyboardDoubleArrowRight/> : <MdKeyboardDoubleArrowLeft/>}
             </div>
         </div>

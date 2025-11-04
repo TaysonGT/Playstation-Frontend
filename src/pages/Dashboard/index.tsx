@@ -62,7 +62,7 @@ const DashboardPage = () => {
   const [employeesRevenue, setEmployeesRevenue] = useState<EmployeesRevenueType>()
   const [balance, setBalance] = useState<{total: number, lastCollection: ICollection}>()
   const [period, setPeriod] = useState<'monthly'|'yearly'>('monthly')
-  const [date, setDate] = useState(new Date())
+  const [date, setDate] = useState(new Date(new Date().setDate(1)))
   const {configs} = useConfigs()
   
   const currentDateHandler = (e:React.InputEvent<HTMLInputElement>)=>{
@@ -72,14 +72,13 @@ const DashboardPage = () => {
 
   const formatDate = (date: Date)=>{
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0')
 
-    return `${year}-${month}-${day}`;
+    return `${year}-${month}`;
   }
 
   const fetchProductsRevenue = async()=>{
-    await axios.get('/finances/products', {params: {period, date}})
+    await axios.get('/finances/products', {params: {period, date: date.toISOString()}})
     .then(({data})=>{
       if(!data.success) return toast.error('Failed to load Total played hours')
       setProductsRevenue({
@@ -94,7 +93,7 @@ const DashboardPage = () => {
   }
 
   const fetchTotalRevenue = async()=>{
-    await axios.get('/finances/collective', {params: {period, date}})
+    await axios.get('/finances/collective', {params: {period, date: date.toISOString()}})
     .then(({data})=>{
       if(!data.success) return toast.error('Failed to load Total played hours')
       setTotalRevenue({
@@ -109,7 +108,7 @@ const DashboardPage = () => {
   }
 
   const fetchEmployeesRevenue = async()=>{
-    await axios.get('/finances/employees', {params: {period, date, top5: true}})
+    await axios.get('/finances/employees', {params: {period, date: date.toISOString(), top5: true}})
     .then(({data})=>{
       if(!data.success) return toast.error('Failed to load Total played hours')
       setEmployeesRevenue(data)
@@ -140,7 +139,6 @@ const DashboardPage = () => {
     <div dir={currentDirection} className='h-full flex flex-col'>
       
       <ListDialogue {...{cancel:()=>setShowList(null), productsRevenue, employeesRevenue, showList}}/>
-      {/* <NewCollectionDialogue {...{cancel: ()=>setShowNewCollection(false), show: showNewCollection}} /> */}
 
       <div className='w-full flex gap-10 px-10 py-4 grow items-center border-b border-gray-200'>
         <h1 className="text-4xl font-semibold text-black">{t('dashboard.dashboard')}</h1>
@@ -153,8 +151,8 @@ const DashboardPage = () => {
             <label>{t('dashboard.yearly')}</label>
           </div>
           <div className='flex items-center'>
-            <p className='font-bold mr-4'>{t('tables.date')}:</p>
-            <input value={formatDate(date)} type="date" className='bg-white text-black px-3 py-1 rounded-lg shadow-sm hover:bg-green-200' onInput={currentDateHandler} />
+            <p className='font-bold mr-4'>{t('dashboard.month')}:</p>            
+            <input value={formatDate(date)} type="month" className='bg-white text-black px-3 py-1 rounded-lg shadow-sm hover:bg-green-200' onInput={currentDateHandler} />
           </div>
         </div>
       </div>
@@ -267,15 +265,13 @@ const DashboardPage = () => {
           </div>
           <div className='grid grid-cols-2 grow'>
             <div className={`${currentDirection==='ltr'? 'border-r' : 'border-l'} border-gray-200 p-5 flex flex-col`}>
-              <div className='flex justify-between items-start mb-2'>
-                <h1 className='text-gray-600'>{t('dashboard.balance')}</h1>
-                <Link to='/reports/cash-review' className='rounded-sm px-3 py-2 text-white bg-blue-600 hover:bg-blue-500'>{t('dashboard.reviewCash')}</Link>
-              </div>              
-                <h1 className='text-xl font-bold'>{balance?.total.toLocaleString('en-US')} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></h1>
+              <h1 className='text-gray-600'>{t('dashboard.balance')}</h1>
+              <h1 className='text-xl font-bold'>{balance?.total.toLocaleString('en-US')} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></h1>
               {
                 balance?.lastCollection?<p className='mt-2'><span className='font-bold'>{t('dashboard.lastCollection')}:</span> {new Date(balance.lastCollection.timestamp).toLocaleDateString()}, {new Date(balance.lastCollection.timestamp).toLocaleTimeString()}</p>
                 :<p className='text-gray-600 mt-2'>{t('dashboard.noCollections')}...</p>
               }
+              <Link to='/dashboard/cash-review' className='rounded-sm self-start duration-150 px-3 py-2 mt-2 text-white bg-blue-600 hover:bg-blue-500'>{t('dashboard.reviewCash')}</Link>
             </div>
             
           </div>

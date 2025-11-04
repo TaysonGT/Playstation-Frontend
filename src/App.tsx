@@ -7,18 +7,17 @@ import LoginRoute from './routes/LoginRoute';
 import Login from './pages/login/Login'
 import Home from './pages/home/Home';
 import Devices from './pages/devices/Devices';
-import ReceiptsLayout from './pages/Receipts';
 import Stock from './pages/stock/Stock';
 import { DevicesProvider } from './context/DeviceContext';
 import NotFoundPage from './pages/404';
 import { AuthProvider } from './context/AuthContext';
 import TestPage from './pages/TestPage';
-import Dashboard from './pages/Dashboard';
-import OuterReceipts from './pages/Receipts/partials/OuterReceipts';
-import SessionReceipts from './pages/Receipts/partials/SessionReceipts';
+// import ReceiptsLayout from './pages/Receipts';
+// import OuterReceipts from './pages/Receipts/partials/OuterReceipts';
+// import SessionReceipts from './pages/Receipts/partials/SessionReceipts';
 import SettingsPage from './pages/Settings';
 import { ConfigsProvider } from './context/ConfigsContext';
-import GraphPage from './pages/Dashboard/graphs';
+import DashboardPage from './pages/Dashboard';
 import CashReviewPage from './pages/CashReview';
 
 function App() {
@@ -43,16 +42,15 @@ function App() {
             }/>
             <Route element={<TestPage /> } path='/test'  />
             <Route element={<Devices /> } path='/devices'  />
-            <Route element ={<ReceiptsLayout />} path='/receipts'>
+            {/* <Route element ={<ReceiptsLayout />} path='/receipts'>
               <Route path='/receipts/outer' element={<OuterReceipts/>}/>
               <Route path='/receipts/sessions' element={<SessionReceipts/>}/>
-            </Route>
+            </Route> */}
             <Route element ={<Stock />} path='/stock'  />
-            <Route element={<Dashboard />} path='/dashboard'  />
             <Route element={<SettingsPage />} path='/settings'  />
-            <Route path='/reports'>
-              <Route index element={<GraphPage />}/>
-              <Route element ={<CashReviewPage />} path='/reports/cash-review'  />
+            <Route path='/dashboard'>
+              <Route index element={<DashboardPage />}/>
+              <Route element ={<CashReviewPage />} path='/dashboard/cash-review'  />
             </Route>
           </Route>
           <Route path='*' element={<NotFoundPage/>}/>

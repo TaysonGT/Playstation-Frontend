@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { fetchProducts, createProduct, updateProduct, deleteProduct } from '../../../api/products';
-import toast from 'react-hot-toast';
 import { IProduct, ProductPayload } from '../../../types';
 
 
@@ -9,52 +8,33 @@ export function useProducts() {
   const [isLoading, setIsLoading] = useState(true);
 
   const getAll = async () => {
+    setProducts([]);
     setIsLoading(true);
-    try {
-        const { data } = await fetchProducts();
-        setProducts(data.products);
-    } finally {
-      setIsLoading(false);
-    }
+    await fetchProducts()
+    .then(({data})=>{
+      setProducts(data.products);
+    }).finally(()=>setIsLoading(false))
   };
 
   const create = async (payload: ProductPayload) => {
     setIsLoading(true);
-    await createProduct(payload)
-    .then(({data}) => {
-      if(data.success){
-        toast.success('Category created successfully')
-      }else{
-        toast.error(data.Message || 'Failed to create category');
-      }}
-    );
+    const {data} = await createProduct(payload)
     await getAll();
+    return {data}
   };
 
   const update = async (id: string, payload: ProductPayload) => {
     setIsLoading(true);
-    await updateProduct(id, payload)
-    .then(({data}) => {
-      if(data.success){
-        toast.success(data.Message || 'Category updated successfully');
-      }else{
-        toast.error(data.Message || 'Failed to update category');
-      }
-    })
+    const {data} = await updateProduct(id, payload)
     await getAll();
+    return {data}
   };
 
   const remove = async (id: string) => {
     setIsLoading(true);
-    await deleteProduct(id)
-    .then(({data}) => {
-      if(data.success){
-        toast.success(data.Message || 'Category removed successfully');
-      }else{
-        toast.error(data.Message || 'Failed to remove category');
-      }
-    })
+    const {data} = await deleteProduct(id)  
     await getAll();
+    return {data}
   };
 
   useEffect(() => { getAll(); }, []);
