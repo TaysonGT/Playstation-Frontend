@@ -10,29 +10,31 @@ import { getDirection } from '../../i18n';
 import { useConfigs } from '../../context/ConfigsContext';
 import Loader from '../../components/Loader';
 import { MdClose } from 'react-icons/md';
+import { getStringTime } from './DeviceCard';
 
 interface Props {
   device: IDevice,
-  clock: string,
+  clock: number,
   hide: ()=>void
 }
 
 interface ITotalCost {
   overall: number, 
   ordersCost: number, 
-  timeCost: number, 
-  currentTimeCost: number
+  totalTimeCost: number, 
+  currentTimeCost: number,
 }
 
 const SessionDetails:React.FC<Props> = ({device, clock, hide}) => {
     const [isLoading, setIsLoading] = useState(true)
     const [orders, setOrders] = useState<IOrder[]>([])
     const [timeOrders, setTimeOrders] = useState<ITimeOrder[]>([])
+    const [previousTime, setPreviousTime] = useState(0)
     const [searchParams, setSearchParams] = useSearchParams()
     const {t, i18n} = useTranslation()
     const currentDirection = getDirection(i18n.language);
 
-    const [total, setTotal] = useState<ITotalCost>({overall:0 , ordersCost: 0, timeCost: 0, currentTimeCost: 0})
+    const [total, setTotal] = useState<ITotalCost>({overall:0 , ordersCost: 0, totalTimeCost: 0, currentTimeCost: 0})
     const [products, setProducts] = useState<IProduct[]>([])
     const [freeDevices, setFreeDevices] = useState<IDevice[]>([])
     const [selectedPlayType, setSelectedPlayType] = useState<string>(device.session.play_type)
@@ -83,16 +85,10 @@ const SessionDetails:React.FC<Props> = ({device, clock, hide}) => {
     }
 
     const getTotal = (orders: IOrder[], timeOrders: ITimeOrder[]):ITotalCost=>{
-      let ordersCost = 0;
-      let timeCost = 0;
 
-      orders?.map((order)=>{
-        return ordersCost += order.cost;
-      })
-      
-      timeOrders?.map((order)=>{
-        return timeCost += order.cost;
-      })
+      const ordersCost = orders.reduce((total, order)=> total + order.cost,0)
+
+      const previousTimeCost = timeOrders.reduce((total, order)=>total+order.cost,0)
       
       let time = null;
       let currentTimeCost = 0
@@ -104,9 +100,10 @@ const SessionDetails:React.FC<Props> = ({device, clock, hide}) => {
         currentTimeCost = Math.ceil(time * device.type.multi_price )
         : currentTimeCost = Math.ceil(time * device.type.single_price) 
       
-      timeCost += currentTimeCost;
-      const overall = timeCost + ordersCost;
-      return {overall, ordersCost, timeCost, currentTimeCost}
+      const totalTimeCost = previousTimeCost + currentTimeCost;
+
+      console.log({overall: totalTimeCost + ordersCost, ordersCost, totalTimeCost, currentTimeCost})
+      return {overall: totalTimeCost + ordersCost, ordersCost, totalTimeCost, currentTimeCost}
     }
 
     useEffect(()=>{
@@ -117,14 +114,16 @@ const SessionDetails:React.FC<Props> = ({device, clock, hide}) => {
       })
       
       device.session&& refetchOrders()
-
       if(devices){
         const free = devices.filter((dev)=> (dev.status === false&&dev.id!==device.id))
         setFreeDevices(free)
         setSelectedTransfer(free[0]?.id || null)
       }
-
     },[devices])
+
+    useEffect(()=>{
+      setPreviousTime(timeOrders.reduce((total,order)=>total+Math.floor((new Date(order.ended_at).getTime() - new Date(order.started_at).getTime()) / 1000),0))
+    },[timeOrders])
 
   return (
     <div dir={currentDirection} className="text-center fixed flex flex-col z-[102] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border border-gray-300 shadow-md rounded-lg lg:w-auto w-[90vw]" style={{gridAutoRows: '180px 290px'}}>
@@ -149,10 +148,10 @@ const SessionDetails:React.FC<Props> = ({device, clock, hide}) => {
         </div>
         :
       <div className='grid grid-cols-3 gap-8 grow p-8 pt-4'>
-        <div className='flex flex-col h-auto'>
-          <h2 className="text-lg font-semibold border border-[#1b1b1f] shadow-hard text-[#1b1b1f] p-2">{t('devices.orders')}</h2>
+        <div className='flex flex-col h-auto border border-[#1b1b1f]'>
+          <h2 className="text-lg font-semibold border-b border-[#1b1b1f] shadow-hard text-[#1b1b1f] p-2">{t('devices.orders')}</h2>
           {orders?.length>0?
-          <ul className=' grow overflow-y-auto mt-4 shadow-inner bg-gray-100'>
+          <ul className=' grow overflow-y-auto shadow-inner bg-gray-100'>
             <li className='flex basis-0 text-xs justify-end pt-2 pb-1 border-b border-gray-200'>
               <div className='flex-1 text-center font-semibold'>{t('tables.quantity')}</div>
               <div className='flex-1 text-center font-semibold'>{t('stock.product')}</div>
@@ -166,15 +165,15 @@ const SessionDetails:React.FC<Props> = ({device, clock, hide}) => {
               </li>
             ))}
             </ul> : 
-            <div className='flex flex-col justify-center items-center grow'>
-              <p className='text-gray-500 mt-6'>{t('devices.noOrders')}...</p>
+            <div className='flex flex-col justify-center items-center grow px-6'>
+              <p className='text-gray-500'>{t('devices.noOrders')}...</p>
             </div>
             }
         </div>
-        <div className="flex flex-col">
-          <h2 className="text-lg font-semibold border border-[#1b1b1f] shadow-hard text-[#1b1b1f] p-2">{t('devices.time')}</h2>
+        <div className="flex flex-col border border-[#1b1b1f]">
+          <h2 className="text-lg font-semibold border-b border-[#1b1b1f] shadow-hard text-[#1b1b1f] p-2">{t('devices.time')}</h2>
           <div className="flex flex-col justify-end flex-grow p-4">
-            <div className={'w-full p-4 text-center text-3xl font-bold bg-[#212121] text-white bg-center bg-cover border-emerald-50 border rounded  ' + (device.session?.time_type === "open"? 'text-red-500' :  'text-green-500')}>{clock? clock : <div className='w-full flex justify-center'><Loader size={30} color='white' thickness={5}/></div>}</div>
+            <div className={'w-full p-4 text-center text-3xl font-bold bg-[#212121] text-white bg-center bg-cover border-emerald-50 border rounded  ' + (device.session?.time_type === "open"? 'text-red-500' :  'text-green-500')}>{clock? getStringTime(clock): <div className='w-full flex justify-center'><Loader size={30} color='white' thickness={5}/></div>}</div>
             <p className="text-2xl font-bold mt-4 text-indigo-700">{total?.currentTimeCost} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></p>
             <div className='flex justify-center gap-6 mt-4'>
               <div className='text-md font-medium border-b-4 pb-1 border-gray-600'>{device.session.play_type === "multi"? t('devices.multi') : t('devices.single') }</div>
@@ -183,8 +182,8 @@ const SessionDetails:React.FC<Props> = ({device, clock, hide}) => {
           </div>
         </div>
 
-        <div className="flex flex-col justify-between ">
-          <h2 className="text-lg font-semibold border border-[#1b1b1f] shadow-hard text-[#1b1b1f] p-2">{t('devices.addOrder')}</h2>
+        <div className="flex flex-col border border-[#1b1b1f] justify-between ">
+          <h2 className="text-lg font-semibold border-b border-[#1b1b1f] shadow-hard text-[#1b1b1f] p-2">{t('receipts.addOrder')}</h2>
           <form onSubmit={addOrderHandler} className='grow flex flex-col p-4'>
             <select
               className="w-full px-3 py-2 border border-gray-300 rounded-md mb-2"
@@ -210,32 +209,46 @@ const SessionDetails:React.FC<Props> = ({device, clock, hide}) => {
           </form>
         </div>
 
-        <div className='flex flex-col h-auto'>
-          <h2 className="text-lg font-semibold border border-[#1b1b1f] shadow-hard text-[#1b1b1f] p-2">{t('devices.sessions')}</h2>
+        <div className='flex flex-col border border-[#1b1b1f] h-auto'>
+          <h2 className="text-lg font-semibold border-b border-[#1b1b1f] shadow-hard text-[#1b1b1f] p-2">{t('devices.sessions')}</h2>
           {timeOrders?.length>0?
-          <ul className='overflow-y-auto mt-4 grow shadow-inner bg-gray-100'>
-            <li className='flex basis-0 text-xs justify-end pt-2 pb-1 border-b border-gray-200'>
-              <div className='flex-1 text-center font-semibold'>{t('tables.device')}</div> 
-              <div className='flex-1 text-center font-semibold'>{t('tables.time')}</div>
-              <div className='flex-1 text-center font-semibold'>{t('receipts.cost')}</div>
-            </li>
-            {timeOrders?.map((order, index) => (
-              <li key={index} className='flex basis-0 text-sm justify-end py-1'>
-                <span className="flex-1 text-center">{order.device?.name}</span> 
-                <span className="flex-1 text-center font-semibold">{order.time}</span>
-                <span className="flex-1 text-center">{order.cost} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></span>
-              </li>
-            ))}
-            </ul>
-            :
-            <div className='flex flex-col justify-center items-center grow'>
-              <p className='text-gray-500 mt-6'>{t('devices.noTimeOrders')}...</p>
+          <>
+            <div className='bg-gray-100 overflow-y-auto grow shadow-inner'>
+              <table>
+                <thead>
+                  <tr className='text-xs border-b border-gray-200'>
+                    <th className='text-center p-2 font-semibold'>{t('tables.device')}</th> 
+                    <th className='text-center p-2 font-semibold'>{t('devices.playType')}</th> 
+                    <th className='text-center p-2 font-semibold'>{t('tables.time')}</th>
+                    <th className='text-center p-2 font-semibold'>{t('receipts.cost')}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {timeOrders?.map((order, index) => (
+                    <tr key={index} className='text-sm'>
+                      <td className="text-center p-2">{order.device?.name}</td> 
+                      <td className="text-center p-2 font-semibold">{order.play_type}</td>
+                      <td className="text-center p-2 font-semibold">{order.time}</td>
+                      <td className="text-center p-2">{order.cost} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-            }
+            <div className='flex items-stretch font-bold border-t'>
+              <div className='p-2 text-xs flex items-center'>{t('devices.totalTime')}</div>
+              <div className='p-2 text-center grow text-lg bg-[#1b1a29] text-white'>{clock? getStringTime(clock+previousTime): <div className='w-full flex justify-center'><Loader size={30} color='white' thickness={5}/></div>}</div>
+            </div>
+          </>
+            :
+          <div className='flex flex-col justify-center items-center grow px-6'>
+            <p className='text-gray-500'>{t('devices.noTimeOrders')}...</p>
+          </div>
+          }
         </div>
 
-        <div className="flex flex-col rounded-sm">
-          <h2 className="text-lg font-semibold border border-[#1b1b1f] shadow-hard text-[#1b1b1f] p-2">{t('devices.checkout')}</h2>
+        <div className="flex flex-col border border-[#1b1b1f] rounded-sm">
+          <h2 className="text-lg font-semibold border-b border-[#1b1b1f] shadow-hard text-[#1b1b1f] p-2">{t('devices.checkout')}</h2>
           <div className='flex flex-col grow items-center justify-center px-4'>
             <div className='flex w-full gap-2'>
               <div className='flex-1 shadow-hard border-[#1b1b1f] border px-3 py-2'>
@@ -245,7 +258,7 @@ const SessionDetails:React.FC<Props> = ({device, clock, hide}) => {
 
               <div className='flex-1 shadow-hard border-[#1b1b1f] border px-3 py-2'>
                 <p className='font-semibold'>{t('devices.time')}</p>
-                <p className='text-nowrap'>{total?.timeCost||0} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></p>
+                <p className='text-nowrap'>{total?.totalTimeCost||0} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></p>
               </div>
             </div>
             <div className='shadow-hard border-[#1b1b1f] border p-4 mt-4 w-full'>
@@ -261,8 +274,8 @@ const SessionDetails:React.FC<Props> = ({device, clock, hide}) => {
           }} className='p-2 bg-red-700 mx-4 mb-4 text-white rounded hover:bg-red-600 duration-150'>{t('devices.endSession')}</button>
         </div>
         
-        <div className="flex flex-col justify-between">
-          <h2 className="text-lg font-semibold border border-[#1b1b1f] shadow-hard text-[#1b1b1f] p-2">{t('devices.sessionSettings')}</h2>
+        <div className="flex flex-col border border-[#1b1b1f] justify-between">
+          <h2 className="text-lg font-semibold border-b border-[#1b1b1f] shadow-hard text-[#1b1b1f] p-2">{t('devices.sessionSettings')}</h2>
           <div className='flex flex-col justify-between gap-6 grow p-4'>
             <div>
               <p className='mb-2'>{t('devices.changePlayType')}</p>

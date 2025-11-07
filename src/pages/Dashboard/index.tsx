@@ -136,11 +136,11 @@ const DashboardPage = () => {
   // isLoading? 
   //   <div className='flex justify-center items-center h-full'><Loader size={50} thickness={10}/></div>
   // :(
-    <div dir={currentDirection} className='h-full flex flex-col'>
+    <div dir={currentDirection} className='h-full flex flex-col w-full'>
       
       <ListDialogue {...{cancel:()=>setShowList(null), productsRevenue, employeesRevenue, showList}}/>
 
-      <div className='w-full flex gap-10 px-10 py-4 grow items-center border-b border-gray-200'>
+      <div className='w-full flex gap-10 px-10 py-6 grow items-center border-b border-gray-200'>
         <h1 className="text-4xl font-semibold text-black">{t('dashboard.dashboard')}</h1>
         <div className='flex gap-20 items-center'>
           <div className='flex items-center'>
@@ -150,9 +150,9 @@ const DashboardPage = () => {
             <input onChange={(e)=>e.target.checked&&setPeriod('yearly')} className='mx-2' type="radio" name="period" checked={period==='yearly'} />
             <label>{t('dashboard.yearly')}</label>
           </div>
-          <div className='flex items-center'>
-            <p className='font-bold mr-4'>{t('dashboard.month')}:</p>            
-            <input value={formatDate(date)} type="month" className='bg-white text-black px-3 py-1 rounded-lg shadow-sm hover:bg-green-200' onInput={currentDateHandler} />
+          <div className='flex items-center gap-2'>
+            <p className='font-bold'>{t('dashboard.month')}:</p>            
+            <input value={formatDate(date)} type="month" className='bg-white text-black px-3 py-1 rounded-md shadow-sm border border-gray-200 hover:bg-green-200' onInput={currentDateHandler} />
           </div>
         </div>
       </div>

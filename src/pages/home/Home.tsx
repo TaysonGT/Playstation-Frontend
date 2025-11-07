@@ -10,7 +10,7 @@ const HomePage = () => {
   const currentDirection = getDirection(i18n.language);
 
   return (
-    <div dir={currentDirection} className='h-full w-full bg-[#f5f5f5] flex flex-col gap-15 py-8 min-h-0 overflow-y-auto'>
+    <div dir={currentDirection} className='h-full w-full bg-[#f5f5f5] flex flex-col gap-15 py-12 min-h-0 overflow-y-auto'>
         {isLoading && 
         <div className='h-full w-full flex justify-center items-center'>
           <Loader size={50} thickness={10}/>

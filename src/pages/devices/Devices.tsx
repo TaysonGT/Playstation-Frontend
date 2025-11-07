@@ -59,7 +59,7 @@ const Devices = () => {
             }}} />
         </>
     }
-    <div className='py-6 lg:px-36 px-10 bg-[#0d47a1] h-full flex flex-col' dir={currentDirection}>
+    <div className='py-6 lg:px-36 px-10 bg-[#0d47a1] h-full w-full flex flex-col' dir={currentDirection}>
         <div className='w-full flex justify-between items-center'>
             <h1 className='text-white text-3xl font-bold'>{t('devices.devices')}</h1>
             <button onClick={()=>{ 
@@ -73,7 +73,7 @@ const Devices = () => {
             <div className='mt-16 flex justify-center items-center'>
                 <Loader size={50} color='white' thickness={10}/>
             </div>
-        :devices.length<1? 
+        :devices?.length<1? 
             <div dir={currentDirection} className='flex flex-col items-center mt-20'>
                 <h1 className='text-xl font-bold text-white'>{t('devices.noDevices')}</h1>
                 <p className='text-sm font-bold mt-4 text-gray-300'>{t('devices.pleaseAddNewDevice')}</p>
@@ -86,7 +86,7 @@ const Devices = () => {
                 )}
             </div>
             <div className='relative grow min-h-0 overflow-y-auto'>
-                {devices.map((device, i)=> 
+                {devices?.map((device, i)=> 
                 <div key={i} className={`relative items-stretch flex ${i%2 !== 0 ? 'bg-gray-50': 'bg-white'}`}>
                     <div className='p-3 font-bold text-blue-500 flex-1'>{device.name}</div>
                     <div className='flex-1 p-3 flex items-center justify-center'>

@@ -3,7 +3,7 @@ import './Navbar.css'
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { IoBarChart, IoGameController, IoHome, IoSettings } from 'react-icons/io5'
-// import { IoReceipt } from 'react-icons/io5'
+import { IoReceipt } from 'react-icons/io5'
 import { MdStorage } from 'react-icons/md'
 import { useTranslation } from 'react-i18next'
 import { getDirection } from '../i18n'
@@ -12,17 +12,19 @@ const Navbar = () => {
   let location = useLocation()
   const {t, i18n} = useTranslation()
   const currentDirection = getDirection(i18n.language);
+  const {currentUser, logoutUser} = useAuth()
 
   const links = [
     {name: t('navigation.home'), path: "/", icon: <IoHome/>},
     {name: t('navigation.devices'), path: "/devices", icon: <IoGameController/>},
-    // {name: t('navigation.receipts'), path: "/receipts", icon: <IoReceipt/>},
-    {name: t('navigation.stock'), path: '/stock', icon: <MdStorage/>},
-    {name: t('navigation.dashboard'), path: "/dashboard", icon: <IoBarChart/>},
-    {name: t('navigation.settings'), path: "/settings", icon: <IoSettings/>},
+    {name: t('navigation.receipts'), path: "/receipts", icon: <IoReceipt/>},
+    ...currentUser?.role==='admin'? [
+      {name: t('navigation.stock'), path: '/stock', icon: <MdStorage/>},
+      {name: t('navigation.dashboard'), path: "/dashboard", icon: <IoBarChart/>},
+      {name: t('navigation.settings'), path: "/settings", icon: <IoSettings/>}
+    ]:[],
   ]
 
-  const {currentUser, logoutUser} = useAuth()
 
   return ( 
     <div dir={currentDirection} className='w-full bg-[#1b1b1f] shadow-large py-6 xl:px-32 px-8 flex justify-between items-center select-none z-[99] text-sm'>
@@ -45,16 +47,6 @@ const Navbar = () => {
         <div className='flex gap-20 items-center'>
           <div className='space-y-1 text-center text-white '>
             <p>{t('navigation.changeLanguage')}</p>
-            {/* <div className='flex h-10'>
-              <button onClick={()=>{
-                localStorage.setItem('i18nextLng', 'ar')
-                window.location.reload()
-              }} className={'px-2 py-1 rounded-l border border-gray-600 ' + (i18n.language === 'ar' ? 'bg-amber-300 text-black font-bold' : 'hover:bg-gray-700 duration-150')}><img src={ArLogo} className='h-full'/></button>
-              <button onClick={()=>{
-                localStorage.setItem('i18nextLng', 'en')
-                window.location.reload()
-              }} className={'px-2 py-1 rounded-r border border-gray-600 ' + (i18n.language === 'en' ? 'bg-amber-300 text-black font-bold' : 'hover:bg-gray-700 duration-150')}><img src={EnLogo} className='h-full'/></button>
-            </div> */}
             <div className='flex'>
               <button onClick={()=>{
                 localStorage.setItem('i18nextLng', 'ar')

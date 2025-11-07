@@ -52,23 +52,24 @@ export const AuthProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }
   };
 
   const getUserData = async () => {
+    setIsLoading(true)
     getCurrentSession()
     .then(({data})=>{
-        if(!data.success) {
+      if(!data.success) {
           logoutUser()
           return
         };
         setCurrentUser(data.user)
-    }).catch(()=>logoutUser())
+      }).catch(()=>logoutUser())
     .finally(()=>setIsLoading(false))
   };
 
   useEffect(()=>{
-    getUserData();
+    getUserData()
     checkNewUser()
     .then(({data})=>{
-        if(!data.success) return;
-        setNewUser(true)
+      if(!data.success) return;
+      setNewUser(true)
     })
   },[])
 

@@ -65,7 +65,7 @@ const CollectionsTable:React.FC<Props> = ({refresh, setCollection, selectedColle
             refresh()
         }} cancel={()=>setShowNewCollection(false)}/>
         <div className='flex justify-between items-center'>
-            <h1 className='text-xl font-bold'>{t('dashboard.collectionsList')}</h1>
+            <h1 className='text-xl font-bold'>{t('dashboard.collectionsHistory')}</h1>
             <button onClick={()=>setShowNewCollection(true)} className='bg-[#5D866C] hover:bg-[#769c84] duration-150 rounded-sm px-4 py-2 text-white mt-4'>{t('dashboard.newCollection')}</button>
 
         </div>

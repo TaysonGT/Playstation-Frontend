@@ -35,16 +35,6 @@ const OuterReceipts = () => {
     refetch()
   },[])
 
-  // const getReceiptHandler = (id: string)=>{
-  //     axios.get(`/receipts/outer/${id}`, {withCredentials: true})
-  //     .then(({data})=> {
-  //       setCurrentReceipt(data.receipt)
-  //     })
-      
-  //     axios.get('/config', {withCredentials: true})
-  //     .then(({data})=> setConfigs({name: data.nameConfig?.value, phone: data.phoneConfig?.value}))
-  // }
-
   return ( <>
     {currentReceipt&& 
       <>

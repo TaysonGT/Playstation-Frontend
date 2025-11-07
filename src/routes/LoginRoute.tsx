@@ -7,12 +7,12 @@ const LoginRoute = () => {
     const {currentUser, isLoading} = useAuth()
     
     if(isLoading){
-    return (
-        <div className='h-screen w-screen flex flex-col gap-6 justify-center items-center'>
-        <Loader size={60} thickness={10}/>
-        <p className='text-xl'>Please wait...</p>
-        </div>
-    )
+        return (
+            <div className='h-screen w-screen flex flex-col gap-6 justify-center items-center'>
+            <Loader size={60} thickness={10}/>
+            <p className='text-xl'>Please wait...</p>
+            </div>
+        )
     }
 
     if(!currentUser){

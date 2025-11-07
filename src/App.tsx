@@ -12,13 +12,11 @@ import { DevicesProvider } from './context/DeviceContext';
 import NotFoundPage from './pages/404';
 import { AuthProvider } from './context/AuthContext';
 import TestPage from './pages/TestPage';
-// import ReceiptsLayout from './pages/Receipts';
-// import OuterReceipts from './pages/Receipts/partials/OuterReceipts';
-// import SessionReceipts from './pages/Receipts/partials/SessionReceipts';
 import SettingsPage from './pages/Settings';
 import { ConfigsProvider } from './context/ConfigsContext';
 import DashboardPage from './pages/Dashboard';
 import CashReviewPage from './pages/CashReview';
+import ReceiptsPage from './pages/Receipts';
 
 function App() {
 
@@ -42,10 +40,7 @@ function App() {
             }/>
             <Route element={<TestPage /> } path='/test'  />
             <Route element={<Devices /> } path='/devices'  />
-            {/* <Route element ={<ReceiptsLayout />} path='/receipts'>
-              <Route path='/receipts/outer' element={<OuterReceipts/>}/>
-              <Route path='/receipts/sessions' element={<SessionReceipts/>}/>
-            </Route> */}
+            <Route path='/receipts' element={<ReceiptsPage/>}/>
             <Route element ={<Stock />} path='/stock'  />
             <Route element={<SettingsPage />} path='/settings'  />
             <Route path='/dashboard'>

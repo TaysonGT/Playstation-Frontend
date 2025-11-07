@@ -8,21 +8,10 @@ import { useTranslation } from 'react-i18next'
 import { getDirection } from '../../i18n'
 import Loader from '../../components/Loader'
 
-export const getStringTime = (time: number)=>{
-    const hours = Math.floor(time / (60*60))
-    const minutes = Math.floor(time/(60)) % 60
-    const seconds = time % 60
 
-    const strHours = hours>9? hours : `0${hours}`
-    const strMinutes = minutes>9? minutes : `0${minutes}`
-    const strSeconds = seconds>9? seconds : `0${seconds}`
-
-    return `${strHours}:${strMinutes}:${strSeconds}`
-}
-
-const DeviceCard = ({device}:{device: IDevice}) => {
+const Device = ({device}:{device: IDevice}) => {
   const {startSession} = useDevices()
-  const [clock, setClock] = useState(0)
+  const [clock, setClock] = useState<string>('')
   const [isInputDisabled, setIsInputDisabled] = useState(true)
   const [showDetails, setShowDetails] = useState(false)
   const [searchParams, setSearchParams] = useSearchParams()
@@ -59,23 +48,36 @@ const DeviceCard = ({device}:{device: IDevice}) => {
       timeType === "time"? setIsInputDisabled(false) : setIsInputDisabled(true)
   }
 
+  const getStringTime = (time: number)=>{
+    const hours = Math.floor(time / (60*60))
+    const minutes = Math.floor(time/(60)) % 60
+    const seconds = time % 60
+
+    const strHours = hours>9? hours : `0${hours}`
+    const strMinutes = minutes>9? minutes : `0${minutes}`
+    const strSeconds = seconds>9? seconds : `0${seconds}`
+
+    return `${strHours}:${strMinutes}:${strSeconds}`
+  }
   
   const increment = ()=>{
     let time = Math.floor((Date.now() - new Date(device.session?.started_at).getTime()) /1000)
-    setClock(time)
+    setClock(getStringTime(time))
+    time ++;
   }
   
   const decrement = ()=>{
     let time =  Math.floor((new Date(device.session?.ended_at).getTime() - new Date().getTime()) /1000)
     if (time>0) {
-        setClock(time)
+        setClock(getStringTime(time))
+        time --;
     }else{
-        setClock(0)
+        setClock(`00:00:00`)
     }
   }
   
   useEffect(()=>{
-    const isSelected = searchParams.get('session') === device.id
+    const isSelected = searchParams.get('selected') === device.id
 
     isSelected&& setShowDetails(true)
     if(!device.session) return;
@@ -88,16 +90,8 @@ const DeviceCard = ({device}:{device: IDevice}) => {
   return (
     <>
     {(showDetails&&device.session)&&<>
-        <div onClick={()=>{
-            setShowDetails(false)
-            searchParams.delete('session')
-            setSearchParams(searchParams)
-        }} className='fixed left-0 top-0 w-screen h-screen bg-black/70 animate-appear duration-500 z-101'/>
-        <SessionDetails {...{device, clock, hide: ()=>{
-            setShowDetails(false)
-            searchParams.delete('session')
-            setSearchParams(searchParams)
-        }}} />
+        <div onClick={()=>{setShowDetails(false); searchParams.delete('selected'); setSearchParams(searchParams)}} className='fixed left-0 top-0 w-screen h-screen bg-black/70 animate-appear duration-500 z-[50]'/>
+        <SessionDetails {...{device, clock}} />
     </>
     }
     <div className='bg-[#ffffff] w-60 border-2 border-[#e0e0e0] flex flex-col items-center rounded p-5 text-[#333] shadow-lg duration-[.3s]'>
@@ -137,16 +131,16 @@ const DeviceCard = ({device}:{device: IDevice}) => {
             <button onClick={startDeviceHandler} id={device.id} className=' bg-[#37474f] text-white p-3 text-md rounded-md hover:bg-[#4f6874]  duration-150 active:shadow-hardInner mt-auto '>{t('devices.start')}</button>
         </form> :
         <div className='mt-5 flex flex-col items-center gap-3 h-full w-full'>
-            <div className={'w-[90%] p-4 text-center text-3xl font-bold bg-[#212121] text-white bg-center bg-cover border-emerald-50 border rounded  ' + (device.session?.time_type === "open"? 'text-red-500' :  'text-green-500')}>{clock? getStringTime(clock) : <div className='w-full flex justify-center'><Loader size={30} color='white' thickness={5}/></div>}</div>
+            <div className={'w-[90%] p-4 text-center text-3xl font-bold bg-[#212121] text-white bg-center bg-cover border-emerald-50 border rounded  ' + (device.session?.time_type === "open"? 'text-red-500' :  'text-green-500')}>{clock? clock : <div className='w-full flex justify-center'><Loader size={30} color='white' thickness={5}/></div>}</div>
             <div className='flex justify-between gap-4 p-2 '>
                 <p className={'text-sm font-medium p-3 py-2 rounded-sm w-full text-white ' + (device.session?.time_type==="open" ?  'bg-red-700': 'bg-teal-600')} >{device.session?.time_type.toUpperCase()}</p>
                 <p className='text-sm font-medium p-3 py-2 bg-slate-700 rounded-sm w-full text-white'>{device.session?.play_type.toUpperCase()}</p>
             </div>
             <button onClick={()=> {
                 setShowDetails(true)
-                searchParams.set('session', device.id)
+                searchParams.set('selected', device.id)
                 setSearchParams(searchParams)
-            }} id={device.id} className=' bg-cyan-500 p-3 text-md rounded-md text-white hover:bg-cyan-400 duration-200 active:shadow-hardInner mt-auto w-full text-center '>{t('devices.details')}</button>
+            }} id={device.id} className=' bg-[#00b4d8] p-3 text-md rounded-md text-white hover:bg-[#70d1e2] duration-200 active:shadow-hardInner mt-auto w-full text-center '>{t('devices.details')}</button>
         </div>
         }
 
@@ -155,4 +149,4 @@ const DeviceCard = ({device}:{device: IDevice}) => {
   )
 }
 
-export default DeviceCard
+export default Device

@@ -70,7 +70,7 @@ const Stock = () => {
         }/>
     </>}
 
-    <div className='py-6 px-10 lg:px-36 bg-[#0d47a1] h-full' dir={currentDirection}>
+    <div className='py-6 px-10 lg:px-36 bg-[#0d47a1] h-full w-full' dir={currentDirection}>
     
         <div className='w-full flex justify-between items-start '>
             <h1 className='text-white text-3xl font-bold'>{t('stock.inventory')}</h1>

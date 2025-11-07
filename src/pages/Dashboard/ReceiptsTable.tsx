@@ -9,17 +9,19 @@ import { MdKeyboardArrowLeft, MdKeyboardArrowRight, MdKeyboardDoubleArrowLeft, M
 import DarkBackground from '../../components/DarkBackground'
 import SessionReceipt from '../Receipts/partials/receipt/SessionReceipt'
 import Loader from '../../components/Loader'
+import { useAuth } from '../../context/AuthContext'
 
 type pageAction = "next" | "previous" | "start" | "end"
 
-const ReceiptsTable = () => {
+const ReceiptsTable = ({refresh}:{refresh?:boolean}) => {
     const [isLoading, setIsLoading] = useState(true)
     const [selectedType, setSelectedType] = useState<'session'|'outer'|null>(null)
     const [selectedReceipt, setSelectedReceipt] = useState<IReceipt|null>(null)
     const [receipts, setReceipts] = useState<IReceipt[]>([])
     const {t, i18n} = useTranslation()
     const currentDirection = getDirection(i18n.language);
-      
+
+    const {currentUser} = useAuth()
     const [pageCount, setPageCount] = useState<number>(1)
     const [maxPages, setMaxPages] = useState<number>(0)
 
@@ -41,7 +43,7 @@ const ReceiptsTable = () => {
 
     const refetch = async()=>{
         setIsLoading(true)
-        await axios.get(`/receipts`, {params:{page: pageCount, type: selectedType}, withCredentials:true})
+        await axios.get(`/receipts${currentUser?.role==='admin'?'':'/employee'}`, {params:{page: pageCount, type: selectedType}, withCredentials:true})
         .then(({data})=> {
             setReceipts(data.receipts)
             setMaxPages(Math.ceil(data.total/data.limit))
@@ -50,11 +52,11 @@ const ReceiptsTable = () => {
 
     useEffect(()=>{
         refetch()
-    }, [pageCount, selectedType])
+    }, [pageCount, selectedType, refresh])
 
 
   return (
-    <div className="flex flex-col text-black col-start-2 row-start-2 col-end-4 lg:col-end-5 lg:row-end-6 row-end-5 overflow-hidden">
+    <div className="flex flex-col h-full text-black col-start-2 row-start-2 col-end-4 lg:col-end-5 lg:row-end-6 row-end-5 overflow-hidden">
         {selectedReceipt&& 
             <>
             <DarkBackground show={!!selectedReceipt} setShow={()=>setSelectedReceipt(null)} />
@@ -62,9 +64,9 @@ const ReceiptsTable = () => {
             </>
         }
         <div className='flex mb-2'>
-            <button onClick={()=>setSelectedType(null)} className={`py-2 px-3 text-gray-500 border-gray-200 duration-75 hover:bg-gray-50 ${!selectedType&& 'text-gray-800 bg-gray-100'}`}>{t('dashboard.all')}</button>
-            <button onClick={()=>setSelectedType('session')} className={`py-2 px-3 text-gray-500 border-x border-gray-200 duration-75 hover:bg-gray-50 ${selectedType==='session'&& 'text-gray-800 bg-gray-100'}`}>{t('receipts.session')}</button>
-            <button onClick={()=>setSelectedType('outer')} className={`py-2 px-3 text-gray-500 duration-75 hover:bg-gray-50 ${selectedType==='outer' && 'text-gray-800 bg-gray-100'}`}>{t('receipts.outer')}</button>
+            <button onClick={()=>setSelectedType(null)} className={`py-2 px-3 text-gray-500 border-gray-200 duration-75 hover:bg-gray-50 ${!selectedType&& 'text-gray-800 bg-gray-100 shadow-inner'}`}>{t('dashboard.all')}</button>
+            <button onClick={()=>setSelectedType('session')} className={`py-2 px-3 text-gray-500 border-x border-gray-200 duration-75 hover:bg-gray-50 ${selectedType==='session'&& 'text-gray-800 bg-gray-100 shadow-inner'}`}>{t('receipts.session')}</button>
+            <button onClick={()=>setSelectedType('outer')} className={`py-2 px-3 text-gray-500 duration-75 hover:bg-gray-50 ${selectedType==='outer' && 'text-gray-800 bg-gray-100 shadow-inner'}`}>{t('receipts.outer')}</button>
         </div>
         <div className='flex items-stretch border-y border-gray-200 font-bold text-sm text-black'>
             <div className='flex-[0.5] p-3 pl-4 flex items-center'>{t('tables.type')}</div>
@@ -75,7 +77,7 @@ const ReceiptsTable = () => {
         </div>
         <div className='flex flex-col overflow-y-auto bg-gray-100 grow'>
             {isLoading?
-            <div className='py-20 flex justify-center w-full'>
+            <div className='py-20 bg-white flex justify-center w-full'>
                 <Loader size={30} thickness={7} />
             </div>
             :receipts.length>0? receipts.map((receipt, i ) =>
@@ -101,8 +103,8 @@ const ReceiptsTable = () => {
                 </div>
             </div>
             ):
-            <div className='w-full flex justify-center text-gray-400 font-bold'>
-                <p>No Receipts Yet...</p>
+            <div className='w-full flex justify-center py-10 bg-white text-gray-400 font-bold'>
+                <p>{t('receipts.noReceipts')}</p>
             </div>
         }
         </div>

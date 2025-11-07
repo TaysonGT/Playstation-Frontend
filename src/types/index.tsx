@@ -97,7 +97,7 @@ export interface DevicePayload {
 
 export interface IOrder {
     cost: number,
-    quantity: string,
+    quantity: number,
     product: IProduct,
 }
 

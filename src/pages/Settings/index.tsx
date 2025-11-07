@@ -76,7 +76,7 @@ const SettingsPage = () => {
   },[])
   
   return (
-    <div dir={currentDirection} className="flex flex-col h-full overflow-hidden py-6 bg-[#0d47a1] lg:px-36 px-10 font-alexandria">
+    <div dir={currentDirection} className="flex flex-col h-full w-full overflow-hidden py-6 bg-[#0d47a1] lg:px-36 px-10 font-alexandria">
       {typePopup&& <>
         <DevTypePopup {...{onAction: async()=>{
           setTypePopup(false)
