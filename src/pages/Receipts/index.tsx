@@ -12,7 +12,7 @@ const ReceiptsPage = () => {
     const [refresh, setRefresh] = useState(false)
 
     return (
-        <div dir={currentDirection} className='w-full h-full flex flex-col p-8 bg-[#f3f3f3]'>
+        <div dir={currentDirection} className='w-full h-full flex flex-col p-10 px-20 bg-[#f3f3f3]'>
             {showPopup&&
                 <>
                     <OrderModal {...{ hide: ()=>setShowPopup(false), refetch: ()=>setRefresh(prev=>!prev)}}  />

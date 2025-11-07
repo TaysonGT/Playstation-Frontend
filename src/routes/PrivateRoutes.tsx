@@ -34,7 +34,7 @@ const PrivateRoutes = ({roles}:{roles:string[]}) => {
 
   return (
     <div className='flex flex-col h-screen overflow-hidden'>
-      <div className={`flex grow min-h-0 ${currentDirection==='rtl'?'pr-52':'pl-52'}`}>
+      <div className={`flex grow min-h-0 ${currentDirection==='rtl'?'pr-55':'pl-55'}`}>
         <Sidebar/>
         <Outlet /> 
       </div>

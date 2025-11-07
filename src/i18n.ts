@@ -177,6 +177,7 @@ i18n
             noTimeOrders: "This session has no other time receipts.",
           },
           deviceTypes:{
+            deviceTypes: "Device Types",
             hourlyRateSingle: "Hourly Rate (Single)",
             hourlyRateMulti: "Hourly Rate (Multi)",
             addDeviceType: "Add Device Type",
@@ -401,6 +402,7 @@ i18n
             noTimeOrders: "لا توجد جلسات وقت أخرى لهذه الجلسة.",
           },
           deviceTypes: {
+            deviceTypes: "أنواع الأجهزة",
             hourlyRateSingle: "سعر الساعة (فردي)",
             hourlyRateMulti: "سعر الساعة (متعدد)",
             addDeviceType: "إضافة نوع جهاز",
@@ -439,7 +441,7 @@ i18n
             noOrders: "لا توجد طلبات بعد"
           },
           stock: {
-            inventory: "المخزون",
+            inventory: "المخزن",
             productName: "اسم المنتج",
             product: "المنتج",
             addProduct: "إضافة منتج",

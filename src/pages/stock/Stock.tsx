@@ -72,12 +72,12 @@ const Stock = () => {
         }/>
     </>}
 
-    <div className='py-6 px-10 lg:px-36 bg-[#0d47a1] h-full w-full' dir={currentDirection}>
+    <div className='p-10 lg:px-20 bg-[#0d47a1] h-full w-full' dir={currentDirection}>
     
-        <div className='w-full flex justify-between items-start '>
+        <div className='w-full flex justify-between items-center'>
             <h1 className='text-white text-3xl font-bold'>{t('stock.inventory')}</h1>
             {currentUser?.role==='admin'&&
-                <button onClick={()=> setShowCreate(true)} className='mt-4 px-4 p-2 shadow-hard cursor-pointer rounded text-md text-white bg-blue-700 hover:bg-blue-500 duration-100 flex gap-3 items-center'>
+                <button onClick={()=> setShowCreate(true)} className='mt-6 px-4 p-2 shadow-hard cursor-pointer rounded text-md text-white bg-blue-700 hover:bg-blue-500 duration-100 flex gap-3 items-center'>
                     {t('stock.addProduct')} <span className='text-xl font-bold'>+</span> 
                 </button>
             }
@@ -87,7 +87,7 @@ const Stock = () => {
                 {/* <Loader size={50} thickness={20} /> */}
             </div>
         :
-        <div className='w-full text-black mt-6 text-right tracking-wide shadow-2xl rounded-lg overflow-hidden'>
+        <div className='w-full text-black mt-2 text-right tracking-wide shadow-2xl rounded-lg overflow-hidden'>
             <ul className='bg-gray-50 border-b-2 border-gray-200'>
                 <li className='flex w-full items-stretch'>
                 {tableHead?.map((key, i)=> 
