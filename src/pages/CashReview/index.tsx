@@ -51,7 +51,7 @@ const CashReviewPage = () => {
                         <div className='flex justify-center items-center h-full'><Loader size={50} thickness={10}/></div>
                     :(
                     <>
-                        <div className='flex gap-10'>
+                        <div className='flex gap-10 flex-wrap text-nowrap'>
                             <div className='p-4 shadow-soft rounded-md flex-1 bg-white'>
                                 <h1 className='mb-2 text-gray-600'>{t('dashboard.balance')}</h1>
                                 <h1 className='text-xl font-bold'>{report?.total.toLocaleString('en-US')} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></h1>

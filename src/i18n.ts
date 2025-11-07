@@ -16,6 +16,12 @@ i18n
             typeCollectedAmount: "Type collected amount",
             typeNotes: "Type your notes" 
           },
+          routing:{
+            unauthorized: "Unauthorized",
+            noAccess: "You have no authorities to access this page",
+            redirectHome: "Redirect to home page",
+            pleaseWait: "Please wait"
+          },
           modals:{
             add: "Add",
             edit: "Edit",
@@ -233,6 +239,12 @@ i18n
             typeCountedCash: "أدخل النقد المعدود",
             typeCollectedAmount: "أدخل النقد المحصل",
             typeNotes: "أدخل ملاحظاتك" 
+          },
+          routing:{
+            unauthorized: "غير مصرح به",
+            noAccess: "لا تملك الصلاحيات للدخول لهذه الصفحة",
+            redirectHome: "العودة للصفحة الرئيسة",
+            pleaseWait: "برجاء الإنتظار"
           },
           navigation:{
             home: "الرئيسية",

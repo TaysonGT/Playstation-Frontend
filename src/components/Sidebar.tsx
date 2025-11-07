@@ -1,9 +1,9 @@
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { RiBarChart2Line, RiBillFill, RiQuestionLine,  RiSettings5Line } from "react-icons/ri";
+import { RiBox2Fill, RiDashboardFill, RiReceiptFill, RiSettingsFill } from "react-icons/ri";
 import { useTranslation } from 'react-i18next';
 import UserIcon from '../assets/user.png'
-import { IoHome } from 'react-icons/io5';
+import { IoGameController, IoHome } from 'react-icons/io5';
 import { getDirection } from '../i18n';
 import { useAuth } from '../context/AuthContext';
 
@@ -15,31 +15,18 @@ const Sidebar: React.FC = () => {
 
     const links = [
       {name: t('navigation.home'), path: "/", icon: <IoHome/>},
-      {name: t('receipts.receipts'), path: "/receipts", icon: <RiBillFill/>},
-      {
-        name: "الأسئلة",
-        path: "/questions",
-        icon: <RiQuestionLine/>,
-      },
-      {
-        name: t('navigation.dashboard'),
-        path: "/dashboard",
-        icon: <RiBarChart2Line/>
-      },
-      {
-        name: t('navigation.settings'),
-        path: "/settings",
-        icon: <RiSettings5Line/>
-      },
-      // {
-      //   name: t('navigation.logout'),
-      //   path: "/power",
-      //   icon: <RiShutDownLine/>
-      // },
+      {name: t('receipts.receipts'), path: "/receipts", icon: <RiReceiptFill/>},
+      {name: t('navigation.devices'), path: "/devices", icon: <IoGameController/>},
+      {name: t('navigation.stock'), path: '/stock', icon: <RiBox2Fill/>},
+      ...currentUser?.role==='admin'?
+        [
+          {name: t('navigation.dashboard'), path: "/dashboard", icon: <RiDashboardFill/>},
+          {name: t('navigation.settings'), path: "/settings", icon: <RiSettingsFill/>}
+        ]:[],
     ]
     
   return ( 
-      <div dir={currentDirection} className={`flex flex-col p-6 bg-black text-white h-full group absolute z-[50] shadow-hard ${currentDirection==='rtl'?'right-0':'left-0'} top-0`}>
+      <div dir={currentDirection} className={`flex flex-col overflow-y-auto  p-6 bg-black text-white h-full group absolute w-55 z-[50] shadow-hard ${currentDirection==='rtl'?'right-0':'left-0'} top-0`}>
         <div className='flex flex-col gap-4 items-center cursor-pointer p-4'>
           <img src={UserIcon} className='sm:h-[40px] h-[30px]' alt="" />
           <p className='sm:font-medium text-white'>{currentUser?.username}</p>
@@ -68,7 +55,7 @@ const Sidebar: React.FC = () => {
 
           </div>
         </div>
-        <button onClick={logoutUser} className='duration-150 hover:bg-red-500 bg-red-600 rounded-sm py-3 mt-10'>
+        <button onClick={logoutUser} className='duration-150 hover:bg-red-500 bg-red-600 rounded-sm py-2 mt-10'>
           {t('navigation.logout')}
         </button>
       </div>

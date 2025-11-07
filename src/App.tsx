@@ -32,7 +32,7 @@ function App() {
           <Route path='/login' element={<LoginRoute/>}>
             <Route index element={<Login/>}/>
           </Route>
-          <Route path='/' element={<PrivateRoutes />}>
+          <Route path='/' element={<PrivateRoutes roles={['admin', 'employee']} />}>
             <Route index element={ 
               <DevicesProvider>
                 <Home />
@@ -42,6 +42,8 @@ function App() {
             <Route element={<Devices /> } path='/devices'  />
             <Route path='/receipts' element={<ReceiptsPage/>}/>
             <Route element ={<Stock />} path='/stock'  />
+          </Route>
+          <Route path='/' element={<PrivateRoutes roles={['admin']} />}>
             <Route element={<SettingsPage />} path='/settings'  />
             <Route path='/dashboard'>
               <Route index element={<DashboardPage />}/>

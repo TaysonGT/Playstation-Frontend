@@ -8,6 +8,7 @@ import toast from 'react-hot-toast'
 import { RiDeleteBin6Fill, RiEdit2Fill } from 'react-icons/ri'
 import { useTranslation } from 'react-i18next'
 import { getDirection } from '../../i18n'
+import { useAuth } from '../../context/AuthContext'
 
 
 const Devices = () => {
@@ -19,6 +20,7 @@ const Devices = () => {
     const [deleteConfirm, setDeleteConfirm] = useState(false)
     const {t, i18n} = useTranslation()
     const currentDirection = getDirection(i18n.language);
+    const {currentUser} = useAuth()
 
     const refetchDevices = async ()=>{ 
         setIsLoading(true)
@@ -37,7 +39,7 @@ const Devices = () => {
         t('tables.name'),
         t('tables.type'),
         t('tables.status'),
-        t('tables.actions')
+        ...currentUser?.role==='admin'?[t('tables.actions')]:[]
     ]
   
   return (
@@ -62,12 +64,14 @@ const Devices = () => {
     <div className='py-6 lg:px-36 px-10 bg-[#0d47a1] h-full w-full flex flex-col' dir={currentDirection}>
         <div className='w-full flex justify-between items-center'>
             <h1 className='text-white text-3xl font-bold'>{t('devices.devices')}</h1>
-            <button onClick={()=>{ 
-                deviceTypes?.length>0? setShowPopup(true)
-                : toast.error('برجاء إضافة نوع جهاز أولًا');
-            }} className='mt-4 px-4 p-2 shadow-hard rounded text-md text-white bg-blue-700 hover:bg-blue-500 duration-100 flex gap-3 items-center'>
-                {t('devices.addDevice')} <span className='text-xl font-bold'>+</span> 
-            </button>
+            {currentUser?.role==='admin'&&
+                <button onClick={()=>{ 
+                    deviceTypes?.length>0? setShowPopup(true)
+                    : toast.error('برجاء إضافة نوع جهاز أولًا');
+                }} className='mt-4 px-4 p-2 shadow-hard rounded text-md text-white bg-blue-700 hover:bg-blue-500 duration-100 flex gap-3 items-center'>
+                    {t('devices.addDevice')} <span className='text-xl font-bold'>+</span> 
+                </button>
+            }
         </div>
         {isLoading? 
             <div className='mt-16 flex justify-center items-center'>
@@ -95,17 +99,19 @@ const Devices = () => {
                     <div className='flex-1 p-3 flex items-center justify-center'>
                         <span className={'p-1.5 text-xs font-bold uppercase tracking-wider bg-opcaity-50 rounded-lg ' + (!device.status? "text-green-800 bg-green-200" : "text-red-800 bg-red-200")}>{!device.status? t('devices.available') : t('devices.inUse')}</span>
                     </div>
-                    <div className='flex-1 flex gap-4 items-center p-3 justify-center'>
-                        <div className='bg-indigo-100 cursor-pointer hover:text-indigo-400 duration-100 rounded-md p-1 text-2xl'>
-                            <RiEdit2Fill/>
+                    {currentUser?.role==='admin'&&
+                        <div className='flex-1 flex gap-4 items-center p-3 justify-center'>
+                            <div className='bg-indigo-100 cursor-pointer hover:text-indigo-400 duration-100 rounded-md p-1 text-2xl'>
+                                <RiEdit2Fill/>
+                            </div>
+                            <div className='rounded-md cursor-pointer bg-red-100 text-red-600 hover:text-red-400 duration-100 p-1 text-2xl' onClick={()=>{
+                                setDeleteDevice(device)
+                                setDeleteConfirm(true)
+                            }}>
+                                <RiDeleteBin6Fill />
+                            </div>
                         </div>
-                        <div className='rounded-md cursor-pointer bg-red-100 text-red-600 hover:text-red-400 duration-100 p-1 text-2xl' onClick={()=>{
-                            setDeleteDevice(device)
-                            setDeleteConfirm(true)
-                        }}>
-                            <RiDeleteBin6Fill />
-                        </div>
-                    </div>
+                    }
                 </div>
                 )}
             </div>

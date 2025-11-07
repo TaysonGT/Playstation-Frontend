@@ -160,11 +160,11 @@ const DashboardPage = () => {
         <div className={`bg-white flex flex-col ${currentDirection==='ltr'? 'border-r': 'border-l'} border-gray-200`}>
           <h1 className='px-5 pt-5 mb-2 text-2xl font-bold'>{t('dashboard.revenue')}</h1>
           <div className='h-80 flex flex-col p-5 border-b border-gray-200'>
-            <div className='flex w-full'>
+            <div className='flex w-full gap-4 flex-wrap'>
               <div className='flex-1'>
                 <h1 className='text-gray-600'>{t('dashboard.totalRevenue')}</h1>
                 <div className='flex gap-2 items-center'>
-                  <h1 className='text-xl font-bold mb-2'>{totalRevenue?.total.toLocaleString('en-US')} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></h1>
+                  <h1 className='text-xl font-bold mb-2 text-nowrap'>{totalRevenue?.total.toLocaleString('en-US')} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></h1>
                   {!(!totalRevenue?.totalGrowthLoss || totalRevenue?.totalGrowthLoss===0) &&
                       <p className={`text-base font-bold flex gap-1 ${totalRevenue?.totalGrowthLoss>0 ? 'text-green-500' : 'text-red-500'}`}>{totalRevenue?.totalGrowthLoss>0? "↑" : "↓"}<span>{Math.abs(totalRevenue?.totalGrowthLoss)}%</span></p>
                     }
@@ -173,7 +173,7 @@ const DashboardPage = () => {
               <div className='flex-1'>
                 <h1 className='text-gray-600'>{t('dashboard.playingRevenue')}</h1>
                 <div className='flex gap-2 items-center'>
-                  <h1 className='text-xl font-bold mb-2'>{totalRevenue?.totalPlaying.toLocaleString('en-US')} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></h1>
+                  <h1 className='text-xl font-bold mb-2 text-nowrap'>{totalRevenue?.totalPlaying.toLocaleString('en-US')} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></h1>
                   {!(!totalRevenue?.playingGrowthLoss || totalRevenue?.playingGrowthLoss===0) &&
                       <p className={`text-base font-bold flex gap-1 ${totalRevenue?.playingGrowthLoss>0 ? 'text-green-500' : 'text-red-500'}`}>{totalRevenue?.playingGrowthLoss>0? "↑" : "↓"}<span>{Math.abs(totalRevenue?.playingGrowthLoss)}%</span></p>
                     }
@@ -182,7 +182,7 @@ const DashboardPage = () => {
               <div className='flex-1'>
                 <h1 className='text-gray-600'>{t('dashboard.productsRevenue')}</h1>
                 <div className='flex gap-2 items-center'>
-                  <h1 className='text-xl font-bold mb-2'>{totalRevenue?.totalProducts.toLocaleString('en-US')} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></h1>
+                  <h1 className='text-xl font-bold mb-2 text-nowrap'>{totalRevenue?.totalProducts.toLocaleString('en-US')} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></h1>
                   {!(!totalRevenue?.productsGrowthLoss || totalRevenue?.productsGrowthLoss===0) &&
                       <p className={`text-base font-bold flex gap-1 ${totalRevenue?.productsGrowthLoss>0 ? 'text-green-500' : 'text-red-500'}`}>{totalRevenue?.productsGrowthLoss>0? "↑" : "↓"}<span>{Math.abs(totalRevenue?.productsGrowthLoss)}%</span></p>
                     }
@@ -190,7 +190,7 @@ const DashboardPage = () => {
               </div>
               <div className='flex-1'>
                 <h1 className='text-gray-600'>{t('dashboard.totalHours')}</h1>
-                <h1 className='text-xl font-bold mb-2'>{totalRevenue?.hours.toLocaleString('en-US')} {t('dashboard.hours')}</h1>
+                <h1 className='text-xl font-bold mb-2 text-nowrap'>{totalRevenue?.hours.toLocaleString('en-US')} {t('dashboard.hours')}</h1>
               </div>
             </div>
             <div className='grow' dir='ltr'>

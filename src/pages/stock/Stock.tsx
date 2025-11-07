@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { getDirection } from '../../i18n';
 import { BiEdit, BiTrash } from 'react-icons/bi';
 import { useConfigs } from '../../context/ConfigsContext';
+import { useAuth } from '../../context/AuthContext';
 
 const Stock = () => {
     const [showCreate, setShowCreate] = useState(false)
@@ -18,6 +19,7 @@ const Stock = () => {
     const {t, i18n} = useTranslation()
     const currentDirection = getDirection(i18n.language);
     const {configs} = useConfigs()
+    const {currentUser} = useAuth()
     
     const {products, isLoading, refetch} = useProducts()
 
@@ -29,7 +31,7 @@ const Stock = () => {
         t('stock.productName'),
         t('tables.quantity'),
         t('tables.price'),
-        t('tables.actions')
+        ...currentUser?.role==='admin'?[t('tables.actions')]:[]
     ]
 
   return (
@@ -74,9 +76,11 @@ const Stock = () => {
     
         <div className='w-full flex justify-between items-start '>
             <h1 className='text-white text-3xl font-bold'>{t('stock.inventory')}</h1>
-            <button onClick={()=> setShowCreate(true)} className='mt-4 px-4 p-2 shadow-hard cursor-pointer rounded text-md text-white bg-blue-700 hover:bg-blue-500 duration-100 flex gap-3 items-center'>
-                {t('stock.addProduct')} <span className='text-xl font-bold'>+</span> 
-            </button>
+            {currentUser?.role==='admin'&&
+                <button onClick={()=> setShowCreate(true)} className='mt-4 px-4 p-2 shadow-hard cursor-pointer rounded text-md text-white bg-blue-700 hover:bg-blue-500 duration-100 flex gap-3 items-center'>
+                    {t('stock.addProduct')} <span className='text-xl font-bold'>+</span> 
+                </button>
+            }
         </div>
         {isLoading? 
             <div className='fixed w-screen h-screen flex justify-center items-center bg-[#fff/20]'>
@@ -99,7 +103,7 @@ const Stock = () => {
                         <span className={'p-1.5 text-xs font-bold uppercase tracking-wider bg-opcaity-50 rounded-lg ' + (product.stock>20? "text-green-800 bg-green-200" : "text-red-800 bg-red-200")}>{product.stock}</span>
                     </div>
                     <div className='flex flex-1 text-center justify-center items-center gap-1'><p>{product.price.toLocaleString('en-US')}</p> <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></div>
-                    <div  className='flex flex-1 gap-4 items-center justify-center'>
+                    {currentUser?.role==='admin'&&<div  className='flex flex-1 gap-4 items-center justify-center'>
                         <button 
                             onClick={()=>setShowEdit(true)}
                             onMouseOver={()=>setSelectedProd(product)}
@@ -112,7 +116,7 @@ const Stock = () => {
                             className='text-white bg-red-600 text-2xl hover:bg-red-400 duration-100 rounded shadow-hard p-1'>
                             <BiTrash/>
                         </button>   
-                    </div>
+                    </div>}
                 </li>
                 )}
             </ul>
