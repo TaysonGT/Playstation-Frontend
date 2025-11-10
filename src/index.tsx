@@ -6,7 +6,8 @@ import axios from 'axios';
 import Cookies from 'js-cookie'
 import './i18n';
 
-axios.defaults.baseURL = process.env.NODE_ENV == 'production'? 'https://playstation-backend.onrender.com' : 'http://localhost:5000';
+// axios.defaults.baseURL = process.env.NODE_ENV == 'production'? 'https://playstation-backend.onrender.com' : 'http://localhost:5000';
+axios.defaults.baseURL = process.env.NODE_ENV == 'production'? 'https://playstation-backend.onrender.com' : 'http://192.168.1.49:5000';
 axios.interceptors.request.use(config => {
    const accessToken = Cookies.get('access_token');
    

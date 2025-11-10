@@ -33,7 +33,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }
         }
 
         toast.success(data.message)
-        Cookies.set('access_token', data.token, {expires: new Date(data.expDate), secure: true, path: '/'})
+        Cookies.set('access_token', data.token, {expires: new Date(data.expDate), path: '/'})
         await getUserData()
         navigate('/')
     })
@@ -45,7 +45,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }
       if(!data.success) return toast.error(data.message);
       
       toast.success(data.message)
-      Cookies.set('access_token', data.token, {expires: new Date(data.expDate), secure: true, path: '/'})
+      Cookies.set('access_token', data.token, {expires: new Date(data.expDate), path: '/'})
       await getUserData()
       navigate('/')
     })

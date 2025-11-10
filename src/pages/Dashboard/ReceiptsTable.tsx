@@ -63,51 +63,60 @@ const ReceiptsTable = ({refresh}:{refresh?:boolean}) => {
             <SessionReceipt {...{receipt:selectedReceipt, hide: ()=>setSelectedReceipt(null)}} />
             </>
         }
-        <div className='flex mb-2'>
+        <div className='flex mb-2 text-xs md:text-sm'>
             <button onClick={()=>setSelectedType(null)} className={`py-2 px-3 text-gray-500 border-gray-200 duration-75 hover:bg-gray-50 ${!selectedType&& 'text-gray-800 bg-gray-100 shadow-inner'}`}>{t('dashboard.all')}</button>
             <button onClick={()=>setSelectedType('session')} className={`py-2 px-3 text-gray-500 border-x border-gray-200 duration-75 hover:bg-gray-50 ${selectedType==='session'&& 'text-gray-800 bg-gray-100 shadow-inner'}`}>{t('receipts.session')}</button>
             <button onClick={()=>setSelectedType('outer')} className={`py-2 px-3 text-gray-500 duration-75 hover:bg-gray-50 ${selectedType==='outer' && 'text-gray-800 bg-gray-100 shadow-inner'}`}>{t('receipts.outer')}</button>
         </div>
-        <div className='flex items-stretch border-y border-gray-200 font-bold text-sm text-black'>
-            <div className='flex-[0.5] p-3 pl-4 flex items-center'>{t('tables.type')}</div>
-            <div className='flex-[0.5] p-3 flex items-center'>{t('tables.employee')}</div>
-            <div className='flex-1 p-3 flex items-center'>{t('tables.time')}</div>
-            <div className='flex-[0.5] p-3 flex items-center'>{t('tables.total')}</div>
-            <div className='flex-[0.5] p-3 flex items-center justify-center'>{t('tables.actions')}</div>
+        {isLoading?
+            <div className='flex justify-center items-center grow py-10'>
+                <Loader size={40} thickness={7}/>
+            </div>
+        :receipts.length>0?
+        <div className='overflow-x-auto w-full grow'>
+            <table className='w-full'>
+                <thead>
+                    <tr className='border-y border-gray-200 text-center font-md:bold text-xs md:text-sm  text-black'>
+                        <th className='p-3 pl-4 text-center'>{t('tables.type')}</th>
+                        <th className='p-3 text-center'>{t('tables.employee')}</th>
+                        <th className='p-3 text-center'>{t('tables.time')}</th>
+                        <th className='p-3 text-center'>{t('tables.total')}</th>
+                        <th className='p-3 text-center'>{t('tables.actions')}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {receipts.map((receipt, i ) =>
+                    <tr key={i} className="bg-white text-center border-b text-xs md:text-sm  text-gray-700 border-gray-200">
+                        <td className="p-3 pl-4">
+                            {receipt.type==="session" ? t('receipts.session') : receipt.type === "outer" ? t('receipts.outer') : t('receipts.deduction')}
+                        </td>
+                        <td className="p-3">
+                            {receipt.cashier.username}
+                        </td>
+                        <td className="p-3 gap-2">
+                            <p>{new Date(receipt.created_at).toLocaleString()}</p>
+                        </td>
+                        <td dir={currentDirection} className={"font-bold p-3 " + (receipt.type === "deduction"? "text-red-600" : "text-green-500")}>
+                            <p className='flex items-center justify-center gap-1'>
+                                {Math.abs(receipt.total).toLocaleString('en-US')}<span>{currentDirection==='rtl'? configs.currency.symbolNative: configs.currency.code}</span>
+                            </p>
+                        </td>
+                        <td
+                            onClick={()=>{
+                                setSelectedReceipt(receipt)
+                            }}
+                            className="md:text-2xl text-lg flex items-center justify-center hover:text-cyan-700 cursor-pointer flex-[0.5] p-3 ">
+                            <RiEyeLine />
+                        </td>
+                    </tr>
+                    )}
+                </tbody>
+            </table>
         </div>
-        <div className='flex flex-col overflow-y-auto bg-gray-100 grow'>
-            {isLoading?
-            <div className='py-20 bg-white flex justify-center w-full'>
-                <Loader size={30} thickness={7} />
-            </div>
-            :receipts.length>0? receipts.map((receipt, i ) =>
-            <div key={i} className="bg-white flex items-stretch border-b text-sm text-gray-700 border-gray-200">
-                <div className="flex-[0.5] p-3 pl-4">
-                    {receipt.type==="session" ? t('receipts.session') : receipt.type === "outer" ? t('receipts.outer') : t('receipts.deduction')}
-                </div>
-                <div className="flex-[0.5] p-3">
-                    {receipt.cashier.username}
-                </div>
-                <div className="flex-1 p-3 flex gap-2 items-center ">
-                    <p>{new Date(receipt.created_at).toLocaleString()}</p>
-                </div>
-                <div dir={currentDirection} className={"font-bold flex-[0.5] p-3 flex items-center gap-1 " + (receipt.type === "deduction"? "text-red-600" : "text-green-500")}>
-                    {Math.abs(receipt.total).toLocaleString('en-US')}<span>{currentDirection==='rtl'? configs.currency.symbolNative: configs.currency.symbol}</span>
-                </div>
-                <div
-                    onClick={()=>{
-                        setSelectedReceipt(receipt)
-                    }}
-                    className="text-2xl flex items-center justify-center hover:text-cyan-700 cursor-pointer flex-[0.5] p-3 ">
-                    <RiEyeLine />
-                </div>
-            </div>
-            ):
-            <div className='w-full flex justify-center py-10 bg-white text-gray-400 font-bold'>
-                <p>{t('receipts.noReceipts')}</p>
-            </div>
+        :<div className='flex items-center justify-center py-8'>
+            <p className='text-gray-500 font-semibold'>{t('receipts.noReceipts')}</p>
+        </div>
         }
-        </div>
         <div className='flex gap-2 py-2 text-xl justify-center mt-auto'>
             <div onClick={()=>changePage('start')} className={`w-8 duration-150 aspect-square flex justify-center items-center border border-${pageCount>1? 'black cursor-pointer  hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400]': 'gray-200 text-gray-500 cursor-not-allowed'}`}>
                 {currentDirection==='ltr'? <MdKeyboardDoubleArrowLeft/> : <MdKeyboardDoubleArrowRight/>}
@@ -115,7 +124,7 @@ const ReceiptsTable = ({refresh}:{refresh?:boolean}) => {
             <div onClick={()=>changePage('previous')} className={`w-8 duration-150 aspect-square flex justify-center items-center border border-${pageCount>1? 'black cursor-pointer  hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400]': 'gray-200 text-gray-500 cursor-not-allowed'}`}>
                 {currentDirection==='ltr'? <MdKeyboardArrowLeft/> : <MdKeyboardArrowRight/>}
             </div>
-            <div className='w-8 hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400] cursor-pointer  duration-150 aspect-square flex justify-center items-center border border-black text-sm font-bold py-1'>{pageCount}</div>
+            <div className='w-8 hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400] cursor-pointer  duration-150 aspect-square flex justify-center items-center border border-black text-xs md:text-sm  font-bold py-1'>{pageCount}</div>
             <div onClick={()=>changePage('next')} className={`w-8 duration-150 aspect-square flex justify-center items-center border border-${pageCount<maxPages? 'black cursor-pointer  hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400]': 'gray-200 text-gray-500 cursor-not-allowed'}`}>
                 {currentDirection==='ltr'? <MdKeyboardArrowRight/> : <MdKeyboardArrowLeft/>}
             </div>

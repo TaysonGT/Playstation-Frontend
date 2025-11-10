@@ -60,7 +60,7 @@ const OrderPopup = ({hide, refetch}:{hide: ()=>void, refetch: ()=>void}) => {
             <li key={i} className={'flex border-b text-black text-md font-medium border-[#ddd] items-stretch ' + (i%2===0? 'bg-[#f3f3f3] ' : 'bg-[#e3e3e3] ')+ (i===products.length-1&&' border-b-[4px] border-[#009829]')}>
               <div className='p-2 px-4 flex-1 flex items-center '>{product.name}</div>
               <div className='p-2 flex-1 flex items-center  text-white'><input type="number" onChange={(e)=>inputHandler(product.id, e.target.value)} className="w-[50px] text-center p-1 input border-y-2 border-[#009829] bg-slate-700" defaultValue={0} /></div>
-              <div className='p-2 flex-1 flex items-center  gap-1'>{product.price} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></div>
+              <div className='p-2 flex-1 flex items-center  gap-1'>{product.price} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.code}</span></div>
               <div className='p-2 flex-1 flex items-center '>{product.stock}</div>
             </li>
           ): <div className='p-4 text-center'>{t('stock.noProducts')}</div>}

@@ -36,6 +36,7 @@ i18n
             deleting: "Deleting...",
             areYouSure: "Are you sure?",
             confirmDeleteDevice: "Are you sure you want to delete this device?",
+            confirmDeleteDeviceType: "Are you sure you want to delete this device type?",
             confirmEndSession: "Are you sure you want to end this session?",
             confirmDeleteOrder: "Are you sure you want to delete this order?",
             confirmDeleteProduct: "Are you sure you want to delete this product?",
@@ -228,6 +229,8 @@ i18n
           home:{
             availableDevices: "Available Devices",
             unavailableDevices: "Unavailable Devices",
+            noAvailableDevices: "All devices are occupied",
+            noUnavailableDevices: "All devices are free",
             pleaseAddNewDevices: "Please add new devices...",
           }
           // Add your strings here
@@ -272,6 +275,7 @@ i18n
             deleting: "جارٍ الحذف...",
             areYouSure: "هل أنت متأكد؟",
             confirmDeleteDevice: "هل أنت متأكد أنك تريد حذف هذا الجهاز؟",
+            confirmDeleteDeviceType: "هل أنت متأكد أنك تريد حذف نوع الجهاز هذا؟",
             confirmEndSession: "هل أنت متأكد أنك تريد إنهاء هذه الجلسة؟",
             confirmDeleteOrder: "هل أنت متأكد أنك تريد حذف هذا الطلب؟",
             confirmDeleteProduct: "هل أنت متأكد أنك تريد حذف هذا المنتج؟",
@@ -374,7 +378,7 @@ i18n
             deviceType: "نوع الجهاز",
             available: "متاح",
             checkout: "الحساب",
-            inUse: "قيد الاستخدام",
+            inUse: "مشغول",
             start: "ابدأ",
             details: "التفاصيل",
             endSession: "إنهاء الجلسة",
@@ -452,7 +456,9 @@ i18n
           },
           home: {
             availableDevices: "الأجهزة المتاحة",
-            unavailableDevices: "الأجهزة غير المتاحة",
+            unavailableDevices: "الأجهزة المشغولة",
+            noAvailableDevices: "كل الأجهزة مشغولة",
+            noUnavailableDevices: "لا يوجد أجهزة مشغولة",
             pleaseAddNewDevices: "يرجى إضافة أجهزة جديدة...",
           },
         },

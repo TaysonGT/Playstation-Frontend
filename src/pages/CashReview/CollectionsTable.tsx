@@ -59,15 +59,14 @@ const CollectionsTable:React.FC<Props> = ({refresh, setCollection, selectedColle
 
 
   return (
-    <div className='px-10 py-6'>
+    <div className='md:px-10 py-6 p-4'>
         <NewCollectionDialogue show={showNewCollection} refresh={()=>{
             fetchCollections()
             refresh()
         }} cancel={()=>setShowNewCollection(false)}/>
         <div className='flex justify-between items-center'>
             <h1 className='text-xl font-bold'>{t('dashboard.collectionsHistory')}</h1>
-            <button onClick={()=>setShowNewCollection(true)} className='bg-[#5D866C] hover:bg-[#769c84] duration-150 rounded-sm px-4 py-2 text-white mt-4'>{t('dashboard.newCollection')}</button>
-
+            <button onClick={()=>setShowNewCollection(true)} className='bg-[#5D866C] hover:bg-[#769c84] text-sm duration-150 rounded-sm px-4 py-2 text-white'>{t('dashboard.newCollection')}</button>
         </div>
         {isLoading?
             <div className='flex justify-center items-center py-20'>
@@ -79,16 +78,16 @@ const CollectionsTable:React.FC<Props> = ({refresh, setCollection, selectedColle
             </div>
         :
         <>
-            <table className='w-full mt-8 text-center border border-gray-200 bg-white shadow-soft'>
-                <thead className='bg-[#5D866C] text-white text-sm'>
+            <table className='w-full mt-2 text-center border border-gray-200 bg-white shadow-soft md:text-sm text-xs'>
+                <thead className='bg-[#5D866C] text-white'>
                     <tr className='border-b border-gray-200'>
-                        <th className='p-2 border-x border-gray-200 text-center'>{t('tables.no')}</th>
-                        <th className='p-2 text-center'>{t('tables.employee')}</th>
-                        <th className='p-2 text-center'>{t('dashboard.collectedCash')}</th>
-                        <th className='p-2 text-center'>{t('dashboard.remaining')}</th>
-                        <th className='p-2 text-center'>{t('tables.date')}/{t('tables.time')}</th>
+                        <th className='p-2 py-3 text-xs border-x border-gray-200 text-center'>{t('tables.no')}</th>
+                        <th className='p-2 py-3 text-xs text-center'>{t('tables.employee')}</th>
+                        <th className='p-2 py-3 text-xs text-center'>{t('dashboard.collectedCash')}</th>
+                        <th className='p-2 py-3 text-xs text-center'>{t('dashboard.remaining')}</th>
+                        <th className='p-2 py-3 text-xs text-center'>{t('tables.date')}/{t('tables.time')}</th>
                         {setCollection&&
-                            <th className='p-2 text-center'>{t('tables.actions')}</th>
+                            <th className='p-2 py-3 text-xs text-center'>{t('tables.actions')}</th>
                         }
                     </tr>
                 </thead>
@@ -97,11 +96,11 @@ const CollectionsTable:React.FC<Props> = ({refresh, setCollection, selectedColle
                     <tr key={i} className='not-last:border-b border-gray-200 hover:bg-gray-50'>
                         <td className='p-2 border-x border-gray-200 text-center'>{i+1}</td>
                         <td className='p-2'>{collection.collected_by.username}</td>
-                        <td className='p-2'>{collection.amount_collected.toLocaleString('en-US')} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></td>
-                        <td className='p-2'>{collection.float_remaining.toLocaleString('en-US')} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></td>
-                        <td className='p-2 text-sm font-bold'>{formatDateWithRegion(collection.timestamp, i18n.language === 'ar'? 'ar-US': 'en-US', true)}</td>
+                        <td className='p-2'>{collection.amount_collected.toLocaleString('en-US')} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.code}</span></td>
+                        <td className='p-2'>{collection.float_remaining.toLocaleString('en-US')} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.code}</span></td>
+                        <td className='p-2 '>{formatDateWithRegion(collection.timestamp, i18n.language === 'ar'? 'ar-US': 'en-US', true)}</td>
                         {setCollection&&
-                            <td className='p-2 flex items-center justify-center text-sm font-bold'>
+                            <td className='p-2 flex items-center justify-center md:text-sm text-xs font-bold'>
                                 <button onClick={()=>setCollection(prev=>prev?.id===collection.id?null:collection)} className={`p-2 rounded-sm text-white ${selectedCollection?.id===collection.id?'bg-gray-400':'bg-green-500'} `}>{selectedCollection?.id===collection.id?t('tables.unselect'):t('tables.select')}</button>
                             </td>
                         }

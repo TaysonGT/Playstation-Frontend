@@ -42,7 +42,7 @@ export interface IDevice {
     id: string,
     name: string,
     type: IDeviceType,
-    session: ISession,
+    session?: ISession,
     status: boolean
 }
 

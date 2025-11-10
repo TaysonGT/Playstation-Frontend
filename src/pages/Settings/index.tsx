@@ -1,6 +1,5 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import DevTypePopup from './popups/DevTypePopup';
 import NewUser from './popups/NewUser';
 import EditUser from './popups/EditUser'
 import DeleteConfirm from './popups/DeleteConfirm';
@@ -19,13 +18,13 @@ const SettingsPage = () => {
   const [currentUser, setCurrentUser] = useState<IUser|null>(null)
   const [editPopup, setEditPopup] = useState(false)
   const [addPopup, setAddPopup] = useState(false)
-  const [typePopup, setTypePopup] = useState(false)
+  // const [typePopup, setTypePopup] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [deviceTypes, setDeviceTypes] = useState<IDeviceType[]>([])
   const [currentDeviceType, setCurrentDeviceType] = useState<string|null>(null)
-  const [singlePrice, setSinglePrice] = useState<number>(0)
-  const [multiPrice, setMultiPrice] = useState<number>(0)  
+  // const [singlePrice, setSinglePrice] = useState<number>(0)
+  // const [multiPrice, setMultiPrice] = useState<number>(0)  
   const [users, setUsers] = useState<IUserFinances[]>([])
   
   const {configs, updateConfigs} = useConfigs()
@@ -56,35 +55,27 @@ const SettingsPage = () => {
     updateConfigs(form).finally(()=>getAll())
   };
   
-  const handleSaveTypes = (e: React.FormEvent<HTMLElement>) => {
-    e.preventDefault();
-    if(!currentDeviceType) {
-      toast.error('برجاء تحديد نوع جهاز')
-      return
-    }
-    setIsLoading(true)
-    axios.put(`/device-types/${currentDeviceType}`, {singlePrice, multiPrice}, {withCredentials: true})
-    .then(({data})=>{
-      if(data.message){
-        data.success? toast.success(data.message) : toast.error(data.message);
-      }
-    }).finally(()=>getAll())
-  };
+  // const handleSaveTypes = (e: React.FormEvent<HTMLElement>) => {
+  //   e.preventDefault();
+  //   if(!currentDeviceType) {
+  //     toast.error('برجاء تحديد نوع جهاز')
+  //     return
+  //   }
+  //   setIsLoading(true)
+  //   axios.put(`/device-types/${currentDeviceType}`, {singlePrice, multiPrice}, {withCredentials: true})
+  //   .then(({data})=>{
+  //     if(data.message){
+  //       data.success? toast.success(data.message) : toast.error(data.message);
+  //     }
+  //   }).finally(()=>getAll())
+  // };
 
   useEffect(()=>{
     getAll()
   },[])
   
   return (
-    <div dir={currentDirection} className="flex flex-col h-full w-full overflow-hidden py-6 bg-[#0d47a1] lg:px-36 px-10 font-alexandria">
-      {typePopup&& <>
-        <DevTypePopup {...{onAction: async()=>{
-          setTypePopup(false)
-          await getAll()
-        }, hide: ()=>setTypePopup(false)}} />
-        <DarkBackground {... {show: typePopup
-        , setShow: setTypePopup}}/>
-      </>}
+    <div dir={currentDirection} className="flex flex-col h-full w-full overflow-hidden p-10 bg-[#0d47a1] lg:px-20 font-alexandria">
       {addPopup&& <>
         <NewUser {...{onAction: async()=>{
           setAddPopup(false)
@@ -146,7 +137,7 @@ const SettingsPage = () => {
               </div>
               <input type='submit' className="px-4 py-2 mt-auto bg-blue-500 text-white rounded" value={t('modals.save')}/>
             </form>
-            <form className='gap-4 flex flex-col'>
+            {/* <form className='gap-4 flex flex-col'>
               <div className='flex gap-4 items-start'>
                 <h1 className='font-bold text-xl' >{t('settings.prices')}</h1>
                 <select onSelect={e=> setCurrentDeviceType(e.currentTarget.value)} className='select-input p-2 border-2 border-indigo-500 text-indigo-500 outline-none cursor-pointer'>
@@ -164,9 +155,9 @@ const SettingsPage = () => {
                 <input onChange={e=> setMultiPrice(parseInt(e.currentTarget.value))} type="number" placeholder={deviceTypes.find(d=>d.id===currentDeviceType)?.multi_price.toString()||"0"} className="border px-2 py-1"/>
               </div>
               <button type='submit' onClick={handleSaveTypes} className="px-4 py-2 mt-auto bg-blue-500 text-white rounded">{t('modals.save')}</button>
-            </form>
+            </form> */}
           </div>
-          <form className='flex flex-1/2 flex-col'>
+          {/* <form className='flex flex-1/2 flex-col'>
             <h1 className='font-bold text-xl' >{t('settings.users')}</h1>
             <div className='grow flex flex-col mb-2 mt-4'>
               <div className='text-white flex w-full gap-2 text-center bg-slate-700 py-2 rounded-t-sm'>
@@ -198,7 +189,7 @@ const SettingsPage = () => {
                 className={"px-4 py-2 mt-auto duration-150 text-white rounded flex-1 " + (currentUser? "bg-blue-500 hover:bg-blue-400" : "bg-gray-300")}>{t('modals.edit')}</button>
               <button type='button' onClick={()=> currentUser? setConfirmDelete(true) : toast.error("برجاء تحديد مستخدم للحذف")} className={"px-4 py-2 mt-auto duration-150 text-white rounded flex-1 " + (currentUser? "bg-red-600 hover:bg-red-500" : "bg-gray-300")}>{t('modals.delete')}</button>
             </div>
-        </form>
+        </form> */}
       </div>
     </div>
   );

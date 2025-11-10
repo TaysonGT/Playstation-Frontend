@@ -28,24 +28,36 @@ export const DevicesProvider:React.FC<React.PropsWithChildren<{}>> = ({children}
   const [availableDevices, setAvailableDevices] = useState<IDevice[]>([]);
   const [unavailableDevices, setUnavailableDevices] = useState<IDevice[]>([]);
   const [deviceTypes, setDeviceTypes] = useState<IDeviceType[]>([]);
-  // const [sessions, setSessions] = useState<ISession[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const getAll = async () => {
+    setIsLoading(true)
+    await getDevices()
+    await getDeviceTypes()
+    setIsLoading(false)
+  };
+  
+  const getDeviceTypes = async () => {
+    setDeviceTypes([]);
+    try {
+        const { data } = await fetchDevices();
+        setDeviceTypes(data.deviceTypes);
+    } catch(error){
+      console.log(error)
+    }
+  };
+
+  const getDevices = async () => {
     setDevices([]);
     setAvailableDevices([]);
     setUnavailableDevices([]);
-    setIsLoading(true);
     try {
-        const { data:devData } = await fetchDevices();
-        setDevices(devData.devices);
-        setAvailableDevices(devData.availableDevices);
-        setUnavailableDevices(devData.unavailableDevices);
-        setDeviceTypes(devData.deviceTypes);
+      const { data:devData } = await fetchDevices();
+      setDevices(devData.devices);
+      setAvailableDevices(devData.availableDevices);
+      setUnavailableDevices(devData.unavailableDevices);
     } catch(error){
       console.log(error)
-    }finally {
-      setIsLoading(false);
     }
   };
 
@@ -71,17 +83,9 @@ export const DevicesProvider:React.FC<React.PropsWithChildren<{}>> = ({children}
   };
   
   const newOrder = async (session_id: string, product_id: string, quantity: number) => {
-    setIsLoading(true);
     await addOrder(session_id, product_id, quantity)
     .then(({data})=> data.success? toast.success(data.message) : toast.error(data.message))
-    setIsLoading(false);
   };
-
-  // const getSessions = async () => {
-  //   setIsLoading(true);
-  //   await fetchSessions()
-  //   .then(({data})=> data.success? toast.success(data.message) : toast.error(data.message))
-  // }
 
   const transferSession = async (session_id: string, destination: string) => {
     setIsLoading(true);
@@ -104,6 +108,7 @@ export const DevicesProvider:React.FC<React.PropsWithChildren<{}>> = ({children}
   }
 
   const startSession = async ({device_id, play_type, time_type, end_time}:{device_id:string, play_type: string, time_type: string, end_time?: Date})=>{
+    setIsLoading(true);
     await createSession({device_id, play_type, time_type, end_time})
     .then(({data})=> {
       if(!data.success) return toast.error(data.message)
@@ -113,6 +118,7 @@ export const DevicesProvider:React.FC<React.PropsWithChildren<{}>> = ({children}
   }
 
   const endSession = async (session_id:string)=>{
+    setIsLoading(true);
     await removeSession(session_id)
     .then(({data})=> {
       if(!data.success) return toast.error(data.message)
@@ -131,8 +137,7 @@ export const DevicesProvider:React.FC<React.PropsWithChildren<{}>> = ({children}
         devices, 
         availableDevices, 
         unavailableDevices, 
-        deviceTypes, 
-        // sessions,
+        deviceTypes,
         startSession, 
         endSession,
         create, 

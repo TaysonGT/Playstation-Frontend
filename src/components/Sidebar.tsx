@@ -1,4 +1,3 @@
-import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { RiBox2Fill, RiDashboardFill, RiReceiptFill, RiSettingsFill } from "react-icons/ri";
 import { useTranslation } from 'react-i18next';
@@ -7,7 +6,7 @@ import { IoGameController, IoHome } from 'react-icons/io5';
 import { getDirection } from '../i18n';
 import { useAuth } from '../context/AuthContext';
 
-const Sidebar: React.FC = () => {
+const Sidebar = ({show, setShow}:{show:boolean, setShow?: (b:boolean)=>void}) => {
     const location = useLocation()
     const {t, i18n} = useTranslation()
     const currentDirection = getDirection(i18n.language);
@@ -26,14 +25,14 @@ const Sidebar: React.FC = () => {
     ]
     
   return ( 
-      <div dir={currentDirection} className={`flex flex-col overflow-y-auto  p-6 bg-black text-white h-full group absolute w-55 z-[50] shadow-hard ${currentDirection==='rtl'?'right-0':'left-0'} top-0`}>
+      <div dir={currentDirection} className={`flex flex-col overflow-y-auto p-6 bg-black text-white h-full group fixed lg:relative w-55 z-[103] shadow-hard duration-200 ${currentDirection==='rtl'?`lg:right-0 ${show?'right-0':'-right-55'}`:`lg:left-0 ${show?'left-0':'-left-55'}`} top-0`}>
         <div className='flex flex-col gap-4 items-center cursor-pointer p-4'>
           <img src={UserIcon} className='sm:h-[40px] h-[30px]' alt="" />
           <p className='sm:font-medium text-white'>{currentUser?.username}</p>
         </div>
         <ul className='flex flex-col text-md justify-center gap-2 mt-2'>
           {links.map((link, i)=>
-            <Link key={i} to={link.path} className={`duration-200 flex items-center text-sm relative select-none ${location.pathname !== link.path&& 'hover:text-black'} z-[9] cursor-pointer py-3 ${currentDirection==='rtl'?'pl-10':'pr-10'} w-full rounded-lg group/secondary whitespace-nowrap text-ellipsis ${location.pathname==link.path? 'bg-[#0665DB] text-white': 'hover:bg-[#fbfdff]'}`}>
+            <Link onClick={()=>setShow&&setShow(false)} key={i} to={link.path} className={`duration-200 flex items-center text-xs md:text-sm relative select-none ${location.pathname !== link.path&& 'hover:text-black'} z-[9] cursor-pointer py-3 ${currentDirection==='rtl'?'pl-10':'pr-10'} w-full rounded-lg group/secondary whitespace-nowrap text-ellipsis ${location.pathname==link.path? 'bg-[#0665DB] text-white': 'hover:bg-[#fbfdff]'}`}>
               <div className={`px-3 text-2xl`}>
                 {link.icon}
               </div>
@@ -41,7 +40,7 @@ const Sidebar: React.FC = () => {
             </Link>
           )}
         </ul>
-        <div className='space-y-1 text-sm text-white flex flex-col items-center mt-10'>
+        <div className='space-y-1 text-xs md:text-sm text-white flex flex-col items-center mt-10'>
           <p>{t('navigation.changeLanguage')}</p>
           <div className='flex'>
             <button onClick={()=>{
@@ -55,7 +54,7 @@ const Sidebar: React.FC = () => {
 
           </div>
         </div>
-        <button onClick={logoutUser} className='duration-150 hover:bg-red-500 bg-red-600 rounded-sm py-2 mt-10'>
+        <button onClick={logoutUser} className='duration-150 hover:bg-red-500 bg-red-600 rounded-sm py-2 mt-10 text-xs md:text-sm'>
           {t('navigation.logout')}
         </button>
       </div>

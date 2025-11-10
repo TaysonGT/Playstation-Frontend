@@ -60,7 +60,7 @@ const OuterReceipts = () => {
             <h2 className="text-xl font-semibold mb-2">{t('tables.cashier')}: {receipt.cashier?.username}</h2>
             <p className="text-gray-600">{t('tables.date')}: {new Date(receipt.created_at).toLocaleDateString()}</p>
             <p className="text-gray-600">{t('tables.time')}: {new Date(receipt.created_at).toLocaleTimeString()}</p>
-            <p className="text-gray-800 mt-2 flex gap-1">{t('tables.total')}:  {receipt.total}<span>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></p>
+            <p className="text-gray-800 mt-2 flex gap-1">{t('tables.total')}:  {receipt.total}<span>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.code}</span></p>
             <div className="mt-4 flex justify-between items-center">
               <button onClick={()=>setCurrentReceipt(receipt)} className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 ">{t('devices.details')}</button>
             </div>

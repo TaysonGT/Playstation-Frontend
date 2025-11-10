@@ -6,7 +6,7 @@ import { useProducts } from './hooks/useProducts'
 import toast from 'react-hot-toast'
 
 interface Props{
-    product: IProduct,
+    product: IProduct|null,
     cancel: ()=> void,
     onAction: ()=> void,
 }
@@ -18,11 +18,12 @@ const DeleteProductDialogue:React.FC<Props> = ({product, cancel, onAction}) => {
     const [isLoading, setIsLoading] = useState(false)
 
     return (
-    <div dir={currentDirection} className='fixed left-1/2 top-1/2 -translate-1/2 bg-white shadow-large flex-col flex z-[102] select-none p-6 rounded-sm'>
+    <div dir={currentDirection} className={`fixed left-1/2 top-1/2 -translate-1/2 bg-white shadow-large flex-col flex z-[102] select-none p-6 rounded-sm ${product?'opacity-100 pointer-events-auto':'opacity-0 pointer-events-none'}`}>
         <h1 className='font-bold'>{t('modals.confirmDeleteProduct')}</h1>
-        <h1 className='font-bold text-center text-xl text-indigo-600 mt-4'>{product.name}</h1>
+        <h1 className='font-bold text-center text-xl text-indigo-600 mt-4'>{product?.name}</h1>
         <div className='flex text-sm gap-6 text-white mt-6'>
             <button disabled={isLoading} onClick={()=>{
+                if(!product) return;
                 setIsLoading(true)
                 remove(product.id)
                 .then(({data})=>{

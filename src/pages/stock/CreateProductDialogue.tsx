@@ -7,10 +7,11 @@ import { useProducts } from './hooks/useProducts'
 
 interface Props{
   cancel: ()=> void,
-  onAction: ()=>void
+  onAction: ()=>void,
+  show: boolean
 }
 
-const CreateProductDialogue: React.FC<Props> = ({cancel, onAction}) => {
+const CreateProductDialogue: React.FC<Props> = ({cancel, onAction, show}) => {
     const [form, setForm] = useState<ProductPayload>()
     const {t, i18n} = useTranslation()
     const currentDirection = getDirection(i18n.language);
@@ -26,7 +27,7 @@ const CreateProductDialogue: React.FC<Props> = ({cancel, onAction}) => {
     }
 
   return (
-    <div dir={currentDirection} className="fixed left-1/2 top-1/2 -translate-1/2 z-102 bg-white rounded-md p-8">
+    <div dir={currentDirection} className={`fixed left-1/2 top-1/2 -translate-1/2 z-102 bg-white rounded-md p-6 ${show?'opacity-100 pointer-events-auto':'opacity-0 pointer-events-none'}`}>
       <h2 className="text-lg text-center font-bold mb-4">{t('stock.addProduct')}</h2>
       <form className='mt-6'>
         <div className="mb-4">

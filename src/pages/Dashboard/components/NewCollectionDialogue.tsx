@@ -81,7 +81,7 @@ const NewCollectionDialogue = ({show, cancel, refresh}:{show:boolean, cancel: ()
                         {isLoading?
                             <div className="h-5 w-full mt-3 animate-pulse bg-gray-300 rounded-md mb-4"></div>
                             : 
-                            <p  className='font-bold text-xl'><span dir='ltr'>{expectedCash}</span> <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></p>
+                            <p  className='font-bold text-xl'><span dir='ltr'>{expectedCash}</span> <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.code}</span></p>
                         }
                     </div>
                     <div>
@@ -89,7 +89,7 @@ const NewCollectionDialogue = ({show, cancel, refresh}:{show:boolean, cancel: ()
                         {isLoading?
                             <div className="h-5 w-full mt-3 animate-pulse bg-gray-300 rounded-md mb-4"></div>
                             :
-                            <p className={`font-bold text-xl ${(form?.cash_over_short||0)!==0&& ((form?.cash_over_short||0)<0?'text-red-500': 'text-blue-500')}`}><span dir='ltr'>{form?.cash_over_short||0}</span> <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></p>
+                            <p className={`font-bold text-xl ${(form?.cash_over_short||0)!==0&& ((form?.cash_over_short||0)<0?'text-red-500': 'text-blue-500')}`}><span dir='ltr'>{form?.cash_over_short||0}</span> <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.code}</span></p>
                         }
                     </div>
                     <div>
@@ -97,7 +97,7 @@ const NewCollectionDialogue = ({show, cancel, refresh}:{show:boolean, cancel: ()
                         {isLoading?
                             <div className="h-5 w-full mt-3 animate-pulse bg-gray-300 rounded-md mb-4"></div>
                             :
-                            <p className='font-bold text-xl'><span dir='ltr'>{form?.float_remaining||0}</span> <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></p>
+                            <p className='font-bold text-xl'><span dir='ltr'>{form?.float_remaining||0}</span> <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.code}</span></p>
                         }
                     </div>
                 </div>

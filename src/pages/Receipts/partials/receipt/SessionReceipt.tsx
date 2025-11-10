@@ -95,7 +95,7 @@ const SessionReceipt:React.FC<Props> = ({receipt, hide}) => {
                 <div key={i} className="flex mb-2">
                     <span className='flex-1'>{order.product.name}</span>
                     <span className='flex-1 text-center'>{order.quantity}</span>
-                    <span className='flex flex-1 gap-1 justify-end items-center'>{order.cost}<span>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></span>
+                    <span className='flex flex-1 gap-1 justify-end items-center'>{order.cost}<span>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.code}</span></span>
                 </div>
                 ))}
             </div>
@@ -107,7 +107,7 @@ const SessionReceipt:React.FC<Props> = ({receipt, hide}) => {
                   <div key={i} className="flex mb-4">
                       <span className='ml-auto flex-1'>{timeConv({start: order.started_at, end: order.ended_at})}</span>
                       <span className='text-center flex-1'>{order.play_type.toUpperCase()}</span>
-                      <span className='flex justify-end gap-1 flex-1'>{order.cost}<span>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></span>
+                      <span className='flex justify-end gap-1 flex-1'>{order.cost}<span>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.code}</span></span>
                   </div>
                 ))}
                 <div className="flex items-start flex-col mb-2">
@@ -118,7 +118,7 @@ const SessionReceipt:React.FC<Props> = ({receipt, hide}) => {
             }
             <div className="flex font-bold justify-between pt-2 border-t-2 border-gray-300">
                 <span className="">{t('tables.total')}:</span>
-                <span className='flex items-center gap-1'>{receipt?.total}<span className=''>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></span>
+                <span className='flex items-center gap-1'>{receipt?.total}<span className=''>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.code}</span></span>
             </div>
         </div>
         </div>

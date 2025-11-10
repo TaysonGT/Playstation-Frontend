@@ -40,7 +40,7 @@ const ListDialogue:React.FC<PropsWithChildren<Props>> = ({productsRevenue, emplo
                         <tr key={i} className='not-last:border-b border-gray-100 hover:bg-gray-50'>
                             <td className='p-2 border-x border-gray-200 text-center'>{i+1}</td>
                             <td className='p-2'>{employee.cashier}</td>
-                            <td className='p-2'>{employee.revenue.toLocaleString('en-US')} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></td>
+                            <td className='p-2'>{employee.revenue.toLocaleString('en-US')} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.code}</span></td>
                             <td className='p-2'>{employee.percent}%</td>
                         </tr>
                         ))}
@@ -62,7 +62,7 @@ const ListDialogue:React.FC<PropsWithChildren<Props>> = ({productsRevenue, emplo
                             <tr key={i} className='not-last:border-b border-gray-200 hover:bg-gray-50'>
                                 <td className='p-2 border-x border-gray-200 text-center'>{i+1}</td>
                                 <td className='p-2'>{product.product}</td>
-                                <td className='p-2'>{product.sales.toLocaleString('en-US')} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></td>
+                                <td className='p-2'>{product.sales.toLocaleString('en-US')} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.code}</span></td>
                                 <td className='p-2'>{product.percent}%</td>
                             </tr>
                             ))}

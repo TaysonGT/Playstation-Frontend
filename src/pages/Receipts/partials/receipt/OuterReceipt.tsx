@@ -59,7 +59,7 @@ const OuterReceipt:React.FC<Props> = ({receipt, hide}) => {
                     <div key={index} className="flex w-full mb-2">
                         <span className='flex-1 text-start'>{order.product?.name}</span>
                         <span className='flex-1 text-center px-2'>{order.quantity}</span>
-                        <span className='flex-1 text-end'>{order.cost}<span>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></span>
+                        <span className='flex-1 text-end'>{order.cost}<span>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.code}</span></span>
                     </div>
                     ))}
                 </div>
@@ -72,7 +72,7 @@ const OuterReceipt:React.FC<Props> = ({receipt, hide}) => {
             }
             <div className="flex justify-between pt-2 border-t-2 border-gray-300">
                 <span className="font-bold">{t('tables.total')}:</span>
-                <span className='font-[Noto] flex items-center gap-1 font-bold'>{Math.abs(receipt?.total||0)}<span>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.symbol}</span></span>
+                <span className='font-[Noto] flex items-center gap-1 font-bold'>{Math.abs(receipt?.total||0)}<span>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.code}</span></span>
             </div>
         </div>
         </div>
