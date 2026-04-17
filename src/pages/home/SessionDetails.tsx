@@ -175,7 +175,7 @@ const SessionDetails:React.FC<Props> = ({device, clock, hide, show}) => {
         <div className="flex flex-col border border-gray-300 shadow-lg bg-white row-start-1 md:row-start-auto rounded-md">
           <h2 className="text-lg text-nowrap px-6 font-semibold border-b border-gray-300 shadow-md text-[#1b1b1f] p-2">{t('devices.time')}</h2>
           <div className="flex flex-col justify-end flex-grow p-4">
-            <div className={'w-full p-4 text-center text-3xl font-bold bg-[#212121] text-white bg-center bg-cover border-emerald-50 border rounded  ' + (device.session?.time_type === "open"? 'text-red-500' :  'text-green-500')}>{clock? getStringTime(clock): <div className='w-full flex justify-center'><Loader size={30} color='white' thickness={5}/></div>}</div>
+            <div className={'w-full p-4 text-center text-3xl font-bold bg-[#212121] text-white bg-center bg-cover border-emerald-50 border rounded  ' + (device.session?.time_type === "open"? 'text-red-500' :  'text-green-500')}>{clock>=0? getStringTime(clock): <div className='w-full flex justify-center'><Loader size={30} color='white' thickness={5}/></div>}</div>
             <p className="text-2xl font-bold mt-4 text-indigo-700">{total?.currentTimeCost} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.code}</span></p>
             <div className='flex justify-center gap-6 mt-4'>
               <div className='text-md font-medium border-b-4 pb-1 border-gray-600'>{device.session?.play_type === "multi"? t('devices.multi') : t('devices.single') }</div>

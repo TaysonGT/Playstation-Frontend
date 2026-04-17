@@ -246,7 +246,7 @@ const DashboardPage = () => {
               </div>
               <ul className='grow md:text-base text-xs'>
                 {productsRevenue?.productsList.slice(0,5).map((p,i)=>
-                  <li key={i} className='flex items-center w-full gap-2 p-1'>
+                  <li key={i} className='flex items-center w-full gap-2 p-1 text-nowrap'>
                     <span style={{backgroundColor: COLORS[i]}} className='w-2 h-2 rounded-full'/>
                     <p className='grow'>{p.product}</p>
                     <p className='w-1/4 text-end'>{p.sales.toLocaleString('en-US')} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.code}</span></p>

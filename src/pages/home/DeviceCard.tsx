@@ -23,7 +23,7 @@ export const getStringTime = (time: number)=>{
 
 const DeviceCard = ({device}:{device: IDevice}) => {
   const {startSession} = useDevices()
-  const [clock, setClock] = useState(0)
+  const [clock, setClock] = useState(-1)
   const [isInputDisabled, setIsInputDisabled] = useState(true)
   const [showDetails, setShowDetails] = useState(false)
   const [searchParams, setSearchParams] = useSearchParams()
@@ -139,7 +139,7 @@ const DeviceCard = ({device}:{device: IDevice}) => {
         </form> :
         <div className='mt-5 flex flex-col items-center gap-3 h-full w-full'>
             <div className={'w-[90%] p-2 text-center text-2xl font-bold bg-[#212121] text-white bg-center bg-cover border-emerald-50 border rounded  ' + (device.session?.time_type === "open"? 'text-red-500' :  'text-green-500')}>
-                {clock? 
+                {clock>=0? 
                     getStringTime(clock)
                     : 
                     <div className='w-full flex justify-center'>
