@@ -23,6 +23,8 @@ type ConfigsContextType = {
     setPhone: (phone: string) => void;
     setCurrency: (currencyCode: string) => boolean;
     updateConfigs: (updated: Partial<ConfigsPayload>) => Promise<void>;
+    fetchConfigs: () => Promise<void>;
+    isLoading: boolean;
 };
 
 const defaultConfigs: Configs = {
@@ -35,26 +37,29 @@ const ConfigsContext = createContext<ConfigsContextType | undefined>(undefined);
 
 export const ConfigsProvider = ({ children }: { children: ReactNode }) => {
     const [configs, setConfigs] = useState<Configs>(defaultConfigs);
+    const [isLoading, setIsLoading] = useState(true);
 
     const fetchConfigs = async () => {
-        axios.get('/configs')
+        setIsLoading(true)
+        await axios.get('/configs')
         .then(({data})=>{
             if (!data.success) return toast.error(data.message || "حدث خطأ أثناء جلب الإعدادات");
+            console.log(currencies.find(c=>c.code === data.configs.currency))
             setConfigs(cfg => ({
                 ...defaultConfigs,
+                ...cfg,
                 ...data.configs,
                 currency: data.configs.currency? currencies.find(c=>c.code === data.configs.currency) : defaultConfigs.currency,
             }));
-        })
+        }).finally(()=>setIsLoading(false))
     };
 
     useEffect(() => {
-        
         fetchConfigs();
     }, []);
 
     const updateConfigs = async (updated: Partial<ConfigsPayload>) => {
-        if((updated.name===configs.name) && (updated.phone === configs.phone) && (updated.currency === configs.currency.code)) {
+        if((updated.name===configs.name) && (updated.phone === configs.phone) && (configs.currency&&(updated.currency === configs.currency.code))) {
             toast.error("لا توجد تغييرات لحفظها");
             return
         }
@@ -100,7 +105,7 @@ export const ConfigsProvider = ({ children }: { children: ReactNode }) => {
     };
 
     return (
-        <ConfigsContext.Provider value={{ configs, setName, setPhone, setCurrency, updateConfigs }}>
+        <ConfigsContext.Provider value={{ configs, setName, setPhone, setCurrency, updateConfigs, fetchConfigs, isLoading }}>
             {children}
         </ConfigsContext.Provider>
     );

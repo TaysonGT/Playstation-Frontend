@@ -11,7 +11,7 @@ import { useAuth } from '../../context/AuthContext'
 import { BiEdit, BiTrash } from 'react-icons/bi'
 import { useConfigs } from '../../context/ConfigsContext'
 import DarkBackground from '../../components/DarkBackground'
-import CreateDeviceTypePopup from './CreateDeviceTypePopup'
+import DeviceTypeDialog from './DeviceTypeDialog'
 
 
 const Devices = () => {
@@ -21,12 +21,14 @@ const Devices = () => {
     const [deleteDevice, setDeleteDevice] = useState<IDevice|null>(null)
     const [deleteType, setDeleteType] = useState<IDeviceType|null>(null)
     const [showCreateType, setShowCreateType] = useState(false)
+    const [showEditType, setShowEditType] = useState(false)
     const {t, i18n} = useTranslation()
     const currentDirection = getDirection(i18n.language);
     const {currentUser} = useAuth()
     const {configs} = useConfigs()
     const [isLoadingDevices, setIsLoadingDevices] = useState(true)
     const [isLoadingTypes, setIsLoadingTypes] = useState(true)
+    const [selectedDeviceType, setSelectedDeviceType] = useState<IDeviceType|null>(null)
 
     const refetchDevices = async ()=>{ 
         setIsLoadingDevices(true)
@@ -86,16 +88,38 @@ const Devices = () => {
         },
         show: !!deleteDevice||!!deleteType
     }} />
-    <CreateDeviceTypePopup show={showCreateType} hide={()=>setShowCreateType(false)} onAction={async()=>{
-        await refetchDeviceTypes()
-        setShowCreateType(false)
-    }} />
-    <DarkBackground show={showPopup||!!deleteDevice||!!deleteType||showCreateType} setShow={(b: boolean)=>{
-        setShowPopup(b);
-        setShowCreateType(b)
-        setDeleteDevice(null)
-        setDeleteType(null)
-    }}/>
+
+    <DeviceTypeDialog 
+        show={showCreateType} 
+        hide={()=>setShowCreateType(false)} 
+        onAction={async()=>{await refetchDeviceTypes();setShowCreateType(false)}} 
+        deviceType={null}
+        type='create'
+    />
+    
+    <DeviceTypeDialog 
+        show={showEditType} 
+        hide={()=>setShowEditType(false)} 
+        onAction={async()=>{
+            await refetchDeviceTypes();
+            setShowEditType(false);
+            setSelectedDeviceType(null)
+        }}
+        deviceType={selectedDeviceType}
+        type='edit'
+    />
+        
+    <DarkBackground 
+        show={showPopup||!!deleteDevice||!!deleteType||showCreateType||!!selectedDeviceType} 
+        setShow={(b: boolean)=>{
+            setShowPopup(b);
+            setShowCreateType(b)
+            setShowEditType(b)
+            setDeleteDevice(null)
+            setDeleteType(null)
+            setSelectedDeviceType(null)
+        }}
+    />
 
     <div className='bg-gray-300 h-full w-full flex md:flex-row flex-col md:justify-between gap-6 md:p-10 p-4 overflow-y-auto' dir={currentDirection}>
         <div className='md:flex-1 h-100 md:h-auto md:p-8 p-4 bg-[#f3f3f3] rounded-md flex flex-col'>
@@ -198,13 +222,15 @@ const Devices = () => {
                             {currentUser?.role==='admin'&&
                                 <div className='flex-1 flex gap-4 items-center p-3 justify-center'>
                                     <button 
+                                        onClick={()=>{
+                                            setSelectedDeviceType(type)
+                                            setShowEditType(true)
+                                        }}
                                         className='text-white cursor-pointer bg-indigo-600 md:text-2xl text-lg hover:bg-indigo-400 duration-100 rounded shadow-hard p-1'>
                                         <BiEdit/>
                                     </button>
                                     <button 
-                                        onClick={()=>{
-                                            setDeleteType(type)
-                                        }}
+                                        onClick={()=>setDeleteType(type)}
                                         className='text-white cursor-pointer bg-red-600 md:text-2xl text-lg hover:bg-red-400 duration-100 rounded shadow-hard p-1'>
                                         <BiTrash/>
                                     </button>   

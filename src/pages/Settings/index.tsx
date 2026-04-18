@@ -1,85 +1,40 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import NewUser from './popups/NewUser';
-import EditUser from './popups/EditUser'
-import DeleteConfirm from './popups/DeleteConfirm';
-import toast from 'react-hot-toast';
-import { IDeviceType, IUser, IUserFinances } from '../../types';
-import { fetchDeviceTypes } from '../../api/devices';
-import DarkBackground from '../../components/DarkBackground';
+import React, { useState } from 'react';
+// import NewUser from './popups/NewUser';
+// import EditUser from './popups/EditUser'
+// import DeleteConfirm from './popups/DeleteConfirm';
+// import DarkBackground from '../../components/DarkBackground';
 import Loader from '../../components/Loader';
 import LightBackground from '../../components/LightBackground';
 import { useTranslation } from 'react-i18next';
 import { getDirection } from '../../i18n';
 import { useConfigs } from '../../context/ConfigsContext';
 import currencies from '../../assets/currencies.json';
+// import { IUser } from '../../types';
 
 const SettingsPage = () => {
-  const [currentUser, setCurrentUser] = useState<IUser|null>(null)
-  const [editPopup, setEditPopup] = useState(false)
-  const [addPopup, setAddPopup] = useState(false)
-  // const [typePopup, setTypePopup] = useState(false)
-  const [confirmDelete, setConfirmDelete] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
-  const [deviceTypes, setDeviceTypes] = useState<IDeviceType[]>([])
-  const [currentDeviceType, setCurrentDeviceType] = useState<string|null>(null)
-  // const [singlePrice, setSinglePrice] = useState<number>(0)
-  // const [multiPrice, setMultiPrice] = useState<number>(0)  
-  const [users, setUsers] = useState<IUserFinances[]>([])
+  // const [currentUser, setCurrentUser] = useState<IUser|null>(null)
+  // const [editPopup, setEditPopup] = useState(false)
+  // const [addPopup, setAddPopup] = useState(false)
+  // const [confirmDelete, setConfirmDelete] = useState(false)
   
-  const {configs, updateConfigs} = useConfigs()
+  const {configs, updateConfigs, fetchConfigs, isLoading} = useConfigs()
 
   const [form, setForm] = useState<{name: string, phone: string, currency: string}>({...configs, currency: configs.currency?.code||currencies[0].code})
 
   const {t, i18n} = useTranslation()
   const currentDirection = getDirection(i18n.language);
 
-  const getAll = async()=>{
-    setIsLoading(true)
-    await axios.get('/finances/users', {withCredentials: true})
-    .then(({data})=>{
-      setUsers(data.usersFinances)
-    })
-    await fetchDeviceTypes().then(({data})=>{
-      if(data.success){
-        setDeviceTypes(data.deviceTypes)
-        setCurrentDeviceType(data.deviceTypes[0]?.id)
-      }
-    })
-    setIsLoading(false)
-  }
-
-  const handleSaveInfo = (e: React.FormEvent<HTMLElement>) => {
+  const handleSaveInfo = async(e: React.SubmitEvent<HTMLElement>) => {
     e.preventDefault();
-    setIsLoading(true)
-    updateConfigs(form).finally(()=>getAll())
+    await updateConfigs(form).finally(()=>fetchConfigs())
   };
-  
-  // const handleSaveTypes = (e: React.FormEvent<HTMLElement>) => {
-  //   e.preventDefault();
-  //   if(!currentDeviceType) {
-  //     toast.error('برجاء تحديد نوع جهاز')
-  //     return
-  //   }
-  //   setIsLoading(true)
-  //   axios.put(`/device-types/${currentDeviceType}`, {singlePrice, multiPrice}, {withCredentials: true})
-  //   .then(({data})=>{
-  //     if(data.message){
-  //       data.success? toast.success(data.message) : toast.error(data.message);
-  //     }
-  //   }).finally(()=>getAll())
-  // };
 
-  useEffect(()=>{
-    getAll()
-  },[])
-  
   return (
     <div dir={currentDirection} className="flex flex-col h-full w-full overflow-hidden p-10 bg-[#0d47a1] lg:px-20 font-alexandria">
-      {addPopup&& <>
+      {/* {addPopup&& <>
         <NewUser {...{onAction: async()=>{
           setAddPopup(false)
-          await getAll()
+          // await getAll()
         }}}/>
         <DarkBackground setShow={setAddPopup} show={addPopup}/>
       </>
@@ -87,7 +42,7 @@ const SettingsPage = () => {
       {(editPopup&&currentUser)&& <>
         <EditUser {...{onAction: async()=>{
           setEditPopup(false)
-          await getAll()
+          // await getAll()
           }, user:currentUser}}/>
         <DarkBackground setShow={setEditPopup} show={editPopup}/>
       </>
@@ -95,11 +50,11 @@ const SettingsPage = () => {
       {(confirmDelete&&currentUser)&& <>
         <DeleteConfirm {...{onAction: async()=>{
           setConfirmDelete(false)
-          await getAll()
+          // await getAll()
         }, hide: ()=> setConfirmDelete(false), user:currentUser}}/>
         <DarkBackground setShow={setConfirmDelete} show={confirmDelete}/>
       </>
-      }
+      } */}
       {isLoading&& <>
         <Loader size={40} thickness={10} className='fixed z-100 top-1/2 left-1/2 -translate-1/2'/>
         <LightBackground/>
@@ -116,7 +71,8 @@ const SettingsPage = () => {
               </div>
               <div className='flex flex-col'>
                 <label className="block font-semibold mb-1">{t('settings.phone')}:</label>
-                <input type="tel" placeholder={configs?.phone} onChange={(e)=> setForm(prev=>({...prev, phone: e.target.value}))}  onKeyDown={(e) => {
+                <input type="tel" placeholder={configs?.phone} onChange={(e)=> setForm(prev=>({...prev, phone: e.target.value}))}  
+                  onKeyDown={(e) => {
                     const key = e.key;
                     const isValidInput = /^[0-9]*$/.test(key);
                     if (!isValidInput && key != 'Backspace' && key != 'ArrowRight' && key != 'ArrowLeft' && key != 'Shift' && key != 'Home' && key != 'End' && key != 'Del' && key != 'Enter') {
@@ -137,25 +93,6 @@ const SettingsPage = () => {
               </div>
               <input type='submit' className="px-4 py-2 mt-auto bg-blue-500 text-white rounded" value={t('modals.save')}/>
             </form>
-            {/* <form className='gap-4 flex flex-col'>
-              <div className='flex gap-4 items-start'>
-                <h1 className='font-bold text-xl' >{t('settings.prices')}</h1>
-                <select onSelect={e=> setCurrentDeviceType(e.currentTarget.value)} className='select-input p-2 border-2 border-indigo-500 text-indigo-500 outline-none cursor-pointer'>
-                  {deviceTypes?.map((deviceType, i)=> <option key={i} value={deviceType.id}>{deviceType.name}</option> )}
-                </select>
-                <button type='button' onClick={(e)=>{e.preventDefault();  setTypePopup(true)}} className='bg-[#1f1f1f] hover:bg-[#4d4d4d] duration-150 text-white p-2 px-4 rounded'>{t('deviceTypes.addDeviceType')}</button>
-              </div>
-              <div className='flex flex-col'>
-                <label className="block font-semibold mb-1">{t('deviceTypes.hourlyRateSingle')}:</label>
-                <input onChange={e=> setSinglePrice(parseInt(e.currentTarget.value))} type="number" placeholder={deviceTypes.find(d=>d.id===currentDeviceType)?.single_price.toString()||"0"} className="border px-2 py-1"
-                />
-              </div>
-              <div className='flex flex-col'>
-                <label className="block font-semibold mb-1">{t('deviceTypes.hourlyRateMulti')}:</label>
-                <input onChange={e=> setMultiPrice(parseInt(e.currentTarget.value))} type="number" placeholder={deviceTypes.find(d=>d.id===currentDeviceType)?.multi_price.toString()||"0"} className="border px-2 py-1"/>
-              </div>
-              <button type='submit' onClick={handleSaveTypes} className="px-4 py-2 mt-auto bg-blue-500 text-white rounded">{t('modals.save')}</button>
-            </form> */}
           </div>
           {/* <form className='flex flex-1/2 flex-col'>
             <h1 className='font-bold text-xl' >{t('settings.users')}</h1>

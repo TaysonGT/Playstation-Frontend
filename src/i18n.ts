@@ -14,7 +14,8 @@ i18n
           forms:{
             typeCountedCash: "Type counted cash",
             typeCollectedAmount: "Type collected amount",
-            typeNotes: "Type your notes" 
+            typeNotes: "Type your notes",
+            fillAllFields: "Please fill all fields"
           },
           routing:{
             unauthorized: "Unauthorized",
@@ -242,7 +243,8 @@ i18n
           forms:{
             typeCountedCash: "أدخل النقد المعدود",
             typeCollectedAmount: "أدخل النقد المحصل",
-            typeNotes: "أدخل ملاحظاتك" 
+            typeNotes: "أدخل ملاحظاتك",
+            fillAllFields: "برجاء ملء كل الحقول"
           },
           routing:{
             unauthorized: "غير مصرح به",
@@ -410,6 +412,7 @@ i18n
             hourlyRateSingle: "سعر الساعة (فردي)",
             hourlyRateMulti: "سعر الساعة (متعدد)",
             addDeviceType: "إضافة نوع جهاز",
+            editDeviceType: "تعديل نوع جهاز",
           },
           settings: {
             settings: "الإعدادات",

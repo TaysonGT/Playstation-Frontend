@@ -164,7 +164,7 @@ const DashboardPage = () => {
               <div className='flex-1'>
                 <h1 className='text-gray-600'>{t('dashboard.totalRevenue')}</h1>
                 <div className='flex gap-2 items-center'>
-                  <h1 className='md:text-xl text-lg font-bold mb-2 text-nowrap'>{totalRevenue?.total.toLocaleString('en-US')} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.code}</span></h1>
+                  <h1 className='md:text-xl text-lg font-bold mb-2 text-nowrap'>{totalRevenue?.total.toLocaleString('en-US')} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency?.symbolNative: configs.currency.code}</span></h1>
                   {!(!totalRevenue?.totalGrowthLoss || totalRevenue?.totalGrowthLoss===0) &&
                       <p className={`text-base font-bold flex gap-1 ${totalRevenue?.totalGrowthLoss>0 ? 'text-green-500' : 'text-red-500'}`}>{totalRevenue?.totalGrowthLoss>0? "↑" : "↓"}<span>{Math.abs(totalRevenue?.totalGrowthLoss)}%</span></p>
                     }

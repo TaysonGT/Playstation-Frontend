@@ -38,7 +38,7 @@ const PrivateRoutes = ({roles}:{roles:string[]}) => {
 
   return (
     <div dir={currentDirection} className='flex flex-col h-screen overflow-hidden'>
-      <div className='w-full bg-[#1b1b1f] shadow-md py-4 px-8 flex justify-between items-center z-[99] md:hidden'>
+      <div className='w-full bg-[#1b1b1f] shadow-md py-4 px-8 flex justify-between items-center z-99 md:hidden'>
         <div onClick={()=>setShow(true)} className='text-3xl text-white cursor-pointer'>
           <MdMenu/>
         </div>

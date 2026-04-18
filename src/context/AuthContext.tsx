@@ -59,6 +59,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }
           logoutUser()
           return
         };
+        console.log(data)
         setCurrentUser(data.user)
       }).catch(()=>logoutUser())
     .finally(()=>setIsLoading(false))
