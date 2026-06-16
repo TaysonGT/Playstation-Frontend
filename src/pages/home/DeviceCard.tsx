@@ -91,7 +91,7 @@ const DeviceCard = ({device}:{device: IDevice}) => {
   return (
     <>
     
-    <div className='bg-[#ffffff] w-50 border-2 border-[#e0e0e0] flex flex-col items-center rounded p-5 text-[#333] shadow-lg duration-[.3s]'>
+    <div className='bg-[#ffffff] w-50 border-2 border-[#e0e0e0] flex flex-col items-center rounded p-5 text-[#333] shadow-lg duration-300'>
         <DarkBackground show={showDetails&&!!device.session} setShow={()=>{
             setShowDetails(false);
             searchParams.delete('session')
@@ -103,11 +103,11 @@ const DeviceCard = ({device}:{device: IDevice}) => {
             setShowDetails(false)
         }}} />
         <div className='flex justify-between w-full items-stretch text-xs'>
-            <h1 className={'font-semibold px-[20px] py-[3px] text-white rounded flex items-center ' + (device.status?  'bg-red-500' : 'bg-[#3cb75b]')}>{device.name}</h1>
+            <h1 className={'font-semibold px-5 py-0.75 text-white rounded flex items-center ' + (device.status?  'bg-red-500' : 'bg-[#3cb75b]')}>{device.name}</h1>
             <div className='bg-white border-2 border-black text-black p-1 px-4 rounded font-medium flex items-center'>{device.type.name}</div>
         </div>
         { !device.status? 
-        <form dir={currentDirection} className='w-full flex flex-grow flex-col gap-1 text-xs font-bold mt-6'>
+        <form dir={currentDirection} className='w-full flex grow flex-col gap-1 text-xs font-bold mt-6'>
             <div className='flex gap-2 items-center'>
                 <label className="flex-1 font-bold text-xs  text-nowrap">{t('devices.playType')}:</label>
                 <select onInput={e=> setPlayType(e.currentTarget.value)} className={classnames.input+' flex-1'}>

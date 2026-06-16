@@ -44,7 +44,6 @@ export const ConfigsProvider = ({ children }: { children: ReactNode }) => {
         await axios.get('/configs')
         .then(({data})=>{
             if (!data.success) return toast.error(data.message || "حدث خطأ أثناء جلب الإعدادات");
-            console.log(currencies.find(c=>c.code === data.configs.currency))
             setConfigs(cfg => ({
                 ...defaultConfigs,
                 ...cfg,

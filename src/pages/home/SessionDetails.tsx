@@ -127,7 +127,7 @@ const SessionDetails:React.FC<Props> = ({device, clock, hide, show}) => {
     },[timeOrders])
 
   return (
-    <div dir={currentDirection} className={`text-center fixed flex flex-col z-[102] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border border-gray-300 shadow-md rounded-lg lg:w-auto w-[90vw] max-h-[96vh] duration-150 ${show? 'opacity-100 pointer-events-auto': 'opacity-0 pointer-events-none'}`}>
+    <div dir={currentDirection} className={`text-center fixed flex flex-col z-102 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border border-gray-300 shadow-md rounded-lg lg:w-auto w-[90vw] max-h-[96vh] duration-150 ${show? 'opacity-100 pointer-events-auto': 'opacity-0 pointer-events-none'}`}>
       <div className='flex gap-2 items-center flex-col-reverse relative md:flex-row border-b border-gray-300 shadow-md p-4'>
         <div className='flex-1 flex gap-4 items-center w-full md:w-auto justify-center self-start'>
           <div className='rounded-md shadow-hard bg-indigo-700 text-white px-4 py-2 text-nowrap'>
@@ -174,7 +174,7 @@ const SessionDetails:React.FC<Props> = ({device, clock, hide, show}) => {
         </div>
         <div className="flex flex-col border border-gray-300 shadow-lg bg-white row-start-1 md:row-start-auto rounded-md">
           <h2 className="text-lg text-nowrap px-6 font-semibold border-b border-gray-300 shadow-md text-[#1b1b1f] p-2">{t('devices.time')}</h2>
-          <div className="flex flex-col justify-end flex-grow p-4">
+          <div className="flex flex-col justify-end grow p-4">
             <div className={'w-full p-4 text-center text-3xl font-bold bg-[#212121] text-white bg-center bg-cover border-emerald-50 border rounded  ' + (device.session?.time_type === "open"? 'text-red-500' :  'text-green-500')}>{clock>=0? getStringTime(clock): <div className='w-full flex justify-center'><Loader size={30} color='white' thickness={5}/></div>}</div>
             <p className="text-2xl font-bold mt-4 text-indigo-700">{total?.currentTimeCost} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.code}</span></p>
             <div className='flex justify-center gap-6 mt-4'>
