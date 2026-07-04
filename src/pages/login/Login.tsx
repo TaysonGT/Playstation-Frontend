@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import NewUser from './NewUser';
+import CreateMainUser from './CreateMainUser';
 import { useAuth } from '../../context/AuthContext'
 import { useTranslation } from 'react-i18next';
 import { getDirection } from '../../i18n';
@@ -12,14 +12,14 @@ const Login = () => {
   const {t, i18n} = useTranslation()
   const currentDirection = getDirection(i18n.language);
 
-  const handleLogin = async(e: React.FormEvent<HTMLFormElement>)=>{
+  const handleLogin = async(e: React.SubmitEvent<HTMLFormElement>)=>{
     e.preventDefault();
     await loginUser(username, password)
   }
 
   return (
     <div className='min-h-screen w-full bg-[url(/src/assets/login-bg.webp)] bg-cover bg-center flex justify-center items-center text-black font-medium'>
-        <div dir={currentDirection} className=' mx-auto p-8 bg-white border border-gray-400 rounded-md shadow-md w-[350px]'>
+        <div dir={currentDirection} className=' mx-auto p-8 bg-white border border-gray-400 rounded-md shadow-md w-87.5'>
           <h1 className='text-center text-xl mb-4'>{t('login.login')}</h1>
           <form onSubmit={handleLogin} className="flex flex-col gap-2 pb-4 w-full mt-6">
             <label>{t('login.username')}</label>
@@ -37,8 +37,8 @@ const Login = () => {
             <p className='text-md font-light'>{t('login.noUsers')}!</p>
             <button onClick={()=> setNewUserPopup(true)} className='cursor-pointer'>{t('login.newUserQuestion')}</button>
             {newUserPopup && <>
-              <div onClick={()=>setNewUserPopup(false)} className='fixed left-0 top-0 w-screen h-screen bg-black/70 animate-appear duration-500 z-[50]'></div>
-              <NewUser/>
+              <div onClick={()=>setNewUserPopup(false)} className='fixed left-0 top-0 w-screen h-screen bg-black/70 animate-appear duration-500 z-50'></div>
+              <CreateMainUser/>
             </>
             }
           </>}

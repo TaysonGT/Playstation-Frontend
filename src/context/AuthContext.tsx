@@ -39,8 +39,8 @@ export const AuthProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }
     })
   };
 
-  const firstLogin = async (username: string, password: string) => {
-    await createFirstUser({username, password})
+  const firstLogin = async ({username, password, confirmPassword}:{username: string, password: string, confirmPassword: string}) => {
+    await createFirstUser({username, password, confirmPassword})
     .then(async({data})=>{
       if(!data.success) return toast.error(data.message);
       

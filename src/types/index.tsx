@@ -17,7 +17,7 @@ export interface IAuthContext {
   currentUser: IUser | null;
   isLoading: boolean;
   loginUser: (username: string, password: string) => Promise<void>;
-  firstLogin: (username: string, password: string) => Promise<void>;
+  firstLogin: ({username, password, confirmPassword}:{username: string, password: string, confirmPassword: string}) => Promise<void>;
   logoutUser: () => Promise<void>;
   newUser: boolean;
 }
