@@ -1,6 +1,6 @@
 import UserIcon from '../assets/user.png'
 import './Navbar.css'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router'
 import { useAuth } from '../context/AuthContext'
 import { IoBarChart, IoGameController, IoHome, IoSettings } from 'react-icons/io5'
 import { IoReceipt } from 'react-icons/io5'

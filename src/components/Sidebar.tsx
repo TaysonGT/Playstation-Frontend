@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router'
 import { RiBox2Fill, RiDashboardFill, RiReceiptFill, RiSettingsFill } from "react-icons/ri";
 import { useTranslation } from 'react-i18next';
 import UserIcon from '../assets/user.png'
