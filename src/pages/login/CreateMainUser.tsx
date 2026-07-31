@@ -5,13 +5,16 @@ import { useTranslation } from 'react-i18next'
 const CreateMainUser:React.FC = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
   const [confirmPassword, setConfirmPassword] = useState('')
   const {t} = useTranslation()
   const {firstLogin} = useAuth()
 
   const addHandler = (e:React.SubmitEvent<HTMLFormElement>)=>{
     e.preventDefault();
+    setLoading(true)
     firstLogin({username, password, confirmPassword})
+    .finally(()=>setLoading(false))
   }
     
   return (
@@ -47,7 +50,7 @@ const CreateMainUser:React.FC = () => {
           />
         </div>
         <div className="flex gap-2 justify-end">
-          <button type='submit' className="px-4 py-2 bg-blue-500 hover:bg-indigo-400 duration-150 text-white rounded">{t('modals.add')}</button>
+          <button type='submit' className="px-4 py-2 bg-blue-500 hover:bg-blue-400 disabled:bg-blue-300 duration-150 text-white rounded" disabled={loading}>{loading?t('modals.adding') :t('modals.add')}</button>
         </div>
       </form>
     </div>
