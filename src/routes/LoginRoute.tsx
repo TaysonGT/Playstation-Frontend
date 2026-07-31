@@ -10,23 +10,24 @@ const LoginRoute = () => {
     const {t} = useTranslation()
     
     if(isLoading){
-        return (
-            <div className='h-screen w-screen flex flex-col gap-6 justify-center items-center'>
-            <Loader size={60} thickness={10}/>
-            <p className='text-xl'>{t('routing.pleaseWait')}...</p>
-            </div>
-        )
+      return (
+        <div className='h-screen w-screen flex flex-col gap-6 justify-center items-center'>
+          <WakeUpBanner/>
+          <Loader size={60} thickness={10}/>
+          <p className='text-xl'>{t('routing.pleaseWait')}...</p>
+        </div>
+      )
     }
 
     if(!currentUser){
-        return <>
-          <>
-            <WakeUpBanner/>
-            <Outlet/>
-          </>
+      return (
+        <>
+          <WakeUpBanner/>
+          <Outlet/>
         </>
+      )
     }else{
-        return <Navigate to="/"  replace state={{from: location}} />
+      return <Navigate to="/"  replace state={{from: location}} />
     }
 }
 

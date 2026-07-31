@@ -7,6 +7,7 @@ import { getDirection } from '../i18n';
 import { MdMenu } from 'react-icons/md';
 import { useState } from 'react';
 import DarkBackground from '../components/DarkBackground';
+import WakeUpBanner from '../components/WakeUpBanner';
 
 const PrivateRoutes = ({roles}:{roles:string[]}) => {
   const location = useLocation()
@@ -18,6 +19,7 @@ const PrivateRoutes = ({roles}:{roles:string[]}) => {
   if(isLoading){
     return (
       <div dir={currentDirection} className='h-screen w-screen flex flex-col gap-6 justify-center items-center'>
+        <WakeUpBanner/>
         <Loader size={60} thickness={10}/>
         <p className='md:text-xl text-lg'>{t('routing.pleaseWait')}...</p>
       </div>
