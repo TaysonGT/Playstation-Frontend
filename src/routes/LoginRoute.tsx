@@ -2,6 +2,7 @@ import { Navigate, Outlet, useLocation } from 'react-router'
 import { useAuth } from '../context/AuthContext';
 import Loader from '../components/Loader';
 import { useTranslation } from 'react-i18next';
+import WakeUpBanner from '../components/WakeUpBanner';
 
 const LoginRoute = () => {
     const location = useLocation();
@@ -19,7 +20,10 @@ const LoginRoute = () => {
 
     if(!currentUser){
         return <>
+          <>
+            <WakeUpBanner/>
             <Outlet/>
+          </>
         </>
     }else{
         return <Navigate to="/"  replace state={{from: location}} />

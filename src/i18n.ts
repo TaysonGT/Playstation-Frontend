@@ -185,6 +185,8 @@ i18n
             hourlyRateSingle: "Hourly Rate (Single)",
             hourlyRateMulti: "Hourly Rate (Multi)",
             addDeviceType: "Add Device Type",
+            noDeviceTypes: "No device types yet",
+            pleaseAddNewDeviceTypes: "Please add new device types...",
           },
           settings:{
             settings: "Settings",
@@ -235,8 +237,11 @@ i18n
             noAvailableDevices: "All devices are occupied",
             noUnavailableDevices: "All devices are free",
             pleaseAddNewDevices: "Please add new devices...",
+          },
+          loading:{
+            wakingUpServer: "Waking up the server",
+            firstLoadInfo: "First load can take up to a minute"
           }
-          // Add your strings here
         }
       },
       // Add these to the "ar" section under "translation"
@@ -417,6 +422,8 @@ i18n
             hourlyRateMulti: "سعر الساعة (متعدد)",
             addDeviceType: "إضافة نوع جهاز",
             editDeviceType: "تعديل نوع جهاز",
+            noDeviceTypes: "لا يوجد أنواع أجهزة",
+            pleaseAddNewDeviceTypes: "يرجى إضافة نوع جهاز جديد...",
           },
           settings: {
             settings: "الإعدادات",
@@ -467,6 +474,10 @@ i18n
             noAvailableDevices: "كل الأجهزة مشغولة",
             noUnavailableDevices: "لا يوجد أجهزة مشغولة",
             pleaseAddNewDevices: "يرجى إضافة أجهزة جديدة...",
+          },
+          loading:{
+            wakingUpServer: "جار إيقاظ الخادم",
+            firstLoadInfo: "قد تصل مدة الإتصال الأولى بالخادم إلى دقيقة"
           },
         },
       },

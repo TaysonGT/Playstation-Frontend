@@ -5,7 +5,7 @@ import { useConfigs } from '../../context/ConfigsContext';
 import axios from 'axios';
 import Loader from '../../components/Loader';
 import { ICollection, IEmployeeReport } from '../../types';
-import { formatDateWithRegion } from '../../utlis/date';
+import { formatDateWithRegion } from '../../utils/date';
 import toast from 'react-hot-toast';
 import CollectionsTable from './CollectionsTable';
 import { Link } from 'react-router';

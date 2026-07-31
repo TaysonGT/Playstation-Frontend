@@ -7,7 +7,7 @@ import { useConfigs } from '../../context/ConfigsContext'
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight, MdKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from 'react-icons/md'
 import Loader from '../../components/Loader'
 import toast from 'react-hot-toast'
-import { formatDateWithRegion } from '../../utlis/date'
+import { formatDateWithRegion } from '../../utils/date'
 import NewCollectionDialogue from '../Dashboard/components/NewCollectionDialogue'
 
 type pageAction = "next" | "previous" | "start" | "end"
