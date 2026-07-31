@@ -79,6 +79,9 @@ const Stock = () => {
             </div>
         :
         <div className='w-full grow min-h-0 flex flex-col bg-[#f3f3f3] text-black mt-2 md:text-sm text-xs text-right tracking-wide shadow-2xl rounded-lg overflow-hidden'>
+          {
+            products?.length>0?
+            <> 
             <ul className='bg-gray-50 border-b-2 border-gray-200'>
                 <li className='flex w-full items-stretch'>
                 {tableHead?.map((key, i)=> 
@@ -110,6 +113,13 @@ const Stock = () => {
                 </li>
                 )}
             </ul>
+            </>
+            :
+            <div className='h-full w-full flex flex-col items-center justify-center'>
+              <h1 className='text-2xl xl:text-3xl font-bold text-[#1f1f1f]'>{t('stock.noProducts')}</h1>
+              <h1 className='text-lg xl:text-xl font-bold mt-4 text-[#565656]'>{t('stock.pleaseAddNewProducts')}</h1>
+            </div>
+            }
         </div>
         }
     </div>

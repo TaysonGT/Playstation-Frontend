@@ -229,6 +229,7 @@ i18n
             editProduct: "Edit Product",
             deleteProduct: "Delete Product",
             noProducts: "No products yet",
+            pleaseAddNewProducts: "Please add new products",
             productExample: "e.g., Coffee, Moro, Pepsi",
           },
           home:{
@@ -466,6 +467,7 @@ i18n
             editProduct: "تعديل المنتج",
             deleteProduct: "حذف المنتج",
             noProducts: "لم يتم العثور على منتجات...",
+            pleaseAddNewProducts: "يرجى إضافة منتجات جديدة",
             productExample: "مثال: قهوة، مورو، بيبسي",
           },
           home: {
