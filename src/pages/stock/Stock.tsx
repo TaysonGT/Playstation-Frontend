@@ -11,6 +11,7 @@ import { BiEdit, BiTrash } from 'react-icons/bi';
 import { useConfigs } from '../../context/ConfigsContext';
 import { useAuth } from '../../context/AuthContext';
 import Loader from '../../components/Loader';
+import TableNav from '../../components/TableNav';
 
 const Stock = () => {
     const [showCreate, setShowCreate] = useState(false)
@@ -21,7 +22,7 @@ const Stock = () => {
     const {configs} = useConfigs()
     const {currentUser} = useAuth()
     
-    const {products, isLoading, refetch} = useProducts()
+    const {products, isLoading, refetch, changePage, maxPages, pageCount} = useProducts()
 
     useEffect(()=>{
         refetch()
@@ -89,7 +90,7 @@ const Stock = () => {
                 )}
                 </li>
             </ul>
-            <ul className='grow min-h-0 overflow-y-auto'>
+            <ul className='grow min-h-0 overflow-y-auto flex flex-col'>
                 {products?.map((product, i)=> 
                 <li key={i} className={ 'border-b border-gray-200 relative flex w-full items-stretch bg-white'}>
                     <div className='flex-1 font-bold py-2 px-2 flex text-center justify-center items-center'>{product.name}</div>
@@ -112,6 +113,11 @@ const Stock = () => {
                     </div>}
                 </li>
                 )}
+                <TableNav {...{
+                  onChange: (page)=>changePage(page),
+                  maxPages,
+                  pageCount
+                }}/>
             </ul>
             </>
             :

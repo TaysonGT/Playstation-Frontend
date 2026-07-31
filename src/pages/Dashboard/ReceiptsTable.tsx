@@ -5,13 +5,12 @@ import { getDirection } from '../../i18n'
 import axios from 'axios'
 import { useConfigs } from '../../context/ConfigsContext'
 import { RiEyeLine } from 'react-icons/ri'
-import { MdKeyboardArrowLeft, MdKeyboardArrowRight, MdKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from 'react-icons/md'
 import DarkBackground from '../../components/DarkBackground'
 import SessionReceipt from '../Receipts/partials/receipt/SessionReceipt'
 import Loader from '../../components/Loader'
 import { useAuth } from '../../context/AuthContext'
+import TableNav from '../../components/TableNav'
 
-type pageAction = "next" | "previous" | "start" | "end"
 
 const ReceiptsTable = ({refresh}:{refresh?:boolean}) => {
     const [isLoading, setIsLoading] = useState(true)
@@ -26,20 +25,6 @@ const ReceiptsTable = ({refresh}:{refresh?:boolean}) => {
     const [maxPages, setMaxPages] = useState<number>(0)
 
     const {configs} = useConfigs()
-
-    const changePage = (action: pageAction)=>{
-        const page = JSON.stringify(actionNav(action, pageCount, maxPages))
-        setPageCount(parseInt(page))
-    }
-    
-    const actionNav = (action: pageAction, count: number, endPage: number)=>{
-        switch(action){
-            case "next": return Math.min(count+1, endPage)
-            case "previous": return Math.max(count-1, 1)
-            case "start": return 1
-            case "end": return endPage
-        }
-    }
 
     const refetch = async()=>{
         setIsLoading(true)
@@ -117,21 +102,12 @@ const ReceiptsTable = ({refresh}:{refresh?:boolean}) => {
             <p className='text-gray-500 font-semibold'>{t('receipts.noReceipts')}</p>
         </div>
         }
-        <div className='flex gap-2 py-2 text-xl justify-center mt-auto'>
-            <div onClick={()=>changePage('start')} className={`w-8 duration-150 aspect-square flex justify-center items-center border border-${pageCount>1? 'black cursor-pointer  hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400]': 'gray-200 text-gray-500 cursor-not-allowed'}`}>
-                {currentDirection==='ltr'? <MdKeyboardDoubleArrowLeft/> : <MdKeyboardDoubleArrowRight/>}
-            </div>
-            <div onClick={()=>changePage('previous')} className={`w-8 duration-150 aspect-square flex justify-center items-center border border-${pageCount>1? 'black cursor-pointer  hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400]': 'gray-200 text-gray-500 cursor-not-allowed'}`}>
-                {currentDirection==='ltr'? <MdKeyboardArrowLeft/> : <MdKeyboardArrowRight/>}
-            </div>
-            <div className='w-8 hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400] cursor-pointer  duration-150 aspect-square flex justify-center items-center border border-black text-xs md:text-sm  font-bold py-1'>{pageCount}</div>
-            <div onClick={()=>changePage('next')} className={`w-8 duration-150 aspect-square flex justify-center items-center border border-${pageCount<maxPages? 'black cursor-pointer  hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400]': 'gray-200 text-gray-500 cursor-not-allowed'}`}>
-                {currentDirection==='ltr'? <MdKeyboardArrowRight/> : <MdKeyboardArrowLeft/>}
-            </div>
-            <div onClick={()=>changePage('end')} className={`w-8 duration-150 aspect-square flex justify-center items-center border border-${pageCount<maxPages? 'black  cursor-pointer  hover:bg-[#FFB400] hover:text-white hover:border-[#FFB400]': 'gray-200 text-gray-500 cursor-not-allowed'}`}>
-                {currentDirection==='ltr'? <MdKeyboardDoubleArrowRight/> : <MdKeyboardDoubleArrowLeft/>}
-            </div>
-        </div>
+      <TableNav {...{
+        onChange: (page)=>setPageCount(page),
+        maxPages,
+        pageCount
+      }}
+      />
     </div>
   )
 }

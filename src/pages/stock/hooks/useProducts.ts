@@ -6,13 +6,21 @@ import { IProduct, ProductPayload } from '../../../types';
 export function useProducts() {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [pageCount, setPageCount] = useState<number>(1)
+  const [maxPages, setMaxPages] = useState<number>(0)
+  
+  const changePage = (page: number)=>{
+    setPageCount(page)
+  }
 
   const getAll = async () => {
     setProducts([]);
     setIsLoading(true);
-    await fetchProducts()
+    await fetchProducts({page: pageCount, limit: 10})
     .then(({data})=>{
       setProducts(data.products);
+      setMaxPages(data.total/data.pagination)
+      setPageCount(data.page)
     }).finally(()=>setIsLoading(false))
   };
 
@@ -39,5 +47,5 @@ export function useProducts() {
 
   useEffect(() => { getAll(); }, []);
 
-  return { products, isLoading, create, update, remove, refetch: getAll };
+  return { products, isLoading, create, update, remove, refetch: getAll, maxPages, pageCount, changePage };
 }
