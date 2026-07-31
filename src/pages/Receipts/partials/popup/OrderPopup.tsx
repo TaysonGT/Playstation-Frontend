@@ -108,7 +108,7 @@ const OrderModal = ({refetch,hide, show}:{refetch: ()=>void, hide:()=>void, show
   }
 
   return (
-    <div dir={currentDirection} className={`text-white text-sm md:text-base lg:w-200 w-[90%] flex flex-col md:h-auto h-[90%] bg-[#1b1b1f] p-6 border-2 border-white rounded-lg fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-[150] duration-150 ${show?'opacity-100 pointer-events-auto':'opacity-0 pointer-events-none'}`}>
+    <div dir={currentDirection} className={`text-white text-sm md:text-base flex flex-col w-9/10 max-w-3xl md:h-auto h-[90%] bg-[#1b1b1f] p-6 border-2 border-white rounded-lg fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-[150] duration-150 ${show?'opacity-100 pointer-events-auto':'opacity-0 pointer-events-none'}`}>
       <div className='flex items-start'>
         <div className='flex-1'/>
         <h1 className='md:text-2xl text-xl font-bold text-center font'>{t('receipts.addOrder')}</h1>
@@ -116,7 +116,7 @@ const OrderModal = ({refetch,hide, show}:{refetch: ()=>void, hide:()=>void, show
             <MdClose onClick={hide} className='text-red-500 hover:text-red-400 cursor-pointer'/>
         </div>
       </div>
-      <div className='flex gap-4 mt-6 flex-col md:items-stretch md:flex-row grow min-h-0'>
+      <div className='grid grid-rows-[max-content_1fr] md:grid-rows-1 md:grid-cols-[max-content_1fr] gap-4 mt-6 flex-col md:items-stretch md:flex-row grow min-h-0'>
         {isLoading?
             <div className='flex-1 flex justify-center items-center py-6'>
                 <Loader color='white' size={50} thickness={8}/>
@@ -151,7 +151,7 @@ const OrderModal = ({refetch,hide, show}:{refetch: ()=>void, hide:()=>void, show
             <button type='submit' onClick={submitHandler} className='bg-[#009879] py-2 px-4 w-full rounded-sm mt-auto cursor-pointer hover:bg-[#03b18e] duration-75'>{t('receipts.order')}</button>
         </form>
         }
-        <div className='md:flex-1 grow min-h-0 overflow-y-auto rounded-sm text-black'>
+        <div className='md:flex-1 grow min-h-0 overflow-y-auto overflow-x-auto rounded-sm text-black'>
             {orders?.length>0?
             <table className='w-full bg-white shadow-soft md:text-sm text-xs'>
                 <thead className='text-xs'>
@@ -160,7 +160,7 @@ const OrderModal = ({refetch,hide, show}:{refetch: ()=>void, hide:()=>void, show
                         <th className='py-2 px-2 md:px-4'>{t('tables.available')}</th>
                         <th className='py-2 px-2 md:px-4'>{t('tables.quantity')}</th>
                         <th className='py-2 px-2 md:px-4'>{t('receipts.cost')}</th>
-                        <th className='py-2 px-2 md:px-4 md:block hidden'>{t('tables.actions')}</th>
+                        <th className='py-2 px-2 md:px-4'>{t('tables.actions')}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -170,7 +170,7 @@ const OrderModal = ({refetch,hide, show}:{refetch: ()=>void, hide:()=>void, show
                         <td className='py-2'>{order.product.stock}</td>
                         <td className='py-2'>{order.quantity}</td>
                         <td className='py-2 text-nowrap'>{order.cost.toLocaleString('en-US')} <span className='font-noto'>{currentDirection === 'rtl'? configs.currency.symbolNative: configs.currency.code}</span></td>
-                        <td className='py-2 px-4 md:flex items-center justify-center hidden gap-2'>
+                        <td className='py-2 px-4 flex items-center justify-center gap-2'>
                             <button onClick={()=>inDecrement(order.product.id, 'increment')} className='rounded-lg w-6 aspect-square flex items-center justify-center bg-green-500 text-white'><FaAngleUp/></button>
                             <button onClick={()=>inDecrement(order.product.id, 'decrement')} className='rounded-lg w-6 aspect-square flex items-center justify-center bg-red-500 text-white'><FaAngleDown/></button>
                             <button onClick={()=>removeOrder(order.product.id)} className='rounded-lg w-6 aspect-square flex items-center justify-center bg-red-500 text-white'><MdDelete/></button>

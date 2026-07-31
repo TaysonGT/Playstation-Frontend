@@ -149,7 +149,7 @@ const SessionDetails:React.FC<Props> = ({device, clock, hide, show}) => {
           <Loader size={50} thickness={10}/>
         </div>
         :
-      <div className='grid md:grid-cols-[1fr_1fr_1fr] auto-rows-max gap-4 grow p-8 pt-4 overflow-y-auto bg-[#e3e3e3]'>
+      <div className='grid md:grid-cols-[1fr_1fr_1fr] auto-rows-max gap-2 grow p-2 overflow-y-auto bg-[#e3e3e3]'>
         <div className='flex flex-col h-80 md:h-auto bg-white rounded-md border border-gray-300 shadow-lg'>
           <h2 className="text-lg text-nowrap px-6 font-semibold border-b border-gray-300 shadow-md text-[#1b1b1f] p-2">{t('devices.orders')}</h2>
           {orders?.length>0?

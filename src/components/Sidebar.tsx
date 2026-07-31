@@ -27,7 +27,7 @@ const Sidebar = ({show, setShow}:{show:boolean, setShow?: (b:boolean)=>void}) =>
   return ( 
       <div dir={currentDirection} className={`flex flex-col overflow-y-auto p-6 bg-black text-white h-full group fixed lg:relative w-55 z-[103] shadow-hard duration-200 ${currentDirection==='rtl'?`lg:right-0 ${show?'right-0':'-right-55'}`:`lg:left-0 ${show?'left-0':'-left-55'}`} top-0`}>
         <div className='flex flex-col gap-4 items-center cursor-pointer p-4'>
-          <img src={UserIcon} className='sm:h-[40px] h-[30px]' alt="" />
+          <img src={UserIcon} className='sm:h-10 h-7.5' alt="" />
           <p className='sm:font-medium text-white'>{currentUser?.username}</p>
         </div>
         <ul className='flex flex-col text-md justify-center gap-2 mt-2'>

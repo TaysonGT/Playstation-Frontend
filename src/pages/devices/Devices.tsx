@@ -34,7 +34,7 @@ const Devices = () => {
         setIsLoadingDevices(true)
         fetchDevices()
         .then(({data})=> {
-            setDevices(data.devices)
+            setDevices(data.devices||[])
         }).finally(()=>setIsLoadingDevices(false))
     }
 
@@ -42,7 +42,7 @@ const Devices = () => {
         setIsLoadingTypes(true)
         fetchDeviceTypes()
         .then(({data})=> {
-            setDeviceTypes(data.deviceTypes)
+            setDeviceTypes(data.deviceTypes||[])
         }).finally(()=>setIsLoadingTypes(false))
     }
 
@@ -64,6 +64,10 @@ const Devices = () => {
         t('deviceTypes.hourlyRateMulti'),
         ...currentUser?.role==='admin'?[t('tables.actions')]:[]
     ]
+
+    useEffect(()=>{
+      console.log(deviceTypes)
+  },[deviceTypes])
   
   return (
     <>
@@ -140,8 +144,8 @@ const Devices = () => {
                 </div>
             :devices?.length<1? 
                 <div dir={currentDirection} className='flex flex-col items-center mt-20'>
-                    <h1 className='text-xl font-bold text-white'>{t('devices.noDevices')}</h1>
-                    <p className='md:text-sm text-xs font-bold mt-4 text-gray-300'>{t('devices.pleaseAddNewDevice')}</p>
+                    <h1 className='text-xl font-bold text-black'>{t('devices.noDevices')}</h1>
+                    <p className='md:text-sm text-xs font-bold mt-4 text-[#989898]'>{t('devices.pleaseAddNewDevices')}</p>
                 </div>
                 :
                 <div className='w-full flex flex-col grow min-h-0 text-black mt-4 text-center rounded-sm overflow-hidden bg-gray-100 shadow-lg'>
@@ -197,10 +201,10 @@ const Devices = () => {
                 <div className='mt-16 flex justify-center grow items-center'>
                     <Loader size={50} color='white' thickness={10}/>
                 </div>
-            :deviceTypes?.length<1? 
+            :deviceTypes?.length===0? 
                 <div dir={currentDirection} className='flex flex-col items-center mt-20'>
-                    <h1 className='text-xl font-bold '>{t('devices.noDevices')}</h1>
-                    <p className='font-bold mt-4 text-gray-300'>{t('devices.pleaseAddNewDevice')}</p>
+                    <h1 className='text-xl font-bold '>{t('deviceTypes.noDeviceTypes')}</h1>
+                    <p className='font-bold mt-4 text-gray-300'>{t('deviceTypes.pleaseAddNewDeviceTypes')}</p>
                 </div>
                 :
                 <div className='w-full flex flex-col grow min-h-0 text-black mt-4 text-center rounded-sm overflow-hidden bg-[#f3f3f3] shadow-lg'>

@@ -30,7 +30,7 @@ const SettingsPage = () => {
   };
 
   return (
-    <div dir={currentDirection} className="flex flex-col h-full w-full overflow-hidden p-10 bg-[#0d47a1] lg:px-20 font-alexandria">
+    <div dir={currentDirection} className="flex flex-col h-full w-full overflow-hidden p-4 pt-10 sm:p-10 bg-[#0d47a1] lg:px-20 font-alexandria">
       {/* {addPopup&& <>
         <NewUser {...{onAction: async()=>{
           setAddPopup(false)
@@ -60,8 +60,8 @@ const SettingsPage = () => {
         <LightBackground/>
       </>
       }
-        <h1 className="text-white text-3xl font-bold mb-4">{t('settings.settings')}</h1>
-        <div className='p-10 grow flex flex-col lg:flex-row gap-16 bg-white rounded-lg shadow-large lg:overflow-y-hidden overflow-y-auto'>
+        <h1 className="text-white text-3xl font-bold mb-6">{t('settings.settings')}</h1>
+        <div className='p-8 lg:p-10 grow flex flex-col lg:flex-row gap-16 bg-white rounded-lg shadow-large lg:overflow-y-hidden overflow-y-auto'>
           <div className='flex-1/2 shrink gap-10 flex flex-col lg:overflow-y-auto'>
             <form onSubmit={handleSaveInfo} className='flex flex-col gap-4'>
               <h1 className='font-bold text-xl' >{t('settings.shopInfo')}</h1>
