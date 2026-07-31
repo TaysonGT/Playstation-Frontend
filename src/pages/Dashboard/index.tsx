@@ -140,9 +140,9 @@ const DashboardPage = () => {
       
       <ListDialogue {...{cancel:()=>setShowList(null), productsRevenue, employeesRevenue, showList}}/>
 
-      <div className='w-full flex gap-10 md:px-10 md:py-6 p-4 text-xs md:text-base grow items-center border-b border-gray-200'>
-        <h1 className="md:text-4xl text-2xl font-semibold text-black">{t('dashboard.dashboard')}</h1>
-        <div className='flex md:gap-20 gap-4 flex-wrap items-center'>
+      <div className='w-full flex gap-10 md:px-10 md:py-6 p-4 text-xs md:text-base grow items-center justify-between border-b border-gray-200'>
+        <h1 className="md:text-4xl text-2xl font-semibold text-nowrap text-black">{t('dashboard.dashboard')}</h1>
+        <div className='flex lg:gap-x-20 gap-y-4 gap-4 flex-wrap items-center'>
           <div className='flex items-center'>
             <p className='font-bold'>{t('dashboard.reportingCycle')}:</p>
             <input onChange={(e)=>e.target.checked&&setPeriod('monthly')} className='mx-2' type="radio" name="period" checked={period==='monthly'}/>
