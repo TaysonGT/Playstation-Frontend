@@ -65,33 +65,35 @@ const SettingsPage = () => {
           <div className='flex-1/2 shrink gap-10 flex flex-col lg:overflow-y-auto'>
             <form onSubmit={handleSaveInfo} className='flex flex-col gap-4'>
               <h1 className='font-bold text-xl' >{t('settings.shopInfo')}</h1>
-              <div className='flex flex-col'>
-                <label className="block font-semibold mb-1">{t('settings.shopName')}:</label>
-                <input onChange={(e)=> setForm(prev=> ({...prev, name: e.target.value}))} type="text" placeholder={configs?.name} className=" border px-2 py-1" />
+              <div className='grid grid-cols-1 sm:grid-cols-2 content-start gap-4 grow'>
+                <div className='flex flex-col flex-1'>
+                  <label className="block font-semibold mb-1">{t('settings.shopName')}:</label>
+                  <input onChange={(e)=> setForm(prev=> ({...prev, name: e.target.value}))} type="text" placeholder={configs?.name} className=" border px-2 py-1" />
+                </div>
+                <div className='flex flex-col flex-1'>
+                  <label className="block font-semibold mb-1">{t('settings.phone')}:</label>
+                  <input type="tel" placeholder={configs?.phone} onChange={(e)=> setForm(prev=>({...prev, phone: e.target.value}))}  
+                    onKeyDown={(e) => {
+                      const key = e.key;
+                      const isValidInput = /^[0-9]*$/.test(key);
+                      if (!isValidInput && key != 'Backspace' && key != 'ArrowRight' && key != 'ArrowLeft' && key != 'Shift' && key != 'Home' && key != 'End' && key != 'Del' && key != 'Enter') {
+                        e.preventDefault();
+                      }
+                    }} className="border px-2 py-1" />
+                </div>
+                <div className='flex flex-col'>
+                  <label className="block font-semibold mb-1">{t('settings.currency')}:</label>
+                  <select value={form.currency} onChange={(e)=> setForm(prev=>({...prev, currency: e.target.value}))} 
+                    className="border px-2 py-1">
+                      {currencies.map((currency, i)=>
+                        <option key={i} value={currency.code}>
+                          {currency.name} - {currency.symbol} ({currency.code})
+                        </option>  
+                      )}
+                  </select>
+                </div>
               </div>
-              <div className='flex flex-col'>
-                <label className="block font-semibold mb-1">{t('settings.phone')}:</label>
-                <input type="tel" placeholder={configs?.phone} onChange={(e)=> setForm(prev=>({...prev, phone: e.target.value}))}  
-                  onKeyDown={(e) => {
-                    const key = e.key;
-                    const isValidInput = /^[0-9]*$/.test(key);
-                    if (!isValidInput && key != 'Backspace' && key != 'ArrowRight' && key != 'ArrowLeft' && key != 'Shift' && key != 'Home' && key != 'End' && key != 'Del' && key != 'Enter') {
-                      e.preventDefault();
-                    }
-                  }} className="border px-2 py-1" />
-              </div>
-              <div className='flex flex-col'>
-                <label className="block font-semibold mb-1">{t('settings.currency')}:</label>
-                <select value={form.currency} onChange={(e)=> setForm(prev=>({...prev, currency: e.target.value}))} 
-                  className="border px-2 py-1">
-                    {currencies.map((currency, i)=>
-                      <option key={i} value={currency.code}>
-                        {currency.name} - {currency.symbol} ({currency.code})
-                      </option>  
-                    )}
-                </select>
-              </div>
-              <input type='submit' className="px-4 py-2 mt-auto bg-blue-500 text-white rounded" value={t('modals.save')}/>
+              <input type='submit' className="px-6 py-2 self-start bg-blue-500 text-white rounded mt-6" value={t('modals.save')}/>
             </form>
           </div>
           {/* <form className='flex flex-1/2 flex-col'>

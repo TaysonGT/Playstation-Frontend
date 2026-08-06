@@ -56,11 +56,12 @@ export const AuthProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }
     getCurrentSession()
     .then(({data})=>{
       if(!data.success) {
-          logoutUser()
-          return
-        };
-        setCurrentUser(data.user)
-      }).catch(()=>logoutUser())
+        logoutUser()
+        return
+      }
+
+      setCurrentUser(data.user)
+    }).catch(()=>logoutUser())
     .finally(()=>setIsLoading(false))
   };
 
