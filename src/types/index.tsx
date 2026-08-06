@@ -82,6 +82,7 @@ export interface IUser{
     id: string;
     username: string;
     role: 'admin'|'employee';
+    createdAt: string;
 }
 
 export interface IUserFinances extends IUser{

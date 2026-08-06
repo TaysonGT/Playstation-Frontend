@@ -18,6 +18,7 @@ import { ConfigsProvider } from './context/ConfigsContext';
 import DashboardPage from './pages/Dashboard';
 import CashReviewPage from './pages/CashReview';
 import ReceiptsPage from './pages/Receipts';
+import UsersPage from './pages/Users';
 
 function App() {
 
@@ -41,10 +42,11 @@ function App() {
             }/>
             <Route element={<TestPage /> } path='/test'  />
             <Route element={<Devices /> } path='/devices'  />
-            <Route path='/receipts' element={<ReceiptsPage/>}/>
+            <Route element={<ReceiptsPage/>} path='/receipts' />
             <Route element ={<Stock />} path='/stock'  />
           </Route>
           <Route path='/' element={<PrivateRoutes roles={['admin']} />}>
+            <Route element={<UsersPage />} path='users'  />
             <Route element={<SettingsPage />} path='/settings'  />
             <Route path='/dashboard'>
               <Route index element={<DashboardPage />}/>

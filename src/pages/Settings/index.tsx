@@ -65,7 +65,7 @@ const SettingsPage = () => {
           <div className='flex-1/2 shrink gap-10 flex flex-col lg:overflow-y-auto'>
             <form onSubmit={handleSaveInfo} className='flex flex-col gap-4'>
               <h1 className='font-bold text-xl' >{t('settings.shopInfo')}</h1>
-              <div className='grid grid-cols-1 sm:grid-cols-2 content-start gap-4 grow'>
+              <div className='grid grid-cols-1 sm:grid-cols-2 content-start gap-4 grow border-b border-[#c3c3c3] pb-6'>
                 <div className='flex flex-col flex-1'>
                   <label className="block font-semibold mb-1">{t('settings.shopName')}:</label>
                   <input onChange={(e)=> setForm(prev=> ({...prev, name: e.target.value}))} type="text" placeholder={configs?.name} className=" border px-2 py-1" />
@@ -93,7 +93,7 @@ const SettingsPage = () => {
                   </select>
                 </div>
               </div>
-              <input type='submit' className="px-6 py-2 self-start bg-blue-500 text-white rounded mt-6" value={t('modals.save')}/>
+              <input type='submit' className="px-6 py-2 self-start bg-blue-500 text-white rounded " value={t('modals.save')}/>
             </form>
           </div>
           {/* <form className='flex flex-1/2 flex-col'>

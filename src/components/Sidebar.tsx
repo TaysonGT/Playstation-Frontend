@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router'
-import { RiBox2Fill, RiDashboardFill, RiReceiptFill, RiSettingsFill } from "react-icons/ri";
+import { RiBox2Fill, RiDashboardFill, RiReceiptFill, RiSettingsFill, RiUser2Fill } from "react-icons/ri";
 import { useTranslation } from 'react-i18next';
 import UserIcon from '../assets/user.png'
 import { IoGameController, IoHome } from 'react-icons/io5';
@@ -19,6 +19,7 @@ const Sidebar = ({show, setShow}:{show:boolean, setShow?: (b:boolean)=>void}) =>
       {name: t('navigation.stock'), path: '/stock', icon: <RiBox2Fill/>},
       ...currentUser?.role==='admin'?
         [
+          {name: t('navigation.users'), path: "/users", icon: <RiUser2Fill/>},
           {name: t('navigation.dashboard'), path: "/dashboard", icon: <RiDashboardFill/>},
           {name: t('navigation.settings'), path: "/settings", icon: <RiSettingsFill/>}
         ]:[],

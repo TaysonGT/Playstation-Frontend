@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { IUser } from '../../../types'
 import axios from 'axios'
 import toast from 'react-hot-toast'
@@ -10,13 +10,18 @@ interface Props{
 }
 
 const DeleteConfirm:React.FC<Props> = ({user, onAction, hide}) => {
+    const [isLoading, setIsLoading] = useState(false)
     const deleteHandler = ()=>{
-        axios.delete(`/users/${user.id}}`, {withCredentials: true})
-        .then(({data})=>{
-            if(data.message){
-                data.success? toast.success(data.message) : toast.error(data.message)
-            }
-          }).finally(()=>onAction())
+      setIsLoading(true)
+      axios.delete(`/users/${user.id}`, {withCredentials: true})
+      .then(({data})=>{
+        if(!data.success){
+          toast.error(data.message)
+          return
+        }
+        toast.success(data.message) 
+        onAction()
+      }).finally(()=>setIsLoading(false))
     }
     
     return (

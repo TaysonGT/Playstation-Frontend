@@ -8,8 +8,7 @@ interface Props {
   user: IUser
 }
 
-const NewUser:React.FC<Props> = ({onAction, user}) => {
-        
+const EditUserDialog:React.FC<Props> = ({onAction, user}) => {
     const [password, setPassword ] = useState('')
     const [username, setUsername ] = useState('')
     const [admin, setAdmin ] = useState('')
@@ -87,4 +86,4 @@ const NewUser:React.FC<Props> = ({onAction, user}) => {
     </div>
   )
 }
-export default NewUser
+export default EditUserDialog

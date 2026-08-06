@@ -67,7 +67,8 @@ i18n
             quantity: "Quantity",
             price: "Price",
             select: "Select",
-            unselect: "Unselect"
+            unselect: "Unselect",
+            createdAt: "Created At"
           },
           login:{
             login: "Login",
@@ -87,6 +88,7 @@ i18n
             receipts: "Receipts",
             stock: "Stock",
             dashboard: "Dashboard",
+            users: "Users",
             reports: "Reports",
             settings: "Settings",
             logout: "Logout",
@@ -221,6 +223,17 @@ i18n
             noSessionReceipts: "No session receipts yet",
             noOrders: "No orders yet",
           },
+          users: {
+            users: "Users",
+            usersList: "Users List",
+            addUser: "Add User",
+            admins: "Admins",
+            employees: "Employees",
+            role: "Role",
+            admin: "admin",
+            employee: "employee",
+            noUsers: "No users found"
+          },
           stock:{
             inventory: "Inventory",
             productName: "Product Name",
@@ -267,6 +280,7 @@ i18n
             stock: "المخزون",
             dashboard: "لوحة التحكم",
             reports: "التقارير",
+            users: "المستخدمين",
             settings: "الإعدادات",
             logout: "تسجيل الخروج",
             changeLanguage: "تغيير اللغة",
@@ -315,7 +329,8 @@ i18n
             quantity: "الكمية",
             price: "السعر",
             select: "تحديد",
-            unselect: "إلغاء تحديد"
+            unselect: "إلغاء تحديد",
+            createdAt: "تاريخ الإنشاء"
           },
           login: {
             login: "تسجيل الدخول",
@@ -458,6 +473,17 @@ i18n
             noOuterReceipts: "لا توجد فواتير خارجية بعد",
             noSessionReceipts: "لا توجد فواتير جلسات بعد",
             noOrders: "لا توجد طلبات بعد"
+          },
+          users: {
+            users: "المستخدمون",
+            usersList: "قائمة المستخدمين",
+            addUser: "إضافة مستخدم",
+            admins: "المسؤولون",
+            employees: "الموظفون",
+            role: "الدور",
+            admin: "مسؤول",
+            employee: "موظف",
+            noUsers: "لا يوجد مستخدمون"
           },
           stock: {
             inventory: "المخزن",
